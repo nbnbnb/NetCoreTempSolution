@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("FxApp")]
+[assembly: AssemblyTitle("ConsoleAppWin")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("FxApp")]
+[assembly: AssemblyProduct("ConsoleAppWin")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // 如果此项目向 COM 公开，则下列 GUID 用于类型库的 ID
-[assembly: Guid("63b9bc73-4651-4f6e-a636-fcad29460fbe")]
+[assembly: Guid("e1124022-37c9-49a2-97f7-c698134847ad")]
 
 // 程序集的版本信息由下列四个值组成: 
 //
