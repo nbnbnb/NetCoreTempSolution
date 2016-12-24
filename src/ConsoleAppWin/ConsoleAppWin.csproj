@@ -58,6 +58,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LibraryPCLToNetStandard\LibraryPCLToNetStandard.csproj">
+      <Project>{189d2dc8-8c6e-4e4a-bb1a-27f467efc90d}</Project>
+      <Name>LibraryPCLToNetStandard</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LibraryPCL\LibraryPCL.csproj">
       <Project>{d2c36ea2-b293-423f-9e5b-4c544b9fa5dd}</Project>
       <Name>LibraryPCL</Name>
