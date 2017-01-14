@@ -9,7 +9,7 @@ namespace ConsoleAppCore
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine($"The answer is {new LibraryCore.Thing().Get(42)}");
+            Console.WriteLine($"The answer is {new LibraryStandard.Thing().Get(42)}");
         }
     }
 }

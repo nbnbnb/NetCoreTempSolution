@@ -19,13 +19,13 @@ namespace ConsoleAppWin
 
             // 目前从 .NET Framework 中添加 .NET Core 程序集
             // 只能使用指定路径的方式，还不支持项目引用
-            Console.WriteLine($"LibraryCore The answer is {new LibraryCore.Thing().Get(42)}.");
+            Console.WriteLine($"LibraryCore The answer is {new LibraryStandard.Thing().Get(42)}.");
 
             // 使用 PCL 可以直接进行项目引用
-            Console.WriteLine($"LibraryPCL The answer is {new LibraryPCL.Thing().Get(42)}.");
+            // Console.WriteLine($"LibraryPCL The answer is {new LibraryPCL.Thing().Get(42)}.");
 
             // 使用 PCL 转 Net Standard 可以直接进行项目引用
-            Console.WriteLine($"LibraryPCLToNetStandard The answer is {new LibraryPCLToNetStandard.Thing().Get(42)}.");
+            // Console.WriteLine($"LibraryPCLToNetStandard The answer is {new LibraryPCLToNetStandard.Thing().Get(42)}.");
         }
     }
 }
