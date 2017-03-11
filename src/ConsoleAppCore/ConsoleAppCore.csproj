@@ -12,6 +12,6 @@
     <None Remove="obj\**" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LibraryStandard\LibraryStandard.csproj" />
+    <ProjectReference Include="..\LibraryStandard\MyLibraryStandard.csproj" />
   </ItemGroup>
 </Project>

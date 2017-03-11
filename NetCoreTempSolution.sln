@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A9CBC90E-DA01-4AC4-B613-BC3003717E4A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryStandard", "src\LibraryStandard\LibraryStandard.csproj", "{6B55B93A-F1EE-455B-AFA9-2BB397DC6FD4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyLibraryStandard", "src\LibraryStandard\MyLibraryStandard.csproj", "{6B55B93A-F1EE-455B-AFA9-2BB397DC6FD4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleAppWin", "src\ConsoleAppWin\ConsoleAppWin.csproj", "{45F00831-E79A-4812-88FC-F80F0F13E353}"
 EndProject
