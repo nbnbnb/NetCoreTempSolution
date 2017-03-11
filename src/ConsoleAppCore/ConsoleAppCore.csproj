@@ -1,17 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp1.1</TargetFramework>
   </PropertyGroup>
+
   <ItemGroup>
-    <EmbeddedResource Include="**\*.resx" />
+    <ProjectReference Include="..\MyLibraryStandard\MyLibraryStandard.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="obj\**" />
-    <EmbeddedResource Remove="obj\**" />
-    <None Remove="obj\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\LibraryStandard\MyLibraryStandard.csproj" />
-  </ItemGroup>
+
 </Project>

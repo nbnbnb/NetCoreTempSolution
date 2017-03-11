@@ -1,7 +1,7 @@
 using System;
 using Xunit;
 
-namespace TestLibraryStandard
+namespace TestMyLibraryStandard
 {
     public class LibraryStandardTest
     {

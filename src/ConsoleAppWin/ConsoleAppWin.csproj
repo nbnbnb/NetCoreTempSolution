@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{45F00831-E79A-4812-88FC-F80F0F13E353}</ProjectGuid>
+    <ProjectGuid>{CD428CF2-A707-4CBA-A2FC-70E70580DE70}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>ConsoleAppWin</RootNamespace>
     <AssemblyName>ConsoleAppWin</AssemblyName>
@@ -50,13 +50,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LibraryStandard\MyLibraryStandard.csproj">
-      <Project>{6b55b93a-f1ee-455b-afa9-2bb397dc6fd4}</Project>
+    <ProjectReference Include="..\MyLibraryStandard\MyLibraryStandard.csproj">
+      <Project>{c9406651-3d0a-49c6-bd98-8bbcfd699f8c}</Project>
       <Name>MyLibraryStandard</Name>
     </ProjectReference>
   </ItemGroup>
