@@ -6,7 +6,7 @@ namespace ConsoleAppCore
     {
         static void Main(string[] args)
         {
-            Console.WriteLine($"LibraryCore The answer is {new MyLibraryStandard.Thing().Get(42)}.");
+            Demos.ReadCommandLineAargs(args);
         }
     }
 }
