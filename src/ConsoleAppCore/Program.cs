@@ -6,7 +6,8 @@ namespace ConsoleAppCore
     {
         static void Main(string[] args)
         {
-            Demos.ReadCommandLineAargs(args);
+            Demos.ReadEFConfig();
+            Console.ReadKey(true);
         }
     }
 }

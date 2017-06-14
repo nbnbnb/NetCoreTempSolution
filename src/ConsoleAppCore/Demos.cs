@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
-
+using System.IO;
+using ConsoleAppCore.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace ConsoleAppCore
 {
@@ -42,7 +44,7 @@ namespace ConsoleAppCore
         /// 添加包 Microsoft.Extensions.Configuration.Binder
         /// 添加包 Microsoft.Extensions.Configuration.CommandLine
         /// </summary>
-        public static void ReadCommandLineAargs(string[] args)
+        public static void ReadCommandLineArgs(string[] args)
         {
             // 支持格式
             // dotnet run -MachineName=Bob -Left=7734
@@ -64,6 +66,27 @@ namespace ConsoleAppCore
             // Set the default value to 80
             var left = Configuration.GetValue<int>("App:MainWindow:Left", 80);
             Console.WriteLine($"Left {left}");
+        }
+
+        public static void ReadEFConfig()
+        {
+            var builder = new ConfigurationBuilder();
+            builder.SetBasePath(Directory.GetCurrentDirectory());
+            builder.AddJsonFile("appsettings.json");
+            var connectionStringConfig = builder.Build();
+
+            var config = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                // Add "appsettings.json" to bootstrap EF config.
+                .AddJsonFile("appsettings.json")
+                // Add the EF configuration provider, which will override any
+                // config made with the JSON provider.
+                .AddEntityFrameworkConfig(options => options.UseSqlServer(connectionStringConfig.GetConnectionString("DefaultConnection")))
+                .Build();
+
+            Console.WriteLine("key1={0}", config["key1"]);
+            Console.WriteLine("key2={0}", config["key2"]);
+            Console.WriteLine("key3={0}", config["key3"]);
         }
     }
 }
