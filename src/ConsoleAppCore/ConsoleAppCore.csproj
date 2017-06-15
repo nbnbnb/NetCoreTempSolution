@@ -16,4 +16,10 @@
     <ProjectReference Include="..\MyLibraryStandard\MyLibraryStandard.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="quotes.txt">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

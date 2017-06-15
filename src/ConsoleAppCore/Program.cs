@@ -6,7 +6,7 @@ namespace ConsoleAppCore
     {
         static void Main(string[] args)
         {
-            Demos.ReadEFConfig();
+            Demos.FileWatch();
             Console.ReadKey(true);
         }
     }
