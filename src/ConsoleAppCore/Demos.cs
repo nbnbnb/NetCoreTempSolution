@@ -98,20 +98,26 @@ namespace ConsoleAppCore
             Console.WriteLine("key3={0}", config["key3"]);
         }
 
-        public  static void FileWatch()
+        public static void FileWatch()
         {
             Console.WriteLine("Monitoring quotes.txt for changes (ctrl-c to quit)...");
+
+            Console.WriteLine($"Current Directory Is {Directory.GetCurrentDirectory()}");
+
             PhysicalFileProvider fileProvider =
                 new PhysicalFileProvider(Directory.GetCurrentDirectory());
-            IChangeToken token = fileProvider.Watch("quotes.txt");   // 监听的是项目根目录的文件，而不是执行目录中的文件
-            var tcs = new TaskCompletionSource<object>();
-            token.RegisterChangeCallback(state =>
-            {
-                ((TaskCompletionSource<object>)state).TrySetResult(null);
-            }, tcs);
 
             async Task watch()
             {
+                // 每次都需要创建一个新的 Token
+                // 使用 dotnet run 命令运行是，监听的是项目根目录下的 quotes.txt
+                // 使用 dotnet ConsoleAppCore.dll 运行时，监听的是应用程序根目录下的 quotes.txt
+                IChangeToken token = fileProvider.Watch("quotes.txt");   
+                var tcs = new TaskCompletionSource<object>();
+                token.RegisterChangeCallback(state =>
+                {
+                    ((TaskCompletionSource<object>)state).TrySetResult(null);
+                }, tcs);
                 await tcs.Task.ConfigureAwait(false);
                 Console.WriteLine("quotes.txt changed.");
             };
