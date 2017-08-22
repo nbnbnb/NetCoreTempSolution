@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Reflection;
+using System.Text;
 
 namespace ConsoleAppCore
 {
@@ -6,8 +8,18 @@ namespace ConsoleAppCore
     {
         static void Main(string[] args)
         {
-            Demos.FileWatch();
+            //Demos.FileWatch();
+            Temp();
             Console.ReadKey(true);
         }
+
+        static void Temp()
+        {
+
+            Console.WriteLine("----- Start -----");
+
+            Console.WriteLine("-----  End  -----");
+        }
     }
+
 }
