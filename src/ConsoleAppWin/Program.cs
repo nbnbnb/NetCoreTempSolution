@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MyLibraryStandard;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,14 +11,8 @@ namespace ConsoleAppWin
     {
         static void Main(string[] args)
         {
-            // 4.6.1 实现了 1.4
-            // 4.6.2 实现了 1.5 
-
-            //Console.WriteLine($"LibraryCore The answer is {new MyLibraryStandard.Thing().Get(42)}.");
-
-
-            Console.WriteLine("Hello world");
-            Console.WriteLine($"LibraryCore The answer is {new MyLibraryStandard.Thing().Get(42)}.");
+            Console.WriteLine($"LibraryCore The answer is {new Thing().Get(42)}.");
+            Console.ReadKey(false);
         }
     }
 }

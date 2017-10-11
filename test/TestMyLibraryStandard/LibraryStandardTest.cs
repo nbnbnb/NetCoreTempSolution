@@ -1,3 +1,4 @@
+using MyLibraryStandard;
 using System;
 using Xunit;
 
@@ -8,7 +9,7 @@ namespace TestMyLibraryStandard
         [Fact]
         public void ThingGetsObjectValFromNumber()
         {
-            Assert.Equal(42, new MyLibraryStandard.Thing().Get(42));
+            Assert.Equal(42, new Thing().Get(42));
         }
     }
 }

@@ -14,10 +14,6 @@ namespace ConsoleAppCore
 {
     static class Demos
     {
-
-
-
-
         public static Dictionary<string, string> GetSwitchMappings(IReadOnlyDictionary<string, string> configurationStrings)
         {
             /*
@@ -110,8 +106,8 @@ namespace ConsoleAppCore
             async Task watch()
             {
                 // 每次都需要创建一个新的 Token
-                // 使用 dotnet run 命令运行是，监听的是项目根目录下的 quotes.txt
-                // 使用 dotnet ConsoleAppCore.dll 运行时，监听的是应用程序根目录下的 quotes.txt
+                // 使用 dotnet run 命令运行时，监听的是"项目根"目录 的 quotes.txt
+                // 使用 dotnet ConsoleAppCore.dll 命令运行时，监听的是"ConsoleAppCore.dll 同级"目录下的 quotes.txt
                 IChangeToken token = fileProvider.Watch("quotes.txt");   
                 var tcs = new TaskCompletionSource<object>();
                 token.RegisterChangeCallback(state =>
