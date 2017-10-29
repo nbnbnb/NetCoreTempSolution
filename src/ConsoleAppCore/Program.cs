@@ -8,19 +8,28 @@ namespace ConsoleAppCore
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main(String[] args)
         {
-            //Demos.FileWatch();
+            Console.WriteLine("----- Start -----");
+            Demo(args);
             Temp();
+            Console.WriteLine("-----  End  -----");
+            Console.WriteLine();
+            Console.WriteLine("按任意键退出");
             Console.ReadKey(true);
         }
 
         static void Temp()
         {
-            Console.WriteLine("----- Start -----");
-            Console.WriteLine($"LibraryCore The answer is {new Thing().Get(42)}.");
-            Console.ReadKey(false);
-            Console.WriteLine("-----  End  -----");
+
+        }
+
+        static void Demo(String[] args)
+        {
+            Demos.FileWatch();
+            Demos.LibraryStandard();
+            Demos.ReadCommandLineArgs(args);
+            Demos.ReadEFConfig();
         }
     }
 

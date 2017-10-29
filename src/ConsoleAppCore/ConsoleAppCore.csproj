@@ -2,7 +2,9 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp2.0;net461;</TargetFrameworks>
+	<TargetFramework>netcoreapp2.0</TargetFramework>
+	<!--TargetFramework(s) 可以生成多个框架版本-->
+    <!-- <TargetFrameworks>netcoreapp2.0;net461;net47</TargetFrameworks> -->
 	<RuntimeIdentifiers>win7-x86;win7-x64;win10-x64;win10-x86;osx-x64;ubuntu.15.10-x64;linuxmint.18-x64;opensuse.13.2-x64</RuntimeIdentifiers>
   </PropertyGroup>
 

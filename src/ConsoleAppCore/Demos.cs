@@ -14,7 +14,7 @@ namespace ConsoleAppCore
 {
     static class Demos
     {
-        public static Dictionary<string, string> GetSwitchMappings(IReadOnlyDictionary<string, string> configurationStrings)
+        private static Dictionary<string, string> GetSwitchMappings(IReadOnlyDictionary<string, string> configurationStrings)
         {
             /*
              *  将键和值进行转换
@@ -30,7 +30,7 @@ namespace ConsoleAppCore
         }
 
         /// <summary>
-        /// 读取 .NET Standard
+        /// 读取 .NET Standard 库
         /// </summary>
         public static void LibraryStandard()
         {
@@ -38,17 +38,18 @@ namespace ConsoleAppCore
         }
 
         /// <summary>
-        /// 读取控制参数配置中
+        /// 从命令行读取参数信息
+        /// 支持 -XXX 和 /XXX 格式
+        /// 指定参数覆盖默认参数
+        /// 
         /// 添加包 Microsoft.Extensions.Configuration
         /// 添加包 Microsoft.Extensions.Options.ConfigurationExtensions
         /// 添加包 Microsoft.Extensions.Configuration.Json
         /// 添加包 Microsoft.Extensions.Configuration.Binder
         /// 添加包 Microsoft.Extensions.Configuration.CommandLine
         /// </summary>
-        public static void ReadCommandLineArgs(string[] args)
+        public static void ReadCommandLineArgs(String[] args)
         {
-
-
             // 支持格式
             // dotnet run -MachineName=Bob -Left=7734
             // dotnet run /Profile:MachineName=  # 设置空值，并且使用 / 前导，表示直接指定值，不需要映射表
@@ -64,7 +65,7 @@ namespace ConsoleAppCore
                 .AddInMemoryCollection(dict)
                 .AddCommandLine(args, GetSwitchMappings(dict));   //  用命令行参数值覆原始值，需要一个 Key-Value 的映射关系
 
-            IConfigurationRoot _config = builder.Build(); ;
+            IConfigurationRoot _config = builder.Build();
 
             Console.WriteLine($"Hello {_config["Profile:MachineName"]}");
 
@@ -73,6 +74,9 @@ namespace ConsoleAppCore
             Console.WriteLine($"Left {left}");
         }
 
+        /// <summary>
+        /// 读取 appsettings.json 中的 key-value 信息
+        /// </summary>
         public static void ReadEFConfig()
         {
             var builder = new ConfigurationBuilder();
@@ -94,6 +98,9 @@ namespace ConsoleAppCore
             Console.WriteLine("key3={0}", config["key3"]);
         }
 
+        /// <summary>
+        /// 监听文件变动
+        /// </summary>
         public static void FileWatch()
         {
             Console.WriteLine("Monitoring quotes.txt for changes (ctrl-c to quit)...");
@@ -106,9 +113,9 @@ namespace ConsoleAppCore
             async Task watch()
             {
                 // 每次都需要创建一个新的 Token
-                // 使用 dotnet run 命令运行时，监听的是"项目根"目录 的 quotes.txt
+                // 使用 dotnet run 命令和 VS 运行时，监听的是"项目根"目录 的 quotes.txt
                 // 使用 dotnet ConsoleAppCore.dll 命令运行时，监听的是"ConsoleAppCore.dll 同级"目录下的 quotes.txt
-                IChangeToken token = fileProvider.Watch("quotes.txt");   
+                IChangeToken token = fileProvider.Watch("Resource/quotes.txt");
                 var tcs = new TaskCompletionSource<object>();
                 token.RegisterChangeCallback(state =>
                 {
@@ -118,10 +125,13 @@ namespace ConsoleAppCore
                 Console.WriteLine("quotes.txt changed.");
             };
 
-            while (true)
+            Task.Run(() =>
             {
-                watch().GetAwaiter().GetResult();
-            }
+                while (true)
+                {
+                    watch().GetAwaiter().GetResult();
+                }
+            });
         }
 
     }
