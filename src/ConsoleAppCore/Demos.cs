@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
 using System.Threading.Tasks;
+using ConsoleAppCore.Util;
+using System.Threading;
+using System.Runtime.ExceptionServices;
 
 namespace ConsoleAppCore
 {
@@ -27,6 +30,20 @@ namespace ConsoleAppCore
             return configurationStrings
                 .Select(item => new KeyValuePair<string, string>("-" + item.Key.Substring(item.Key.LastIndexOf(':') + 1), item.Key))
                 .ToDictionary(item => item.Key, item => item.Value);
+        }
+
+        /// <summary>
+        /// 在 AppDomain 中注册 FirstChanceException 事件
+        /// </summary>
+        private static async void RegisterExceptioin()
+        {
+            var eventAwaiter = new EventAwaiter<FirstChanceExceptionEventArgs>();
+            AppDomain.CurrentDomain.FirstChanceException += eventAwaiter.EventRaised;
+            while (true)
+            {
+                // 每个异常都是通过 ContinueWith 进行处理的
+                Console.WriteLine("AppDomain exception: {0}", (await eventAwaiter).Exception.GetType());
+            }
         }
 
         /// <summary>
@@ -134,5 +151,58 @@ namespace ConsoleAppCore
             });
         }
 
+        /// <summary>
+        /// 显示尚未完成的异步操作
+        /// 
+        /// </summary>
+        public static async Task ShowTaskLogger()
+        {
+#if DEBUG
+            TaskLogger.LogLevel = TaskLogger.TaskLogLevel.Pending;
+#endif
+            var tasks = new List<Task>
+            {
+                   Task.Delay(2000).Log("2s op"),
+                   Task.Delay(5000).Log("5s op"),
+                   Task.Delay(6000).Log("6s op")
+            };
+
+            try
+            {
+                await Task.WhenAll(tasks).WithCancellation(new CancellationTokenSource(3000).Token);
+            }
+            catch (OperationCanceledException)
+            {
+            }
+
+            foreach (var op in TaskLogger.GetLogEntries().OrderBy(m => m.LogTime))
+            {
+                Console.WriteLine(op);
+            }
+        }
+
+        /// <summary>
+        /// 通过　FirstChanceException 捕获　AppDomain 中的异常
+        /// </summary>
+        public static void ShowAppDomainExceptions()
+        {
+            RegisterExceptioin();
+
+            for (Int32 x = 0; x < 3; x++)
+            {
+                try
+                {
+                    switch (x)
+                    {
+                        case 0: throw new InvalidOperationException();
+                        case 1: throw new ObjectDisposedException("");
+                        case 2: throw new ArgumentOutOfRangeException();
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            }
+        }
     }
 }
