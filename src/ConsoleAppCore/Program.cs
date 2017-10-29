@@ -11,7 +11,7 @@ namespace ConsoleAppCore
         static void Main(String[] args)
         {
             Console.WriteLine("----- Start -----");
-            Demo(args);
+            //TheDemos(args);
             Temp();
             Console.WriteLine("-----  End  -----");
             Console.WriteLine();
@@ -21,10 +21,10 @@ namespace ConsoleAppCore
 
         static void Temp()
         {
-
+            Console.WriteLine("Hello World!");
         }
 
-        static void Demo(String[] args)
+        static void TheDemos(String[] args)
         {
             Demos.FileWatch();
             Demos.LibraryStandard();
