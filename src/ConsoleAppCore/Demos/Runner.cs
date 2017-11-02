@@ -15,7 +15,7 @@ using System.Runtime.ExceptionServices;
 
 namespace ConsoleAppCore
 {
-    static class Demos
+    static class Runner
     {
         private static Dictionary<string, string> GetSwitchMappings(IReadOnlyDictionary<string, string> configurationStrings)
         {
