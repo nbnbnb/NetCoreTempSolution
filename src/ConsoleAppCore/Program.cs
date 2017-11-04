@@ -17,19 +17,8 @@ namespace ConsoleAppCore
 {
     class Program
     {
-        static async Task Main(String[] args)
+        static void Main(String[] args)
         {
-            var result = Enumerable.Range(1, 40)
-                .Select(input => (input, task: FibonacciAsync(input)))
-                .ToArray();
-
-            Console.WriteLine("GOGOGO");
-
-            foreach (var tuple in result)
-            {
-                Console.WriteLine($"Fib {tuple.input} =  {await tuple.task}");
-            }
-
             Console.WriteLine("----- Start -----");
             //TheDemos(args);
             Temp();
@@ -39,24 +28,10 @@ namespace ConsoleAppCore
             Console.ReadKey(true);
         }
 
-        private static Task<int> FibonacciAsync(int n, CancellationToken token = default)
-        {
-            return Task.Run(() => Fib(n).curr, token);
-
-            (int curr, int prev) Fib(int i)
-            {
-                if (i is 0)
-                {
-                    return (1, 0);
-                }
-                var (c, p) = Fib(i - 1);
-                return (c + p, c);
-            }
-        }
 
         static void Temp()
         {
-
+            Runner.LockerDiff();
         }
 
         static void TheDemos(String[] args)
@@ -67,6 +42,7 @@ namespace ConsoleAppCore
             Runner.ReadEFConfig();
             Runner.ShowTaskLogger().NoWarning();
             Runner.ShowAppDomainExceptions();
+            Runner.LockerDiff();
         }
     }
 }

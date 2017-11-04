@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ConsoleAppCore.Demos
 {
-    public class CSharp6Features
+    public class CSharp60Features
     {
 
     }
