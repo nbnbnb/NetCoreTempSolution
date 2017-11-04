@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
+using ConsoleAppCore.Demos;
 
 namespace ConsoleAppCore
 {
@@ -31,7 +32,7 @@ namespace ConsoleAppCore
 
         static void Temp()
         {
-
+            CSharp71Features.InferredTuple();
         }
 
         static void TheDemos(String[] args)
