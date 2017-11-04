@@ -270,7 +270,25 @@ namespace ConsoleAppCore
             }
             Console.WriteLine("Incrementing x in SimpleWaitLock: {0}", stopwatch.ElapsedMilliseconds);
 
+            SimpleHybridLock simpleHybridLock = new SimpleHybridLock();
+            stopwatch.Restart();
+            for (Int32 i = 0; i < iterations; i++)
+            {
+                simpleHybridLock.Enter();
+                x++;
+                simpleHybridLock.Leave();
+            }
+            Console.WriteLine("Incrementing x in SimpleHybridLock: {0}", stopwatch.ElapsedMilliseconds);
 
+            AnotherHybridLock anotherHybridLock = new AnotherHybridLock();
+            stopwatch.Restart();
+            for (Int32 i = 0; i < iterations; i++)
+            {
+                anotherHybridLock.Enter();
+                x++;
+                anotherHybridLock.Leave();
+            }
+            Console.WriteLine("Incrementing x in AnotherHybridLock: {0}", stopwatch.ElapsedMilliseconds);
         }
     }
 }

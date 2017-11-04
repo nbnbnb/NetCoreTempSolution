@@ -31,7 +31,7 @@ namespace ConsoleAppCore
 
         static void Temp()
         {
-            //Runner.LockerDiff();
+
         }
 
         static void TheDemos(String[] args)
