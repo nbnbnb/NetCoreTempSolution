@@ -26,22 +26,6 @@ namespace ConsoleAppCore
 
         }
 
-        private static Dictionary<string, string> GetSwitchMappings(IReadOnlyDictionary<string, string> configurationStrings)
-        {
-            /*
-             *  将键和值进行转换
-                Key: "-MachineName" Value: "Profile:MachineName"
-                Key: "-Left" Value: "App:MainWindow:Left"
-            */
-
-            var part1 = configurationStrings.Select(item => new KeyValuePair<string, string>("-" + item.Key.Substring(item.Key.LastIndexOf(':') + 1), item.Key));
-
-            var part2 = part1.ToDictionary(item => item.Key, item => item.Value);
-
-            return part2;
-
-        }
-
         /// <summary>
         /// 在 AppDomain 中注册 FirstChanceException 事件
         /// </summary>
@@ -84,7 +68,8 @@ namespace ConsoleAppCore
             var dict = new Dictionary<string, string>
             {
                 {"Profile:MachineName", "Rick"},
-                {"App:MainWindow:Left", "11"}
+                {"App:MainWindow:Left", "11"},
+                {"App:MainWindow:Right", "54"}
             };
 
             var builder = new ConfigurationBuilder();
@@ -96,12 +81,10 @@ namespace ConsoleAppCore
             // 读取内存中的配置
             // 使用自动类型转换（基本类型），并指定默认值
             Console.WriteLine(_config.GetValue<int>("App:MainWindow:Left", -1)); // 11 
+            Console.WriteLine(_config.GetValue<int>("App:MainWindow:Right", -1)); // 54
 
             // 用命令行参数覆盖内存参数
-            // 命令行支持的格式为
-            // "/" 格式，全匹配 /Profile:MachineName=ZhangJin-PC
-            // "-" 格式，后缀匹配 -MachineName=ZhangJin-PC
-            // 是通过 GetSwitchMappings 方法进行转换的
+            // 需要一个 Mapping
 
             /*
              *  GetSwitchMappings 将键和值进行转换
@@ -109,20 +92,27 @@ namespace ConsoleAppCore
                 Key: "-Left"        Value: "App:MainWindow:Left"
             */
 
-            String[] args = new[] { "/Profile:MachineName=ZhhangJin-PC", "-Left=9800" };
+            String[] args = new[] { "/Profile:MachineName=ZhangJin-PC", "-Left=9800", "-Right=900" };
 
-            Dictionary<String, String> mapping = new
+            Dictionary<String, String> mapping = new Dictionary<string, string>
             {
-
+                // 将命令行参数 /Profile:MachineName 映射到 Profile:MachineName
+                // Key 只要保证以 "-" 开头即可
+                { "-","Profile:MachineName"},
+                // 将命令行参数 -Left 映射到 App:MainWindow:Left 
+                // 命令行参数要和 Key 全匹配
+                { "-Left","App:MainWindow:Left"},
+                { "-Right","App:MainWindow:Right"},
             };
 
-            builder.AddCommandLine(args, GetSwitchMappings(dict));   //  用命令行参数值覆原始值，需要一个 Key-Value 的映射关系
+            builder.AddCommandLine(args, mapping);   //  用命令行参数值覆原始值，需要一个 Key-Value 的映射关系
             _config = builder.Build();
 
-            Console.WriteLine("-------------");
+            Console.WriteLine("-------------------------------");
 
             Console.WriteLine(_config["Profile:MachineName"]);  // Bob
             Console.WriteLine(_config.GetValue<int>("App:MainWindow:Left", -1));  // 
+            Console.WriteLine(_config.GetValue<int>("App:MainWindow:Right", -1));  // 
         }
 
         /// <summary>
