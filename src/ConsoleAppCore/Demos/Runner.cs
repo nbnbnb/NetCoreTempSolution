@@ -94,8 +94,7 @@ namespace ConsoleAppCore
             // Mapping
             Dictionary<String, String> mapping = new Dictionary<string, string>
             {
-                // 将命令行参数 -Left 映射到 App:MainWindow:Left 
-                // 命令行参数要和 Key 全匹配
+                // 命令行参数要和 mapping Key 匹配
                 { "-Left","App:MainWindow:Left"},
                 { "-Right","App:MainWindow:Right"},
             };
@@ -139,6 +138,7 @@ namespace ConsoleAppCore
 
         /// <summary>
         /// 监听文件变动
+        /// Debug 时，修改 "解决方案" /Resource 目录下的 quotes.txt 查看变动
         /// </summary>
         public static void FileWatch()
         {
@@ -152,14 +152,19 @@ namespace ConsoleAppCore
             async Task watch()
             {
                 // 每次都需要创建一个新的 Token
-                // 使用 dotnet run 命令和 VS 运行时，监听的是"项目根"目录 的 quotes.txt
-                // 使用 dotnet ConsoleAppCore.dll 命令运行时，监听的是"ConsoleAppCore.dll 同级"目录下的 quotes.txt
+
+                // 使用 dotnet run 命令和 VS 运行时，监听的是 "解决方案" /Resource 目录下的 quotes.txt
+                // 使用 dotnet ConsoleAppCore.dll 命令运行时，监听的是 "ConsoleAppCore.dll 同级" /Resource 目录下的 quotes.txt
+
+                // 使用 Globbing patterns 进行匹配
                 IChangeToken token = fileProvider.Watch("Resource/quotes.txt");
+
                 var tcs = new TaskCompletionSource<object>();
                 token.RegisterChangeCallback(state =>
                 {
                     ((TaskCompletionSource<object>)state).TrySetResult(null);
                 }, tcs);
+
                 await tcs.Task.ConfigureAwait(false);
                 Console.WriteLine("quotes.txt changed.");
             };
