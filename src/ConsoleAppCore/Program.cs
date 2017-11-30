@@ -28,14 +28,14 @@ namespace ConsoleAppCore
 
         static void Temp()
         {
-
+            Demos.ReadCommandLineArgs();
         }
 
-        static void TheDemos(String[] args)
+        static void TheDemos()
         {
             Demos.FileWatch();
             Demos.LibraryStandard();
-            Demos.ReadCommandLineArgs(args);
+            Demos.ReadCommandLineArgs();
             Demos.ReadEFConfig();
             Demos.ShowTaskLogger().NoWarning();
             Demos.ShowAppDomainExceptions();
