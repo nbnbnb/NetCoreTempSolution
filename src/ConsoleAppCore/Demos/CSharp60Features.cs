@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using static System.Math;  // 1. 静态类型导入
 
@@ -25,7 +24,7 @@ namespace ConsoleAppCore.Demos
         public static async Task<string> MakeRequestWithNotModifiedSupport()
         {
             var client = new System.Net.Http.HttpClient();
-            var streamTask = client.GetStringAsync("https://localHost:10000");
+            var streamTask = client.GetStringAsync("https://localhost:10000");
             try
             {
                 var responseText = await streamTask;
@@ -52,7 +51,7 @@ namespace ConsoleAppCore.Demos
             {
                 // PerformFailingOperation();
             }
-            catch (Exception e) when (e.LogException())
+            catch (Exception e) when (e.LogException())  // when 条件中永远返回 false
             {
                 // This is never reached!
             }
@@ -80,7 +79,7 @@ namespace ConsoleAppCore.Demos
             {
                 // This is never reached!
             }
-            catch (ArgumentNullException ex) when (!System.Diagnostics.Debugger.IsAttached)
+            catch (ArgumentNullException ex) when (!System.Diagnostics.Debugger.IsAttached)  // 判断调试模式
             {
                 Console.WriteLine(ex.ToString());
                 // Only catch exceptions when a debugger is not attached.
@@ -89,7 +88,7 @@ namespace ConsoleAppCore.Demos
         }
 
         /// <summary>
-        /// 4. Await 在 Catch 和 Finally 块中的使用
+        /// 4. Await 在 catch 和 finally 块中的使用
         /// 在 C# 5.0 中限制了 await 在 catch 和 finally 中的使用
         /// </summary>
         /// <returns></returns>
@@ -98,7 +97,7 @@ namespace ConsoleAppCore.Demos
             await Task.Delay(1000);
 
             var client = new System.Net.Http.HttpClient();
-            var streamTask = client.GetStringAsync("https://localHost:10000");
+            var streamTask = client.GetStringAsync("https://localhost:10000");
             try
             {
                 var responseText = await streamTask;
@@ -128,23 +127,25 @@ namespace ConsoleAppCore.Demos
         public string UserName { get; set; } = "ZhangJin";
 
         /// <summary>
-        /// 7. 表达式体成员
+        /// 7. 表达式体成员 
+        /// 使用 => 操作符
         /// 适用于方法和只读属性
         /// </summary>
         /// <returns></returns>
-        public override string ToString() => $" The Name is ${UserName}";
-        public string BigName => $"Big{UserName}";
+        public override string ToString() => $"The Name is ${UserName}";  // 方法
+        public string BigName => $"Big{UserName}";  // 只读属性，注意 => 操作符的使用
 
 
         /// <summary>
-        /// 8. 空判断操作法
+        /// 8. 空判断操作符
         /// </summary>
         public static void NullChecker()
         {
             // default 是 C# 7.1 中的新功能
             CSharp60Features cSharp60 = default;
 
-            // 不为 null 时调用示例方法
+            // 不为 null 时调用对象的实例方法
+            // 与 Kotlin 中一致
             cSharp60?.InstanceMethod();
 
             // 不为 null 时读取属性
@@ -152,14 +153,13 @@ namespace ConsoleAppCore.Demos
 
             // ?. 操作符可以保证左边的表达式只被计算一次
             // 并且将结果缓存，这样可以避免委托为空的场景
-            cSharp60.SometingHappend?.Invoke(null, null);
-
+            cSharp60.SometingHappened?.Invoke(null, null);
         }
 
         /// <summary>
         /// 9. 字符串的内联解释器
         /// 可以调用方法，使用 LINQ 等待
-        /// 建议简单内联使用，复杂语句还是使用方法比较合适
+        /// 建议简单逻辑使用内联语法，复杂语句还是使用方法比较合适
         /// </summary>
         public void StringInterpolation()
         {
@@ -172,12 +172,12 @@ namespace ConsoleAppCore.Demos
         /// 返回的是短限定名称（不包含命名空间信息）
         /// 
         /// 优点
-        /// 在重构时，是无法对字符串名称进行探测的
+        /// 在重构时，是无法对字符串名称进行探测的，使用 nameof 操作法，则会自动的更新
         /// 对于 INotifyPropertyChanged 接口尤其有用
         /// </summary>
         public void NameofOperator()
         {
-            Console.WriteLine(nameof(this.UserName));
+            Console.WriteLine(nameof(UserName));
         }
 
         /// <summary>
@@ -185,12 +185,15 @@ namespace ConsoleAppCore.Demos
         /// </summary>
         public void DictInit()
         {
+            // 方式一
             Dictionary<string, int> infos = new Dictionary<string, int>
             {
                 ["users"] = 123,
                 ["abc"] = 456
             };
 
+            // 方式二
+            // 感觉这种方式更简单
             infos = new Dictionary<string, int>
             {
                 {"A",123 },
@@ -205,9 +208,12 @@ namespace ConsoleAppCore.Demos
         {
             MySet mm = new MySet
             {
-                // 在 C# 5 中，要求 MySet 中必须有一个 void Add(CSharp60Features obj) 的实例方法
-                // 在 C# 6 中，可以将这个方法定义为一个扩展方法进行实现，可以添加多种不同的扩展方法，添加多种对象
+                // 在 C# 5 中，要求 MySet 中必须要有一个 void Add(CSharp60Features obj) 的实例方法
+                // 在 C# 6 中，可以将这个方法定义为一个扩展方法进行实现
+                // 可以添加多种不同的扩展方法，所以实例化的时候可以添加多种对象
                 // 这种可扩展性，对于在集合中初始化其他类型，非常方便
+
+                // 同时也解决了在不能修改源码的情况下执行，也能使用集合初始化语法
                 new CSharp60Features(),
                 new CSharp60Features()
             };
@@ -216,14 +222,16 @@ namespace ConsoleAppCore.Demos
 
         public void InstanceMethod() { }
 
-        public event EventHandler<EventArgs> SometingHappend = null;
+        public event EventHandler<EventArgs> SometingHappened = null;
     }
 
+    /// <summary>
+    /// 自定义 List
+    /// </summary>
     class MySet : List<MySet>
     {
 
     }
-
 
     static class Ext
     {
@@ -241,6 +249,7 @@ namespace ConsoleAppCore.Demos
 
         /// <summary>
         /// 这个 MySet 的一个扩展方法
+        /// 只要符合此签名，能使用集合初始化语法
         /// </summary>
         /// <param name="e"></param>
         /// <param name="s"></param>

@@ -29,7 +29,7 @@ namespace ConsoleAppCore.Demos
         public static void DefaultLiteral()
         {
             // 引用类型默认为 null
-            Func<string, bool> whereClause = default(Func<string, bool>);
+            Func<string, bool> whereClause = default;
             Console.WriteLine(whereClause == null);
 
             // 值类型默认为 0 或 false
@@ -39,14 +39,14 @@ namespace ConsoleAppCore.Demos
             Console.WriteLine(b == false);
 
             // 结构类型
-            MyStruct myStruct = default(MyStruct);
+            // 字段默认为 0 或 false
+            MyStruct myStruct = default;
             Console.WriteLine(myStruct.A == 0);
             Console.WriteLine(myStruct.B == false);
 
             // CancellationToken 默认为 CancellationToken.None
             CancellationToken token = default;
             Console.WriteLine(token == CancellationToken.None);
-
         }
 
         /// <summary>

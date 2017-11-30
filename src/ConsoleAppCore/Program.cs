@@ -21,7 +21,7 @@ namespace ConsoleAppCore
         static void Main(String[] args)
         {
             Console.WriteLine("----- Start -----");
-            TheDemos(args);
+            //TheDemos();
             Temp();
             Console.WriteLine("-----  End  -----");
             Console.WriteLine();
@@ -31,7 +31,7 @@ namespace ConsoleAppCore
 
         static void Temp()
         {
-            
+            CSharp70Features.UseRef();
         }
 
         static void TheDemos(String[] args)
