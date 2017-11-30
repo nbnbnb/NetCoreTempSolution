@@ -37,6 +37,10 @@ namespace ConsoleAppCore.Util
 
         public static TaskLogLevel LogLevel { get; set; }
 
+        /// <summary>
+        /// 返回并行集合中的所有未完成任务
+        /// </summary>
+        /// <returns></returns>
         public static IEnumerable<TaskLogEntry> GetLogEntries()
         {
             return s_log.Values;
@@ -75,6 +79,11 @@ namespace ConsoleAppCore.Util
             // 保存未完成的任务信息
             s_log[task] = logEntry;
 
+            // 在原始任务上附加一个新任务
+            // 在新任务中删除等待记录
+
+            // 此处使用了 ExecuteSynchronously 标记
+            // 这样保证了在原始任务上的线程一致性
             task.ContinueWith(t =>
             {
                 // 如果 Task 执行完成了

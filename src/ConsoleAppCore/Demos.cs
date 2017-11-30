@@ -154,6 +154,7 @@ namespace ConsoleAppCore
         /// <summary>
         /// 显示尚未完成的异步操作
         /// 
+        /// 同时内部使用帮助方法 WithCancellation 用于串联协作式取消
         /// </summary>
         public static async Task ShowTaskLogger()
         {
@@ -184,6 +185,7 @@ namespace ConsoleAppCore
 
         /// <summary>
         /// 通过　FirstChanceException 捕获　AppDomain 中的异常
+        /// 然后通过一个死循环的 awaitr 处理异常信息        
         /// </summary>
         public static void ShowAppDomainExceptions()
         {
@@ -200,8 +202,9 @@ namespace ConsoleAppCore
                         case 2: throw new ArgumentOutOfRangeException();
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Console.WriteLine("Show Loop-Awaiter Test - {0}", ex.GetType());
                 }
             }
         }

@@ -38,12 +38,21 @@ namespace ConsoleAppCore.Util
             return await originalTask;
         }
 
+        /// <summary>
+        /// 在 Task 上面关联一个协助式取消
+        /// 
+        /// 内部使用 TaskCompletionSource 进行封装
+        /// </summary>
+        /// <param name="originalTask"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
         public static async Task WithCancellation(this Task originalTask, CancellationToken ct)
         {
             // 创建在 CancellationToken 被取消时完成的一个 Task
             var cancelTask = new TaskCompletionSource<Void>();
 
-            // 一旦 CancellationToken 被取消，就完成 Task
+            // 注册 CancellationToken 的取消事件
+            // 一旦 CancellationToken 被取消，就将 cancelTask 置完成
             using (ct.Register(t => ((TaskCompletionSource<Void>)t).TrySetResult(new Void()), cancelTask))
             {
                 // 创建在原始 Task 或 CancellationToken Task 完成时都完成的一个 Task
