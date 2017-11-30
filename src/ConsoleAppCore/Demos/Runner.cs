@@ -61,10 +61,6 @@ namespace ConsoleAppCore
         /// </summary>
         public static void ReadCommandLineArgs()
         {
-            // 支持格式
-            // dotnet run -MachineName=Bob -Left=7734
-            // dotnet run /Profile:MachineName=  # 设置空值，并且使用 / 前导，表示直接指定值，不需要映射表
-
             var dict = new Dictionary<string, string>
             {
                 {"Profile:MachineName", "Rick"},
@@ -83,36 +79,38 @@ namespace ConsoleAppCore
             Console.WriteLine(_config.GetValue<int>("App:MainWindow:Left", -1)); // 11 
             Console.WriteLine(_config.GetValue<int>("App:MainWindow:Right", -1)); // 54
 
-            // 用命令行参数覆盖内存参数
-            // 需要一个 Mapping
+            // 支持格式
+            // dotnet run /Profile:MachineName=ZhangJin-PC /Profile:Address=Home -Left=7734 -Left=9800
 
-            /*
-             *  GetSwitchMappings 将键和值进行转换
-                Key: "-MachineName" Value: "Profile:MachineName"
-                Key: "-Left"        Value: "App:MainWindow:Left"
-            */
+            // Command Line Args
+            // "/" 格式的不需要 Mapping，进行全匹配
+            // "-" 格式的需要 Mapping
+            String[] args = new[] {
+                "/Profile:MachineName=ZhangJin-PC",
+                "/Profile:Address=Home",
+                "-Left=9800",
+                "-Right=900" };
 
-            String[] args = new[] { "/Profile:MachineName=ZhangJin-PC", "-Left=9800", "-Right=900" };
-
+            // Mapping
             Dictionary<String, String> mapping = new Dictionary<string, string>
             {
-                // 将命令行参数 /Profile:MachineName 映射到 Profile:MachineName
-                // Key 只要保证以 "-" 开头即可
-                { "-","Profile:MachineName"},
                 // 将命令行参数 -Left 映射到 App:MainWindow:Left 
                 // 命令行参数要和 Key 全匹配
                 { "-Left","App:MainWindow:Left"},
                 { "-Right","App:MainWindow:Right"},
             };
 
+            // "-" 格式的 args 不能笔 mapping 多
             builder.AddCommandLine(args, mapping);   //  用命令行参数值覆原始值，需要一个 Key-Value 的映射关系
             _config = builder.Build();
 
             Console.WriteLine("-------------------------------");
 
-            Console.WriteLine(_config["Profile:MachineName"]);  // Bob
-            Console.WriteLine(_config.GetValue<int>("App:MainWindow:Left", -1));  // 
-            Console.WriteLine(_config.GetValue<int>("App:MainWindow:Right", -1));  // 
+            Console.WriteLine(_config["Profile:MachineName"]);  // ZhangJin-PC
+            Console.WriteLine(_config["Profile:Address"]);  // Home
+            Console.WriteLine(_config.GetValue<int>("App:MainWindow:Left", -1));  //  9800
+            Console.WriteLine(_config.GetValue<int>("App:MainWindow:Right", -1));  //  900
+
         }
 
         /// <summary>
