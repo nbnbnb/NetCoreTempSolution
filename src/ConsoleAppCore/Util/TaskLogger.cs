@@ -42,7 +42,8 @@ namespace ConsoleAppCore.Util
             return s_log.Values;
         }
 
-        public static Task<TResult> Log<TResult>(this Task<TResult> task, String tag = null,
+        public static Task<TResult> Log<TResult>(this Task<TResult> task,
+            String tag = null,
             [CallerMemberName] String callerMemberName = null,
             [CallerFilePath] String callerFilePath = null,
             [CallerLineNumber]  Int32 callerLineNumber = -1)
@@ -50,10 +51,11 @@ namespace ConsoleAppCore.Util
             return (Task<TResult>)Log((Task)task, tag, callerMemberName, callerFilePath, callerLineNumber);
         }
 
-        public static Task Log(this Task task, String tag = null,
-          [CallerMemberName] String callerMemberName = null,
-          [CallerFilePath] String callerFilePath = null,
-          [CallerLineNumber]  Int32 callerLineNumber = -1)
+        public static Task Log(this Task task,
+            String tag = null,
+            [CallerMemberName] String callerMemberName = null,
+            [CallerFilePath] String callerFilePath = null,
+            [CallerLineNumber]  Int32 callerLineNumber = -1)
         {
             if (LogLevel == TaskLogLevel.None)
             {
@@ -70,13 +72,17 @@ namespace ConsoleAppCore.Util
                 CallerLineNumber = callerLineNumber
             };
 
+            // 保存未完成的任务信息
             s_log[task] = logEntry;
 
             task.ContinueWith(t =>
             {
+                // 如果 Task 执行完成了
+                // 则将其从日志列表中移除
                 s_log.TryRemove(t, out TaskLogEntry entry);
             }, TaskContinuationOptions.ExecuteSynchronously);
 
+            // 返回原始的任务
             return task;
         }
     }

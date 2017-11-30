@@ -17,7 +17,7 @@ namespace ConsoleAppCore
         static void Main(String[] args)
         {
             Console.WriteLine("----- Start -----");
-            TheDemos(args);
+            //TheDemos(args);
             Temp();
             Console.WriteLine("-----  End  -----");
             Console.WriteLine();
@@ -27,7 +27,7 @@ namespace ConsoleAppCore
 
         static void Temp()
         {
-            Console.WriteLine("Hello World!");
+            Demos.ShowAppDomainExceptions();
         }
 
         static void TheDemos(String[] args)

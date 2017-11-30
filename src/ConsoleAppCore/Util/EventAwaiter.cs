@@ -13,15 +13,28 @@ namespace ConsoleAppCore.Util
         private ConcurrentQueue<TEventArgs> m_events = new ConcurrentQueue<TEventArgs>();
         private Action m_continuation;
 
-        #region 状态机调用的成员
+        #region await 基础设施 - 状态机调用的成员
 
-        // 状态机先调用这个来获得 awaiter：我们自己返回自己
+        /// <summary>
+        /// 
+        /// 001
+        /// 
+        /// await 语法将会识别这个方法
+        /// 
+        /// 状态机先调用这个来获得 awaiter：我们自己返回自己
+        /// </summary>
+        /// <returns></returns>
         public EventAwaiter<TEventArgs> GetAwaiter()
         {
             return this;
         }
 
         /// <summary>
+        /// 
+        /// 002
+        /// 
+        /// await 基础设施
+        /// 
         /// 告诉状态机是否发生了任何事件
         /// </summary>
         public Boolean IsCompleted
@@ -32,13 +45,28 @@ namespace ConsoleAppCore.Util
             }
         }
 
-        // 状态机告诉我们以后要调用什么方法：我们把它保存起来
+        /// <summary>
+        /// 
+        /// 003
+        /// 
+        /// await 基础设施
+        /// 
+        /// 状态机告诉我们以后要调用什么方法：我们把它保存起来
+        /// </summary>
         public void OnCompleted(Action continuation)
         {
             Volatile.Write(ref m_continuation, continuation);
         }
 
-        // 状态机查询结果：这是 await 操作符的结果
+        /// <summary>
+        /// 
+        /// 005
+        /// 
+        /// await 基础设施
+        /// 
+        /// 状态机查询结果：这是 await 操作符的结果
+        /// </summary>
+        /// <returns></returns>
         public TEventArgs GetResult()
         {
             m_events.TryDequeue(out TEventArgs e);
@@ -47,7 +75,14 @@ namespace ConsoleAppCore.Util
 
         #endregion
 
-        // 如果都引发了事件，多个线程可能同时调用
+        /// <summary>
+        /// 
+        /// 004
+        /// 
+        /// 如果都引发了事件，多个线程可能同时调用
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="eventArgs"></param>
         public void EventRaised(Object sender, TEventArgs eventArgs)
         {
             m_events.Enqueue(eventArgs); // 保存 EventArgs 以便从 GetResult/await 返回

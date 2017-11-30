@@ -173,6 +173,7 @@ namespace ConsoleAppCore
             }
             catch (OperationCanceledException)
             {
+                Console.WriteLine("Task is canceled");
             }
 
             foreach (var op in TaskLogger.GetLogEntries().OrderBy(m => m.LogTime))
