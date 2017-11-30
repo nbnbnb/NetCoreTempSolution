@@ -4,12 +4,15 @@ using MyLibraryStandard;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
+using ConsoleAppCore.Demos;
 
 namespace ConsoleAppCore
 {
@@ -28,17 +31,18 @@ namespace ConsoleAppCore
 
         static void Temp()
         {
-            Demos.ReadCommandLineArgs();
+            Runner.ReadCommandLineArgs();
         }
 
-        static void TheDemos()
+        static void TheDemos(String[] args)
         {
-            Demos.FileWatch();
-            Demos.LibraryStandard();
-            Demos.ReadCommandLineArgs();
-            Demos.ReadEFConfig();
-            Demos.ShowTaskLogger().NoWarning();
-            Demos.ShowAppDomainExceptions();
+            Runner.FileWatch();
+            Runner.LibraryStandard();
+            Runner.ReadCommandLineArgs();
+            Runner.ReadEFConfig();
+            Runner.ShowTaskLogger().NoWarning();
+            Runner.ShowAppDomainExceptions();
+            Runner.LockerDiff();
         }
     }
 }

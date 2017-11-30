@@ -12,11 +12,20 @@ using System.Threading.Tasks;
 using ConsoleAppCore.Util;
 using System.Threading;
 using System.Runtime.ExceptionServices;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using ConsoleAppCore.Demos.Locker;
 
 namespace ConsoleAppCore
 {
-    static class Demos
+    static class Runner
     {
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static void M()
+        {
+
+        }
+
         private static Dictionary<string, string> GetSwitchMappings(IReadOnlyDictionary<string, string> configurationStrings)
         {
             /*
@@ -232,6 +241,82 @@ namespace ConsoleAppCore
                     Console.WriteLine("Show Loop-Awaiter Test - {0}", ex.GetType());
                 }
             }
+        }
+
+        /// <summary>
+        /// 理解用户模式构造和内核模式构造的性能差异
+        /// </summary>
+        public static void LockerDiff()
+        {
+            Int32 x = 0;
+            const Int32 iterations = 10_000_000;
+
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            for (Int32 i = 0; i < iterations; i++)
+            {
+                x++;
+            }
+            Console.WriteLine("Incrementing x: {0}", stopwatch.ElapsedMilliseconds);
+
+            stopwatch.Restart();
+            for (Int32 i = 0; i < iterations; i++)
+            {
+                M();
+                x++;
+                M();
+            }
+            Console.WriteLine("Incrementing x in M: {0}", stopwatch.ElapsedMilliseconds);
+
+            SpinLock spinLock = new SpinLock(false);
+            stopwatch.Restart();
+            for (Int32 i = 0; i < iterations; i++)
+            {
+                Boolean taken = false;
+                spinLock.Enter(ref taken);
+                x++;
+                spinLock.Exit();
+            }
+            Console.WriteLine("Incrementing x in SpinLock: {0}", stopwatch.ElapsedMilliseconds);
+
+            SimpleSpinLock simpleSpinLock = new SimpleSpinLock();
+            stopwatch.Restart();
+            for (Int32 i = 0; i < iterations; i++)
+            {
+                simpleSpinLock.Enter();
+                x++;
+                simpleSpinLock.Leave();
+            }
+            Console.WriteLine("Incrementing x in SimpleSpinLock: {0}", stopwatch.ElapsedMilliseconds);
+
+            SimpleWaitLock simpleWaitLock = new SimpleWaitLock();
+            stopwatch.Restart();
+            for (Int32 i = 0; i < iterations; i++)
+            {
+                simpleWaitLock.Enter();
+                x++;
+                simpleWaitLock.Leave();
+            }
+            Console.WriteLine("Incrementing x in SimpleWaitLock: {0}", stopwatch.ElapsedMilliseconds);
+
+            SimpleHybridLock simpleHybridLock = new SimpleHybridLock();
+            stopwatch.Restart();
+            for (Int32 i = 0; i < iterations; i++)
+            {
+                simpleHybridLock.Enter();
+                x++;
+                simpleHybridLock.Leave();
+            }
+            Console.WriteLine("Incrementing x in SimpleHybridLock: {0}", stopwatch.ElapsedMilliseconds);
+
+            AnotherHybridLock anotherHybridLock = new AnotherHybridLock();
+            stopwatch.Restart();
+            for (Int32 i = 0; i < iterations; i++)
+            {
+                anotherHybridLock.Enter();
+                x++;
+                anotherHybridLock.Leave();
+            }
+            Console.WriteLine("Incrementing x in AnotherHybridLock: {0}", stopwatch.ElapsedMilliseconds);
         }
     }
 }
