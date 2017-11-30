@@ -8,20 +8,17 @@ namespace ConsoleAppCore.Util
 {
     public static class TaskWithCancellation
     {
-        // 因为没有非泛型的 TaskCompletionSource 类
-        private struct Void
-        {
-
-        }
-
         public static async Task<TResult> WithCancellation<TResult>(this Task<TResult> originalTask,
             CancellationToken ct)
         {
             // 创建在 CancellationToken 被取消时完成的一个 Task
-            var cancelTask = new TaskCompletionSource<Void>();
+            var cancelTask = new TaskCompletionSource<Int32>();
+
+            // 没有非泛型的 TaskCompletionSource
+            // 此处使用了一个 Int32 类型
 
             // 一旦 CancellationToken 被取消，就完成 Task
-            using (ct.Register(t => ((TaskCompletionSource<Void>)t).TrySetResult(new Void()), cancelTask))
+            using (ct.Register(t => ((TaskCompletionSource<Int32>)t).TrySetResult(0), cancelTask))
             {
                 // 创建在原始 Task 或 CancellationToken Task 完成时都完成的一个 Task
                 Task any = await Task.WhenAny(originalTask, cancelTask.Task);
