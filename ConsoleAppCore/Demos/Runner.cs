@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using Microsoft.Extensions.Configuration;
-using System.IO;
+﻿using ConsoleAppCore.Demos.Locker;
 using ConsoleAppCore.Extensions;
+using ConsoleAppCore.Util;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
-using System.Threading.Tasks;
-using ConsoleAppCore.Util;
-using System.Threading;
-using System.Runtime.ExceptionServices;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
-using ConsoleAppCore.Demos.Locker;
+using System.Runtime.ExceptionServices;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ConsoleAppCore
 {
@@ -38,14 +37,6 @@ namespace ConsoleAppCore
                 // 每个异常都是通过 ContinueWith 进行处理的
                 Console.WriteLine("AppDomain exception: {0}", (await eventAwaiter).Exception.GetType());
             }
-        }
-
-        /// <summary>
-        /// 读取 .NET Standard 库
-        /// </summary>
-        public static void LibraryStandard()
-        {
-            Console.WriteLine($"LibraryCore The answer is {new MyLibraryStandard.Thing().Get(42)}.");
         }
 
         /// <summary>
