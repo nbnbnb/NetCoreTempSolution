@@ -10,7 +10,7 @@ namespace ConsoleAppCore.Demos
     internal sealed class CSharp72Features
     {
         /// <summary>
-        /// C# 7.0 中实现了对数字分隔符的支持，但这不允许文字值的第一个字符是 _
+        /// C# 7.0 中实现了对数字分隔符的支持，但这不允许 0b 或 0x 后的第一个字符是 _
         /// C# 7.2 放开了这一限制
         /// </summary>
         public static void LiteralPrefix()
@@ -22,74 +22,24 @@ namespace ConsoleAppCore.Demos
             Console.WriteLine(0x_12_dd); // 十六进制
         }
 
+        #region private protected
         /// <summary>
         /// 新增的 private protected 访问级别
+        /// 
+        /// 系统原先有 internal protected 访问级别，但是除了继承类可以访问外，程序集中的其他成员也可以访问
+        /// private protected 则限制了只有继承的成员才可以访问
+        /// 
+        /// 嵌套类是可以访问宿主类 private 成员的
         /// </summary>
         public static void PrivateProtected()
         {
             XYZ xyz = new XYZ();
-            //xyz.MethodA(); // private 无法读取
-            xyz.MethodB();
-        }
-
-        /// <summary>
-        /// 非尾随命名参数
-        /// </summary>
-        /// <param name="delayExecution"></param>
-        /// <param name="continueOnError"></param>
-        /// <param name="maxRecords"></param>
-        private void DoSomething(bool delayExecution, bool continueOnError, int maxRecords)
-        {
-            // 全部顺序参数
-            DoSomething(true, false, 100);
-            // 全部命名参数
-            DoSomething(delayExecution: true, continueOnError: false, maxRecords: 100);
-            // 现在可以在全部命名参数中,指定顺序参数
-            // 只要命名参数的位置顺序正确即可
-            DoSomething(delayExecution: true, continueOnError: false, 100);
-        }
-
-        /// <summary>
-        /// C# 7.2 新增 in 关键字来补充现有的 ref 和 out 关键字
-        /// in 关键字指定要按引用传递参数，并且调用的方法不会修改传递给它的值
-        /// </summary>
-        private static void InParam(in MyPoint myPoint, in ReadOnlyMyPoint readOnlyMyPoint)
-        {
-            // 无法进行赋值
-            // myPoint.X = 123;
-            //readOnlyMyPoint.X = 123;
-        }
-
-        private static ReadOnlyMyPoint readOnlyMyPoint = new ReadOnlyMyPoint();
-        private static MyPoint myPoint = new MyPoint();
-
-        public static void Test()
-        {
-            // 将 readonly struct 作为 in 参数传递到其成员方法
-            InParam(myPoint, readOnlyMyPoint);
-        }
-
-        /// <summary>
-        /// ref struct 声明，指示结构类型直接访问托管的内存（栈）
-        /// ref struct 声明，指示结构类型直接访问托管的内存，且必须始终由堆栈分配
-        /// 
-        /// ref struct 的限制
-        ///     1，不能对 ref struct 装箱。 无法向属于 object、dynamic 或任何接口类型的变量分配 ref struct 类型。
-        ///     2，不能将 ref struct 声明为类或常规结构的成员。
-        ///     3，不能声明异步方法中属于 ref struct 类型的本地变量。 不能在返回 Task、Task<T> 或类似 Task 类型的同步方法中声明它们。
-        ///     4，无法在迭代器中声明 ref struct 本地变量。
-        ///     5，无法捕获 Lambda 表达式或本地函数中的 ref struct 变量。
-        ///   
-        /// </summary>
-        private static ref MyPoint GetRefMyPoint()
-        {
-            return ref myPoint;
+            //xyz.MethodA(); // 外部类，无法访问 private 
+            xyz.MethodB();   // internal 可以访问
         }
 
         private class XYZ
         {
-            public int Z { get; set; }
-
             /// <summary>
             /// 新增的 private protected 
             /// private || protected
@@ -106,50 +56,154 @@ namespace ConsoleAppCore.Demos
             {
 
             }
+        }
+        #endregion
 
-            public class ABC
-            {
-                public ABC()
-                {
-                    XYZ xyz = new XYZ();
-                    xyz.MethodA(); // ABC 包含在 XYX 内部，private 也可以读取
-                    xyz.MethodB();
-                }
-            }
+        /// <summary>
+        /// 命名参数可以在非命名参数之前
+        /// 只要命名参数保持正确位置即可
+        /// </summary>
+        private void DoSomething(bool delayExecution, bool continueOnError, int maxRecords)
+        {
+            // 非命名
+            DoSomething(true, false, 100);
+
+            // 命名
+            DoSomething(delayExecution: true, continueOnError: false, maxRecords: 100);
+
+            // 全部命名参数
+            // 交互位置也支持
+            DoSomething(continueOnError: false, delayExecution: true, maxRecords: 100);
+
+            // 现在可以在全部命名参数中,指定顺序参数
+            // 只要命名参数的位置顺序正确即可
+            DoSomething(delayExecution: true, continueOnError: false, 100);
+
+            // 交换 continueOnError 和 delayExecution 的位置
+            // 不支持
+            //DoSomething(continueOnError: false, delayExecution: true,  100);
         }
 
         /// <summary>
-        /// 使用 readonly struct 声明
-        /// 调用 readonly struct 的成员时，编译器将生成更高效的代码：this 引用
-        /// 这种优化在你使用 readonly struct 时可减少更多复制操作
+        /// 声明一个 readonly struct
         /// 
-        /// 存在针对 readonly struct 的其他优化
-        ///     可在 readonly struct 为参数的每个位置使用 in 修饰符
-        ///     此外，如果要返回其生存期超出返回对象的方法的作用域的对象，可返回 readonly struct 作为 ref return
+        /// 使用方式
+        ///     1，通过 in 参数进行传递（避免值类型的复制）
         /// </summary>
-        private readonly struct ReadOnlyMyPoint
+        private readonly struct ReadOnlyPoint
         {
-            public ReadOnlyMyPoint(double x, double y)
+            public ReadOnlyPoint(double x, double y)
             {
-                this.X = x;
-                this.Y = y;
+                X = x;
+                Y = y;
             }
-            // 只读结构中
-            // 属性只能设置为只读
             public double X { get; }
+            // 只读结构，不允许有 set
+            //public double X { get; set; }
             public double Y { get; }
+            // 只读结构，不允许有 set
+            //public double Y { get; set; }
         }
 
-        private struct MyPoint
+        /// <summary>
+        /// 声明一个 ref struct
+        /// 
+        /// 限制：
+        ///     1，不能装箱，例如转换为 Object、dynamic 类型
+        ///     2，不能将其声明为其他类型或结构的成员字段
+        ///     3，不能在异步方法中声明 ref struct 变量（解决方案，在同步方法中声明，然后返回 Task）
+        ///     4，不能在迭代器中声明 ref struct 变量
+        ///     5，不能在 lambad 表达式和本地函数中 "捕获" ref struct 变量
+        ///     6，不能实现接口
+        /// </summary>
+        private ref struct RefPoint
         {
-            public MyPoint(int x, int y)
+            public RefPoint(int x, int y)
             {
-                this.X = x;
-                this.Y = y;
+                X = x;
+                Y = y;
             }
 
             public int X { get; set; }
+
             public int Y { get; set; }
         }
+
+        /// <summary>
+        /// 声明一个正常的 struct
+        /// </summary>
+        private struct NormalPoint : IComparable<NormalPoint>
+        {
+            public NormalPoint(int x, int y)
+            {
+                X = x;
+                Y = y;
+            }
+
+            public int X { get; set; }
+
+            public int Y { get; set; }
+
+            public int CompareTo(NormalPoint other)
+            {
+                return X - Y;
+            }
+        }
+
+        private class ABC
+        {
+            // ref struct 不能作为类型成员
+            // private RefPoint refPoint = new RefPoint(1, 2);
+
+            private NormalPoint normalPoint = new NormalPoint(1, 2);
+
+            // 声明一个 readonly + (readonly struct)
+            // 这样就表示这个对象不能被更改（指针和字段）
+            private static readonly ReadOnlyPoint _allReadOnly = new ReadOnlyPoint(1, 2);
+            // 然后再将其声明为一个引用（避免调用时复制的开销）
+            // 调用成员时，编译器生成的代码都是 this 直接调用，避免复制这个结构
+            public static ref readonly ReadOnlyPoint allRefReadOnly => ref _allReadOnly;
+
+            public void MyMethod()
+            {
+                RefPoint a = new RefPoint(1, 2);
+                // 无法装箱成 Object
+                // Object aa = a;
+                // 无法赋值给 dynamic
+                // dynamic aaa = a;
+
+                NormalPoint b = new NormalPoint(1, 2);
+                Object bb = b;
+                dynamic bbb = b;
+
+                ReadOnlyPoint c = new ReadOnlyPoint(1, 2);
+                // ReadOnlyPoint 不允许修改
+                //c.X = 111;
+
+
+                Action action = () =>
+                {
+                    // lambda 无法捕获 a
+                    // Console.WriteLine(a.ToString());
+                    Console.WriteLine(b.ToString());
+                };
+
+                void myLocalMethod()
+                {
+                    // 本地函数中 无法捕获 a
+                    // Console.WriteLine(a.ToString());
+                    Console.WriteLine(b.ToString());
+                }
+            }
+
+            public async void DoAsync()
+            {
+                // async 方法中不能声明 ref struct
+                // RefPoint a = new RefPoint(1, 2);
+                NormalPoint b = new NormalPoint(1, 2);
+                await Task.Delay(100);
+            }
+        }
     }
+
 }

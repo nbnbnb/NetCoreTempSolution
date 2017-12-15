@@ -7,6 +7,31 @@ namespace ConsoleAppCore.Demos
 {
     public class CSharp70Features
     {
+        private class MyPoint
+        {
+            public MyPoint(double x, double y)
+            {
+                this.X = x;
+                this.Y = y;
+            }
+
+            public double X { get; }
+            public double Y { get; }
+
+            /// <summary>
+            /// 元组自动解包使用（还可以使用扩展方法）
+            /// 名称为 Deconstruct，无返回值
+            /// 并且参数都用 out 进行标记
+            /// </summary>
+            /// <param name="x"></param>
+            /// <param name="y"></param>
+            public void Deconstruct(out double x, out double y)
+            {
+                x = this.X;
+                y = this.Y;
+            }
+        }
+
         /// <summary>
         /// 1. Out 变量
         /// </summary>
@@ -105,7 +130,7 @@ namespace ConsoleAppCore.Demos
                 max = (n > max) ? n : max;
             }
 
-            var point = new Point(1.2, 3.4);
+            var point = new MyPoint(1.2, 3.4);
 
             // 自动解包功能
             // 由于 Point 类定义了相应的 Deconstruct 函数
@@ -179,7 +204,7 @@ namespace ConsoleAppCore.Demos
             return longRunningWorkImplementation();
 
             // 本地函数可以在方法内部任意位置声明
-            // 注意本地函数的定义方式
+            // 注意本地函数的定义方式（与正常函数类似，不要访问级别修饰符）
             async Task<string> longRunningWorkImplementation()
             {
                 await Task.Delay(1000);
@@ -267,29 +292,6 @@ namespace ConsoleAppCore.Demos
         }
     }
 
-    class Point
-    {
-        public Point(double x, double y)
-        {
-            this.X = x;
-            this.Y = y;
-        }
 
-        public double X { get; }
-        public double Y { get; }
-
-        /// <summary>
-        /// 元组自动解包使用（还可以使用扩展方法）
-        /// 名称为 Deconstruct，无返回值
-        /// 并且参数都用 out 进行标记
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        public void Deconstruct(out double x, out double y)
-        {
-            x = this.X;
-            y = this.Y;
-        }
-    }
 
 }
