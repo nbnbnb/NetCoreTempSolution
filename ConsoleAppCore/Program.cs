@@ -19,7 +19,7 @@ namespace ConsoleAppCore
 
         static void Temp()
         {
-            CSharp70Features.UseRef();
+            
         }
 
         static void TheDemos(String[] args)

@@ -262,7 +262,8 @@ namespace ConsoleAppCore.Demos
             // 用 _ 分割，提高可读性
             Console.WriteLine(0b11_11_11);  // 等价于 0b111111
             Console.WriteLine(12_34.1234_56_78); // 等价于 1234.12345678
-            Console.WriteLine(100_000_000); // 等价于 100000000            
+            Console.WriteLine(100_000_000); // 等价于 100000000      
+
         }
     }
 
