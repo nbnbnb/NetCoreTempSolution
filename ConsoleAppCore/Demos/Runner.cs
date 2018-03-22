@@ -79,18 +79,23 @@ namespace ConsoleAppCore
             String[] args = new[] {
                 "/Profile:MachineName=ZhangJin-PC",
                 "/Profile:Address=Home",
-                "-Left=9800",
-                "-Right=900" };
+                "-ExchangeLeft=9800",  // 和交互字典里面的键匹配  // 以 - 开头
+                "--ExchangeRight=900"  // 和交互字典里面的键匹配  // 以 -- 开头
+            };
 
-            // Mapping
+            // 交互字典
+            // 交互字典的规则
+            // 1，交换必须以单划线 (-) 或双划线 (--) 开头
+            // 2，交换映射字典不得包含重复键
             Dictionary<String, String> mapping = new Dictionary<string, string>
             {
                 // 命令行参数要和 mapping Key 匹配
-                { "-Left","App:MainWindow:Left"},
-                { "-Right","App:MainWindow:Right"},
+                { "-ExchangeLeft","App:MainWindow:Left"},  // 以 - 开头
+                { "--ExchangeRight","App:MainWindow:Right"}, // 以 -- 开头
             };
 
-            // "-" 格式的 args 不能笔 mapping 多
+            // "-" 格式的 args 不能比 mapping 多
+            // 第二个参数 mapping 是交换字典
             builder.AddCommandLine(args, mapping);   //  用命令行参数值覆原始值，需要一个 Key-Value 的映射关系
             _config = builder.Build();
 

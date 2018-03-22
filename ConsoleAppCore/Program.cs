@@ -19,7 +19,7 @@ namespace ConsoleAppCore
 
         static void Temp()
         {
-            
+
         }
 
         static void TheDemos(String[] args)
