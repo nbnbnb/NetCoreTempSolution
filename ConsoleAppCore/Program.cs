@@ -1,6 +1,11 @@
 ﻿using ConsoleAppCore.Demos;
 using ConsoleAppCore.Util;
 using System;
+using System.Linq.Expressions;
+using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace ConsoleAppCore
 {
@@ -19,7 +24,6 @@ namespace ConsoleAppCore
 
         static void Temp()
         {
-
         }
 
         static void TheDemos(String[] args)
