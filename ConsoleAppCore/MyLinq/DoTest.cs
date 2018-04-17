@@ -24,7 +24,6 @@ namespace ConsoleAppCore.MyLinq
                 {
                     Console.WriteLine("Name: {0}", item.ContactName);
                 }
-
             }
         }
 

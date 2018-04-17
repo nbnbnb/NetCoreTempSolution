@@ -9,7 +9,6 @@ namespace ConsoleAppCore.MyLinq
 {
     public class DbQueryProvider : QueryProvider
     {
-
         DbConnection connection;
 
         public DbQueryProvider(DbConnection connection)
@@ -31,7 +30,8 @@ namespace ConsoleAppCore.MyLinq
 
             return Activator.CreateInstance(
                 typeof(ObjectReader<>).MakeGenericType(elementType),
-                BindingFlags.Instance | BindingFlags.NonPublic, null,
+                BindingFlags.Instance | BindingFlags.NonPublic,
+                null,
                 new object[] { reader },
                 null);
         }
