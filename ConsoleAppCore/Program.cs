@@ -6,6 +6,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using ConsoleAppCore.MyLinq;
 
 namespace ConsoleAppCore
 {
@@ -24,6 +25,7 @@ namespace ConsoleAppCore
 
         static void Temp()
         {
+            MyLinqTest.Run();
         }
 
         static void TheDemos(String[] args)
