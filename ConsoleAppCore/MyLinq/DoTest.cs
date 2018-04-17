@@ -16,8 +16,9 @@ namespace ConsoleAppCore.MyLinq
             {
                 con.Open();
                 Northwind db = new Northwind(con);
+                string city = "London";
                 IQueryable<Customers> query =
-                     db.Customers.Where(c => c.City == "London");
+                     db.Customers.Where(c => c.City == city);
                 Console.WriteLine("Query:\n{0}\n", query);
                 var list = query.ToList();
                 foreach (var item in list)
