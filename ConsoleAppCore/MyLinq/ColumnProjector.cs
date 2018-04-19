@@ -6,140 +6,47 @@ using System.Text;
 
 namespace ConsoleAppCore.MyLinq
 {
-    internal class ColumnProjector : DbExpressionVisitor
+    internal class ColumnProjector : ExpressionVisitor
     {
-        Nominator nominator;
-        Dictionary<ColumnExpression, ColumnExpression> map;
-        List<ColumnDeclaration> columns;
-        HashSet<string> columnNames;
-        HashSet<Expression> candidates;
-        string existingAlias;
-        string newAlias;
+        StringBuilder sb;
         int iColumn;
+        ParameterExpression row;
+        static MethodInfo miGetValue;
 
-        internal ColumnProjector(Func<Expression, bool> fnCanBeColumn)
+        internal ColumnProjector()
         {
-            this.nominator = new Nominator(fnCanBeColumn);
-        }
-
-        internal ProjectedColumns ProjectColumns(Expression expression, string newAlias, string existingAlias)
-        {
-            this.map = new Dictionary<ColumnExpression, ColumnExpression>();
-            this.columns = new List<ColumnDeclaration>();
-            this.columnNames = new HashSet<string>();
-            this.newAlias = newAlias;
-            this.existingAlias = existingAlias;
-            this.candidates = this.nominator.Nominate(expression);
-            return new ProjectedColumns(this.Visit(expression), this.columns.AsReadOnly());
-        }
-
-        public override Expression Visit(Expression expression)
-        {
-            if (this.candidates.Contains(expression))
+            if (miGetValue == null)
             {
-                if (expression.NodeType == (ExpressionType)DbExpressionType.Column)
-                {
-                    ColumnExpression column = (ColumnExpression)expression;
-                    ColumnExpression mapped;
-                    if (this.map.TryGetValue(column, out mapped))
-                    {
-                        return mapped;
-                    }
+                miGetValue = typeof(ProjectionRow).GetMethod("GetValue");
+            }
+        }
 
-                    if (this.existingAlias == column.Alias)
-                    {
-                        int ordinal = this.columns.Count;
-                        string columnName = this.GetUniqueColumnName(column.Name);
-                        this.columns.Add(new ColumnDeclaration(columnName, column));
-                        mapped = new ColumnExpression(column.Type, this.newAlias, columnName, ordinal);
-                        this.map[column] = mapped;
-                        this.columnNames.Add(columnName);
-                        return mapped;
-                    }
+        internal ColumnProjection ProjectColumns(Expression expression, ParameterExpression row)
+        {
+            this.sb = new StringBuilder();
+            this.row = row;
+            // 将 item.A 形式的属性调用，转换为 MethodCallExpression 方式的调用
+            Expression selector = this.Visit(expression);
+            return new ColumnProjection { Columns = this.sb.ToString(), Selector = selector };
+        }
 
-                    // must be referring to outer scope
-                    return column;
-                }
-                else
+        protected override Expression VisitMember(MemberExpression m)
+        {
+            if (m.Expression != null && m.Expression.NodeType == ExpressionType.Parameter)
+            {
+                if (this.sb.Length > 0)
                 {
-                    string columnName = this.GetNextColumnName();
-                    int ordinal = this.columns.Count;
-                    this.columns.Add(new ColumnDeclaration(columnName, expression));
-                    return new ColumnExpression(expression.Type, this.newAlias, columnName, ordinal);
+                    this.sb.Append(", ");
                 }
+                this.sb.Append(m.Member.Name);
+                // 执行方法调用，并类型转换
+                // 方法实例为一个 ProjectionRow 对象，参数是 index 
+                // index 将在每次求值后自加
+                return Expression.Convert(Expression.Call(this.row, miGetValue, Expression.Constant(iColumn++)), m.Type);
             }
             else
             {
-                return base.Visit(expression);
-            }
-        }
-
-
-        private bool IsColumnNameInUse(string name)
-        {
-            return this.columnNames.Contains(name);
-        }
-
-
-        private string GetUniqueColumnName(string name)
-        {
-            string baseName = name;
-            int suffix = 1;
-
-            while (this.IsColumnNameInUse(name))
-            {
-                name = baseName + (suffix++);
-            }
-            return name;
-        }
-
-        private string GetNextColumnName()
-        {
-            return this.GetUniqueColumnName("c" + (iColumn++));
-        }
-
-        class Nominator : DbExpressionVisitor
-        {
-            Func<Expression, bool> fnCanBeColumn;
-            bool isBlocked;
-            HashSet<Expression> candidates;
-
-            internal Nominator(Func<Expression, bool> fnCanBeColumn)
-            {
-                this.fnCanBeColumn = fnCanBeColumn;
-            }
-
-            internal HashSet<Expression> Nominate(Expression expression)
-            {
-                this.candidates = new HashSet<Expression>();
-                this.isBlocked = false;
-                this.Visit(expression);
-                return this.candidates;
-            }
-
-            public override Expression Visit(Expression expression)
-            {
-                if (expression != null)
-                {
-                    bool saveIsBlocked = this.isBlocked;
-                    this.isBlocked = false;
-                    base.Visit(expression);
-
-                    if (!this.isBlocked)
-                    {
-                        if (this.fnCanBeColumn(expression))
-                        {
-                            this.candidates.Add(expression);
-                        }
-                        else
-                        {
-
-                            this.isBlocked = true;
-                        }
-                    }
-                    this.isBlocked |= saveIsBlocked;
-                }
-                return expression;
+                return base.VisitMember(m);
             }
         }
     }

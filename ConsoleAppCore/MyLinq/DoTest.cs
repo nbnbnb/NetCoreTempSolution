@@ -18,17 +18,11 @@ namespace ConsoleAppCore.MyLinq
                 Northwind db = new Northwind(con);
                 string city = "London";
 
-                var query = db.Customers.Select(c => new
-                {
-                    Name = c.ContactName,
-                    Location = new
-                    {
-                        City = c.City,
-                        Country = c.Country
-                    }
-                }).Where(x => x.Location.City == city);
+                var query = db.Customers.Where(c => c.City == city);
+                    //.Select(c => new { Name = c.ContactName, Phone = c.Phone });
 
                 Console.WriteLine("Query:\n{0}\n", query);
+
                 var list = query.ToList();
                 foreach (var item in list)
                 {
@@ -60,7 +54,10 @@ namespace ConsoleAppCore.MyLinq
 
             public Northwind(DbConnection connection)
             {
+                // 创建 Provider 对象
                 QueryProvider provider = new DbQueryProvider(connection);
+
+                // 创建 Query 对象，关联 Provider
                 this.Customers = new Query<Customers>(provider);
                 this.Orders = new Query<Orders>(provider);
             }
