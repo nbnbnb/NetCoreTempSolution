@@ -88,6 +88,7 @@ namespace ConsoleAppCore.MyLinq
                     sb.Append("SELECT ");
                     sb.Append(projection.Columns);
                     sb.Append(" FROM (");
+                    // 第一个参数
                     this.Visit(m.Arguments[0]);
                     sb.Append(") AS T ");
                     this.projection = projection;
