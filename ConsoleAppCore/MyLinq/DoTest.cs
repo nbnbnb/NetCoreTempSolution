@@ -18,10 +18,12 @@ namespace ConsoleAppCore.MyLinq
                 Northwind db = new Northwind(con);
                 string city = "London";
 
-                var query = db.Customers.Where(c => c.City == city);
-                    //.Select(c => new { Name = c.ContactName, Phone = c.Phone });
+                var query = db.Customers.Where(c => c.City == city)
+                    .Select(c => new { Name = c.ContactName, Phone = c.Phone });
 
                 Console.WriteLine("Query:\n{0}\n", query);
+
+                return;
 
                 var list = query.ToList();
                 foreach (var item in list)
