@@ -29,7 +29,13 @@ namespace ConsoleAppCore.MyLinq.SimpleVisitor
                 case ExpressionType.Parameter:
                     return new ParameterVisitor((ParameterExpression)node);
                 case ExpressionType.Add:
+                case ExpressionType.Equal:
+                case ExpressionType.Multiply:
                     return new BinaryVisitor((BinaryExpression)node);
+                case ExpressionType.Conditional:
+                    return new ConditionalVisitor((ConditionalExpression)node);
+                case ExpressionType.Call:
+                    return new MethodCallVisitor((MethodCallExpression)node);
                 default:
                     Console.Error.WriteLine($"Node not processed yet: {node.NodeType}");
                     return default;
