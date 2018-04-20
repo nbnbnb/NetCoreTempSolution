@@ -10,7 +10,7 @@ namespace ConsoleAppCore.MyLinq.SimpleVisitor
     {
         public static void Run()
         {
-            BuildTree();
+            DoAggregate();
         }
 
         static void BuildTree()
@@ -84,7 +84,7 @@ namespace ConsoleAppCore.MyLinq.SimpleVisitor
                 );
 
             Console.WriteLine(Expression.Lambda<Func<int, int>>(body, nArgument).Compile().Invoke(5));
-            
+
         }
 
         static void ShowTree()
@@ -98,6 +98,102 @@ namespace ConsoleAppCore.MyLinq.SimpleVisitor
 
             // 输出表达式结构信息
             Visitor.CreateFromExpression(factorial).Visit("");
+        }
+
+        static Expression ReplaceNodes(Expression original)
+        {
+            if (original.NodeType == ExpressionType.Constant)
+            {
+                return Expression.Multiply(original, Expression.Constant(10));
+            }
+            else if (original.NodeType == ExpressionType.Add)
+            {
+                var binaryExprsssion = (BinaryExpression)original;
+                return Expression.Add(ReplaceNodes(binaryExprsssion.Left), ReplaceNodes(binaryExprsssion.Right));
+            }
+
+            return original;
+        }
+
+        static void TransTree()
+        {
+            var one = Expression.Constant(1, typeof(int));
+            var two = Expression.Constant(2, typeof(int));
+
+            var addition = Expression.Add(one, two);
+            var sum = ReplaceNodes(addition);
+
+            var executableFun = Expression.Lambda<Func<int>>(sum);
+
+            Console.WriteLine(executableFun.Compile().Invoke());
+
+        }
+
+        static int Aggregate(Expression exp)
+        {
+            if (exp.NodeType == ExpressionType.Constant)
+            {
+                var constantExp = (ConstantExpression)exp;
+                Console.Error.WriteLine($"Found Constant: {constantExp.Value}");
+                return (int)constantExp.Value;
+            }
+            else if (exp.NodeType == ExpressionType.Add)
+            {
+                var addExp = (BinaryExpression)exp;
+                Console.Error.WriteLine("Found Addition Expression");
+                Console.Error.WriteLine("Computing Left node");
+
+                var leftOperand = Aggregate(addExp.Left);  // 递归调用 Left
+
+                Console.Error.WriteLine($"Left is: {leftOperand}");
+                Console.Error.WriteLine("Computing Right node");
+
+                var rightOperand = Aggregate(addExp.Right); // 递归调用 Right
+
+                Console.Error.WriteLine($"Right is: {rightOperand}");
+                var sum = leftOperand + rightOperand;
+                Console.Error.WriteLine($"Computed sum: {sum}");
+                return sum;
+            }
+            else throw new NotSupportedException("Haven't written this yet");
+        }
+
+        static Func<Expression, int> SelfAggregate()
+        {
+            // Declare the delegate, so we can call it 
+            // from itself recursively:
+            Func<Expression, int> aggregate = null;
+
+            // Aggregate, return constants, or the sum of the left and right operand.
+            // Major simplification: Assume every binary expression is an addition.
+            aggregate = (exp) =>
+                exp.NodeType == ExpressionType.Constant ?
+                (int)((ConstantExpression)exp).Value :
+                aggregate(((BinaryExpression)exp).Left) + aggregate(((BinaryExpression)exp).Right);
+
+            return aggregate;
+        }
+
+        static void DoAggregate()
+        {
+
+            var one = Expression.Constant(1, typeof(int));
+            var two = Expression.Constant(2, typeof(int));
+            var three = Expression.Constant(3, typeof(int));
+            var four = Expression.Constant(4, typeof(int));
+
+            var oneAddTwo = Expression.Add(one, two);
+            var threeAddfour = Expression.Add(three, four);
+
+            var sum = Expression.Add(oneAddTwo, threeAddfour);
+
+            // 递归方式 1
+            Console.WriteLine(SelfAggregate()(sum));
+
+            Console.WriteLine();
+
+            // 递归方式 2
+            Console.WriteLine(Aggregate(sum));
         }
     }
 }
