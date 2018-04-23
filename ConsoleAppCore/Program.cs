@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using ConsoleAppCore.MyLinq;
 using ConsoleAppCore.MyLinq.SimpleVisitor;
+using ConsoleAppCore.MyLinq.LinqToTerra;
 
 namespace ConsoleAppCore
 {
@@ -27,7 +28,8 @@ namespace ConsoleAppCore
         static void Temp()
         {
             //MyLinqTest.Run();
-            SimpleVisitorTest.Run();
+            //SimpleVisitorTest.Run();
+            LinqToTerraTest.Run();
         }
 
         static void TheDemos(String[] args)
