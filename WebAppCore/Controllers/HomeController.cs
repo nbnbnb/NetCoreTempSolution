@@ -29,10 +29,6 @@ namespace WebAppCore.Controllers
             return View();
         }
 
-        public IActionResult Ajax() {
-            return Json(new { Name = "Dotnet Core", Timestamps = DateTime.Now.Ticks });
-        }
-
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
