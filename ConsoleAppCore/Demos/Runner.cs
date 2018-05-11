@@ -76,22 +76,25 @@ namespace ConsoleAppCore
             // Command Line Args
             // "/" 格式的不需要 Mapping，进行全匹配
             // "-" 格式的需要 Mapping
+            // 模拟命令行参数
             String[] args = new[] {
                 "/Profile:MachineName=ZhangJin-PC",
-                "/Profile:Address=Home",
                 "-ExchangeLeft=9800",  // 和交互字典里面的键匹配  // 以 - 开头
                 "--ExchangeRight=900"  // 和交互字典里面的键匹配  // 以 -- 开头
             };
 
             // 交互字典
+
             // 交互字典的规则
             // 1，交换必须以单划线 (-) 或双划线 (--) 开头
             // 2，交换映射字典不得包含重复键
             Dictionary<String, String> mapping = new Dictionary<string, string>
             {
                 // 命令行参数要和 mapping Key 匹配
+                // Key 匹配成功后，把 Value 当作应用内部使用的键，args 中获取的值当作应用内部键的值
                 { "-ExchangeLeft","App:MainWindow:Left"},  // 以 - 开头
                 { "--ExchangeRight","App:MainWindow:Right"}, // 以 -- 开头
+                { "-Test","TestKey"}, // 多出的一个 mapping 键，使用控制台参数时可以不传递，程序中获得的 TestKey 为 null
             };
 
             // "-" 格式的 args 不能比 mapping 多
@@ -102,10 +105,9 @@ namespace ConsoleAppCore
             Console.WriteLine("-------------------------------");
 
             Console.WriteLine(_config["Profile:MachineName"]);  // ZhangJin-PC
-            Console.WriteLine(_config["Profile:Address"]);  // Home
             Console.WriteLine(_config.GetValue<int>("App:MainWindow:Left", -1));  //  9800
             Console.WriteLine(_config.GetValue<int>("App:MainWindow:Right", -1));  //  900
-
+            Console.WriteLine(_config.GetValue("TestKey", "The Test Key Default Value"));  //  "The Test Key Default Value"
         }
 
         /// <summary>
