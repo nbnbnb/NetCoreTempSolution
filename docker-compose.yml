@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  consoleappcore:
+    image: ${DOCKER_REGISTRY}consoleappcore
+    build:
+      context: .
+      dockerfile: ConsoleAppCore/Dockerfile
