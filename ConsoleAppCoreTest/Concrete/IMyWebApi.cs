@@ -10,6 +10,6 @@ namespace ConsoleAppCoreTest.Concrete
     public interface IMyWebApi : IHttpApi
     {
         [HttpGet]
-        ITask<string> GetContent();
+        ITask<string> GetContentAsync();
     }
 }

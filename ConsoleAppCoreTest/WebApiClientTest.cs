@@ -16,8 +16,9 @@ namespace ConsoleAppCoreTest
         public async Task BasicGetTest()
         {
             var client = HttpApiClient.Create<IMyWebApi>();
-            var content = await client.GetContent();
+            var content = await client.GetContentAsync();
             Assert.IsTrue(content.Contains("<!DOCTYPE html>", StringComparison.OrdinalIgnoreCase));
+
         }
 
     }
