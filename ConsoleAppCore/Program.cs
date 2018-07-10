@@ -27,10 +27,7 @@ namespace ConsoleAppCore
 
         static void Temp()
         {
-            //MyLinqTest.Run();
-            //SimpleVisitorTest.Run();
-            //LinqToTerraTest.Run();
-            Runner.ReadCommandLineArgs();
+
         }
 
         static void TheDemos(String[] args)
