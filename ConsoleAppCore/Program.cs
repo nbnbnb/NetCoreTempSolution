@@ -9,6 +9,7 @@ using System.Reflection;
 using ConsoleAppCore.MyLinq;
 using ConsoleAppCore.MyLinq.SimpleVisitor;
 using ConsoleAppCore.MyLinq.LinqToTerra;
+using System.Reflection.Emit;
 
 namespace ConsoleAppCore
 {
@@ -38,6 +39,7 @@ namespace ConsoleAppCore
             Runner.ShowTaskLogger().NoWarning();
             Runner.ShowAppDomainExceptions();
             Runner.LockerDiff();
+            Runner.CreateDynamicType();
         }
     }
 }

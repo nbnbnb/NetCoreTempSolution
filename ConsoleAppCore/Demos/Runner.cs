@@ -1,4 +1,5 @@
-﻿using ConsoleAppCore.Demos.Locker;
+﻿using ConsoleAppCore.Demos.Emit;
+using ConsoleAppCore.Demos.Locker;
 using ConsoleAppCore.Extensions;
 using ConsoleAppCore.Util;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Threading;
@@ -308,6 +310,20 @@ namespace ConsoleAppCore
                 anotherHybridLock.Leave();
             }
             Console.WriteLine("Incrementing x in AnotherHybridLock: {0}", stopwatch.ElapsedMilliseconds);
+        }
+
+        public static void CreateDynamicType()
+        {
+            //动态创建的类类型
+            Type classType = BasicDynamicType.DynamicCreateType();
+            //调用有参数的构造函数
+            Type[] ctorTypes = new Type[] { typeof(string) };
+            object[] ctorValues = new object[] { "Hello World" };
+            ConstructorInfo ci = classType.GetConstructor(ctorTypes);
+            object target = ci.Invoke(ctorValues);
+            //调用方法
+            object[] methedParams = new object[] { };
+            Console.WriteLine(classType.InvokeMember("MyMethod", BindingFlags.InvokeMethod, null, target, methedParams));
         }
     }
 }
