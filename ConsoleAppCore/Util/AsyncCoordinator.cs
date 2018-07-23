@@ -13,7 +13,7 @@ namespace ConsoleAppCore.Util
         private Timer m_timer;
 
         /// <summary>
-        /// 该方法必须在发起一个操作之前调用s
+        /// 该方法必须在发起一个操作之前调用
         /// </summary>
         /// <param name="opsToAdd"></param>
         public void AboutToBegin(Int32 opsToAdd = 1)
