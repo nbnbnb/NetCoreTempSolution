@@ -1,11 +1,13 @@
 ﻿using ConsoleAppCore.Demos.Emit;
 using ConsoleAppCore.Demos.Locker;
+using ConsoleAppCore.Demos.MediatR;
 using ConsoleAppCore.Extensions;
 using ConsoleAppCore.Util;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
+using Ninject;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,6 +18,12 @@ using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Ninject;
+using Ninject.Extensions.Conventions;
+using Ninject.Planning.Bindings.Resolvers;
+using MediatR.Pipeline;
+using Ninject.Syntax;
+using MediatR;
 
 namespace ConsoleAppCore
 {
@@ -324,6 +332,60 @@ namespace ConsoleAppCore
             //调用方法
             object[] methedParams = new object[] { };
             Console.WriteLine(classType.InvokeMember("MyMethod", BindingFlags.InvokeMethod, null, target, methedParams));
+        }
+
+        public async static void MediatR()
+        {
+            // 有两种形式的 Request 类型
+            // IRequest<T> 有返回值
+            // IRequest 无返回值，IRequest 继承值 IRequest<Unit>
+
+            // Request 对应的 Handler 接口类型（有返回值）
+            // IRequestHandler<T, U>，implement this and return Task<U>.（异步）
+            // RequestHandler<T, U>，inherit this and return U.（同步）
+
+            // Request 对应的 Handler 接口类型（无返回值）
+            // IRequestHandler<T> - implement this and you will return Task<Unit>.（异步）
+            // AsyncRequestHandler<T> - inherit this and you will return Task.（异步）
+            // RequestHandler<T> - inherit this and you will return nothing (void).（同步）
+
+            var kernel = new StandardKernel();
+
+            kernel.Bind(scan => scan.FromAssemblyContaining<IMediator>().SelectAllClasses().BindDefaultInterface());
+
+            // Command 模式
+            // 每个 Command 只对应一个 Handler
+            // 将 ASyncPingHandler 和 IRequestHandler<Ping, string> 绑定
+            // 将 SyncPongHandler 和 RequestHandler<Pong, string> 绑定
+            // 将 AsyncOneWayHandler 和 AsyncRequestHandler<OneWay> 绑定
+            kernel.Bind(scan => scan.FromThisAssembly().SelectAllClasses().InheritedFrom(typeof(IRequestHandler<,>)).BindAllInterfaces());
+
+            // Pipeline
+            // Publish 模式
+            // 每个 Command 可以对应多个 Handler
+            // 将 Ping01NotificationHandler 和 INotificationHandler<PingNotification> 绑定
+            // 将 Ping02NotificationHandler 和 INotificationHandler<PingNotification> 绑定
+            // 将 Ping03NotificationHandler 和 INotificationHandler<PingNotification> 绑定
+            kernel.Bind(scan => scan.FromThisAssembly().SelectAllClasses().InheritedFrom(typeof(INotificationHandler<>)).BindAllInterfaces());
+
+            // kernel.Bind(typeof(IPipelineBehavior<,>)).To(typeof(RequestPreProcessorBehavior<,>));
+            // kernel.Bind(typeof(IPipelineBehavior<,>)).To(typeof(RequestPostProcessorBehavior<,>));
+
+            kernel.Bind<ServiceFactory>().ToMethod(ctx => t => ctx.Kernel.TryGet(t));
+
+            var mediator = kernel.Get<IMediator>();
+
+            // 有返回值 Async Handler
+            Console.WriteLine(await mediator.Send(new Ping() { MsgId = 100 }));
+
+            // 有返回值 Sync Handler
+            Console.WriteLine(await mediator.Send(new Pong() { MsgId = 100 }));
+
+            // 无返回值 Async Handler
+            await mediator.Send(new OneWay());
+
+            // Publish
+            await mediator.Publish(new PingNotification());
         }
     }
 }

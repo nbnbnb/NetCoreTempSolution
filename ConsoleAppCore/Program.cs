@@ -10,9 +10,24 @@ using ConsoleAppCore.MyLinq;
 using ConsoleAppCore.MyLinq.SimpleVisitor;
 using ConsoleAppCore.MyLinq.LinqToTerra;
 using System.Reflection.Emit;
+using Ninject;
+using Ninject.Planning.Bindings.Resolvers;
+using Ninject.Infrastructure;
+using Ninject.Planning.Bindings;
+using Ninject.Extensions.Conventions;
+using MediatR;
+using MediatR.Pipeline;
+using System.Threading;
+using System.Threading.Tasks;
+using System.IO;
+using System.Text;
+using Ninject.Syntax;
+using Ninject.Components;
+using ConsoleAppCore.Demos.MediatR;
 
 namespace ConsoleAppCore
 {
+
     class Program
     {
         static void Main(String[] args)
@@ -28,7 +43,7 @@ namespace ConsoleAppCore
 
         static void Temp()
         {
-
+            Runner.MediatR();
         }
 
         static void TheDemos(String[] args)
@@ -40,6 +55,7 @@ namespace ConsoleAppCore
             Runner.ShowAppDomainExceptions();
             Runner.LockerDiff();
             Runner.CreateDynamicType();
+            Runner.MediatR();
         }
     }
 }
