@@ -368,9 +368,17 @@ namespace ConsoleAppCore
             // 将 Ping03NotificationHandler 和 INotificationHandler<PingNotification> 绑定
             kernel.Bind(scan => scan.FromThisAssembly().SelectAllClasses().InheritedFrom(typeof(INotificationHandler<>)).BindAllInterfaces());
 
-            // kernel.Bind(typeof(IPipelineBehavior<,>)).To(typeof(RequestPreProcessorBehavior<,>));
-            // kernel.Bind(typeof(IPipelineBehavior<,>)).To(typeof(RequestPostProcessorBehavior<,>));
+            // 启用 RequestPreProcessorBehavior
+            kernel.Bind(typeof(IPipelineBehavior<,>)).To(typeof(RequestPreProcessorBehavior<,>));
+            // 配置 RequestPreProcessor 
+            kernel.Bind(typeof(IRequestPreProcessor<>)).To(typeof(GenericRequestPreProcessor<>));
 
+            // 启用 RequestPostProcessorBehavior
+            kernel.Bind(typeof(IPipelineBehavior<,>)).To(typeof(RequestPostProcessorBehavior<,>));
+            // 配置 RequestPostProcessor 
+            kernel.Bind(typeof(IRequestPostProcessor<,>)).To(typeof(GenericRequestPostProcessor<,>));
+
+            // 配置 MediatR 的动态 Factory
             kernel.Bind<ServiceFactory>().ToMethod(ctx => t => ctx.Kernel.TryGet(t));
 
             var mediator = kernel.Get<IMediator>();
@@ -378,11 +386,17 @@ namespace ConsoleAppCore
             // 有返回值 Async Handler
             Console.WriteLine(await mediator.Send(new Ping() { MsgId = 100 }));
 
+            Console.WriteLine();
+
             // 有返回值 Sync Handler
             Console.WriteLine(await mediator.Send(new Pong() { MsgId = 100 }));
 
+            Console.WriteLine();
+
             // 无返回值 Async Handler
             await mediator.Send(new OneWay());
+
+            Console.WriteLine();
 
             // Publish
             await mediator.Publish(new PingNotification());
