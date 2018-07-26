@@ -1,1 +1,8 @@
 version: '3.4'
+
+services:
+  webappcore:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "80"
