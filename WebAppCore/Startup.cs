@@ -22,6 +22,7 @@ namespace WebAppCore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddMetrics();
 
             services.AddSwaggerGen(c =>
             {
