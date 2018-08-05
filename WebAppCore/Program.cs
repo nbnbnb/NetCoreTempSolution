@@ -20,7 +20,6 @@ namespace WebAppCore
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseMetrics()
                 .UseStartup<Startup>()
                 .Build();
     }
