@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConsoleAppCore.Demos;
+using System;
 
 namespace ConsoleAppCore
 {
@@ -17,7 +18,8 @@ namespace ConsoleAppCore
 
         static void Temp()
         {
-            Demos.AspectCore.Runner.Run();
+            CSharp73Features.M();
+            CSharp73Features.M2();
         }
     }
 }
