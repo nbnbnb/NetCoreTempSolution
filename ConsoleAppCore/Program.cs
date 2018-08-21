@@ -1,11 +1,11 @@
-﻿using ConsoleAppCore.Demos;
-using System;
+﻿using System;
 
 namespace ConsoleAppCore
 {
 
     class Program
     {
+        static int[] gg = { 1, 2, 3 };
         static void Main(String[] args)
         {
             Console.WriteLine("----- Start -----");
@@ -18,7 +18,7 @@ namespace ConsoleAppCore
 
         static void Temp()
         {
-            CSharp73Features.FixedWithGetPinnableReference();
+
         }
     }
 }
