@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
 
 namespace ConsoleAppCore.Util
 {
+    /// <summary>
+    /// 001，002，003 是初始化步骤
+    /// </summary>
+    /// <typeparam name="TEventArgs"></typeparam>
     public sealed class EventAwaiter<TEventArgs> : INotifyCompletion
     {
 
@@ -17,7 +19,7 @@ namespace ConsoleAppCore.Util
 
         /// <summary>
         /// 
-        /// 001
+        /// 001（Init）
         /// 
         /// await 语法将会识别这个方法
         /// 
@@ -31,11 +33,14 @@ namespace ConsoleAppCore.Util
 
         /// <summary>
         /// 
-        /// 002
+        /// 002（Init）
         /// 
         /// await 基础设施
         /// 
         /// 告诉状态机是否发生了任何事件
+        /// 
+        /// 返回 false 时，然后注册 003， OnCompleted，保存下一步调用
+        /// 此时线程返回
         /// </summary>
         public Boolean IsCompleted
         {
@@ -47,7 +52,7 @@ namespace ConsoleAppCore.Util
 
         /// <summary>
         /// 
-        /// 003
+        /// 003（Init）（INotifyCompletion 接口实现）
         /// 
         /// await 基础设施
         /// 
@@ -65,10 +70,13 @@ namespace ConsoleAppCore.Util
         /// await 基础设施
         /// 
         /// 状态机查询结果：这是 await 操作符的结果
+        /// 
+        /// 返回结果之后，继续执行 001，002，003 步骤
         /// </summary>
         /// <returns></returns>
         public TEventArgs GetResult()
         {
+            // 获取结果
             m_events.TryDequeue(out TEventArgs e);
             return e;
         }
@@ -87,18 +95,11 @@ namespace ConsoleAppCore.Util
         {
             m_events.Enqueue(eventArgs); // 保存 EventArgs 以便从 GetResult/await 返回
 
-            /*
-            //　如果有一个等待进行的延续任务，该线程会运行它
-            Action continuation = Interlocked.Exchange(ref m_continuation, null);
-
-            if (continuation != null)
-            {
-                continuation();  // 恢复状态机
-            }
-            */
-
             // 简写
             // 如果有一个等待进行的延续任务，该线程会运行它
+            // 将 m_continuation 设置为 null
+            // 并返回原始的 m_continuation 值
+            // 当原始 m_continuation 值不为 null 时，执行它
             Interlocked.Exchange(ref m_continuation, null)?.Invoke();  // 恢复状态机
         }
     }
