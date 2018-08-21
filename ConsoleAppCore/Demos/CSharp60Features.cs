@@ -27,8 +27,7 @@ namespace ConsoleAppCore.Demos
             var streamTask = client.GetStringAsync("https://localhost:10000");
             try
             {
-                var responseText = await streamTask;
-                return responseText;
+                return await streamTask;
             }
             catch (System.Net.Http.HttpRequestException e) when (e.Message.Contains("301"))
             {
@@ -43,7 +42,7 @@ namespace ConsoleAppCore.Demos
 
         /// <summary>
         /// 2. 异常过滤器
-        /// 用作日志记录（将匹配放在最前面，并且永远返回 false）
+        /// 用作日志记录（将全匹配放在最前面，并且永远返回 false）
         /// </summary>
         public static void MethodThatFailsButHasRecoveryPath()
         {
@@ -51,7 +50,7 @@ namespace ConsoleAppCore.Demos
             {
                 // PerformFailingOperation();
             }
-            catch (Exception e) when (e.LogException())  // when 条件中永远返回 false
+            catch (Exception e) when (e.LogException())  // when 条件中永远返回 false，此处 LogException() 方法永远返回 false
             {
                 // This is never reached!
             }
@@ -117,9 +116,10 @@ namespace ConsoleAppCore.Demos
 
         /// <summary>
         /// 5. 只读的自动属性
-        /// 和 readonly 字段一样，只能在初始化或构造函数中初始化
+        /// 和 readonly 字段一样，只能在初始化或构造函数中赋值
+        /// 构造函数中的赋值将会覆盖初始化的赋值
         /// </summary>
-        public int Age { get; }
+        public int Age { get; } = 121;
 
         /// <summary>
         /// 6. 自动属性初始化器
@@ -133,8 +133,7 @@ namespace ConsoleAppCore.Demos
         /// </summary>
         /// <returns></returns>
         public override string ToString() => $"The Name is ${UserName}";  // 方法
-        public string BigName => $"Big{UserName}";  // 只读属性，注意 => 操作符的使用
-
+        public string BigName => $"Big{UserName}";  // 属性（只读）
 
         /// <summary>
         /// 8. 空判断操作符
@@ -158,7 +157,7 @@ namespace ConsoleAppCore.Demos
 
         /// <summary>
         /// 9. 字符串的内联解释器
-        /// 可以调用方法，使用 LINQ 等待
+        /// 可以调用方法，使用 LINQ 等等
         /// 建议简单逻辑使用内联语法，复杂语句还是使用方法比较合适
         /// </summary>
         public void StringInterpolation()
@@ -172,7 +171,7 @@ namespace ConsoleAppCore.Demos
         /// 返回的是短限定名称（不包含命名空间信息）
         /// 
         /// 优点
-        /// 在重构时，是无法对字符串名称进行探测的，使用 nameof 操作法，则会自动的更新
+        /// 在重构时，是无法对字符串名称进行探测的，使用 nameof 操作符，则不会有这种问题
         /// 对于 INotifyPropertyChanged 接口尤其有用
         /// </summary>
         public void NameofOperator()
@@ -204,12 +203,12 @@ namespace ConsoleAppCore.Demos
         /// <summary>
         /// 12. 扩展集合的 Add 方法
         /// </summary>
-        public void ExtCollectiionAddMethod()
+        public void ExtCollectionAddMethod()
         {
             MySet mm = new MySet
             {
-                // 在 C# 5 中，要求 MySet 中必须要有一个 void Add(CSharp60Features obj) 的实例方法
-                // 在 C# 6 中，可以将这个方法定义为一个扩展方法进行实现
+                // 在 C# 5.0 中，要求 MySet 中必须要有一个 void Add(CSharp60Features obj) 的实例方法
+                // 在 C# 6.0 中，可以将这个方法定义为一个扩展方法进行实现
                 // 可以添加多种不同的扩展方法，所以实例化的时候可以添加多种对象
                 // 这种可扩展性，对于在集合中初始化其他类型，非常方便
 
@@ -217,7 +216,6 @@ namespace ConsoleAppCore.Demos
                 new CSharp60Features(),
                 new CSharp60Features()
             };
-
         }
 
         public void InstanceMethod() { }

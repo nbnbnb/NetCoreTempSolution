@@ -1,6 +1,5 @@
 ﻿using ConsoleAppCore.Demos;
 using System;
-using System.Runtime.InteropServices;
 
 namespace ConsoleAppCore
 {
@@ -19,7 +18,7 @@ namespace ConsoleAppCore
 
         static void Temp()
         {
-
+            CSharp73Features.FixedWithGetPinnableReference();
         }
     }
 }

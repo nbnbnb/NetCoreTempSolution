@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using System.Threading;
-using System.Drawing;
 
 namespace ConsoleAppCore.Demos
 {
@@ -72,7 +68,7 @@ namespace ConsoleAppCore.Demos
             DoSomething(delayExecution: true, continueOnError: false, maxRecords: 100);
 
             // 全部命名参数
-            // 交互位置也支持
+            // 交换位置也支持
             DoSomething(continueOnError: false, delayExecution: true, maxRecords: 100);
 
             // 现在可以在全部命名参数中,指定顺序参数
@@ -100,6 +96,7 @@ namespace ConsoleAppCore.Demos
             public double X { get; }
             // 只读结构，不允许有 set
             //public double X { get; set; }
+
             public double Y { get; }
             // 只读结构，不允许有 set
             //public double Y { get; set; }
@@ -113,7 +110,7 @@ namespace ConsoleAppCore.Demos
         ///     2，不能将其声明为其他类型或结构的成员字段
         ///     3，不能在异步方法中声明 ref struct 变量（解决方案，在同步方法中声明，然后返回 Task）
         ///     4，不能在迭代器中声明 ref struct 变量
-        ///     5，不能在 lambad 表达式和本地函数中 "捕获" ref struct 变量
+        ///     5，不能在 lambda 表达式和本地函数中 "捕获" ref struct 变量
         ///     6，不能实现接口
         /// </summary>
         private ref struct RefPoint

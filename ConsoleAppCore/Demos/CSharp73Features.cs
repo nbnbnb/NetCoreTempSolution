@@ -71,6 +71,19 @@
         {
 
         }
+
+        /// <summary>
+        /// fixed 语法支持 GetPinnableReference 方法的协议
+        /// </summary>
+        internal static unsafe void FixedWithGetPinnableReference()
+        {
+            fixed (int* ptr = new MyPinnable())
+            {
+                // 传递的是第3个索引
+                // 此处输出第4个索引
+                Console.WriteLine(*(ptr + 1));
+            }
+        }
     }
 
     namespace Misc
@@ -83,6 +96,20 @@
         struct VeryLargeStruct
         {
 
+        }
+
+        class MyPinnable
+        {
+
+            /// <summary>
+            /// 符合 ref T 的签名
+            /// </summary>
+            /// <returns></returns>
+            public ref int GetPinnableReference()
+            {
+                int[] items = { 1, 2, 3, 4, 5 };
+                return ref items[3];
+            }
         }
     }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ConsoleAppCore.Demos
@@ -121,26 +120,22 @@ namespace ConsoleAppCore.Demos
             (String alpha, String beta) = letters;
             Console.WriteLine($"{alpha} - {beta}");  // 变量直接在本地
 
-            int min = int.MinValue;
-            int max = int.MaxValue;
-
-            foreach (var n in numbers)
-            {
-                min = (n < min) ? n : min;
-                max = (n > max) ? n : max;
-            }
-
             var point = new MyPoint(1.2, 3.4);
 
             // 自动解包功能
             // 由于 Point 类定义了相应的 Deconstruct 函数
             // 此处编译器将会自动调用相应的方法
+
+            // 此处只能使用创建“本地”变量的方式  (double pointX, double pointY)          
             (double pointX, double pointY) = point;
+
+            // 不能使用命名元组方式  (double pointX, double pointY) kkking
+            //(double pointX, double pointY) kkking = point
             Console.WriteLine($"{pointX} - {pointY}");
 
             // 返回命名的元组
             // 元组通过 (int Max, int Min) 方式定义
-            return (max, min);
+            return (100, 0);
         }
 
         /// <summary>
