@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace ConsoleAppCore.Demos
@@ -6,7 +7,7 @@ namespace ConsoleAppCore.Demos
     internal sealed class CSharp72Features
     {
         /// <summary>
-        /// C# 7.0 中实现了对数字分隔符的支持，但这不允许 0b 或 0x 后的第一个字符是 _
+        /// C# 7.0 中实现了对数字分隔符的支持，但这不允许 0b 或 0x 这类进制标识后的第一个字符是 _
         /// C# 7.2 放开了这一限制
         /// </summary>
         public static void LiteralPrefix()
@@ -48,11 +49,23 @@ namespace ConsoleAppCore.Demos
             /// <summary>
             /// internal || protected
             /// </summary>
-            internal protected void MethodB()
+            protected internal void MethodB()
             {
 
             }
         }
+
+        private class LMN : XYZ
+        {
+            /// <summary>
+            /// 只有继承类才可以访问  private protected
+            /// </summary>
+            private void CallMethodA()
+            {
+                base.MethodA();
+            }
+        }
+
         #endregion
 
         /// <summary>
@@ -81,10 +94,104 @@ namespace ConsoleAppCore.Demos
         }
 
         /// <summary>
-        /// 声明一个 readonly struct
+        /// 只读引用传递
+        /// 在方法调用时
+        /// 尤其都值类型有效，避免值类型的赋值
+        /// 同时也避免了修改值类型不起效的场景（默认是按值传递的）
+        /// </summary>
+        private static void ReadOnlyRef(in NormalPoint normalPoint)
+        {
+            // normalPoint.X 是只读的
+            // 同时 normalPoint 是按照引用传递的
+            // normalPoint.X = 12;
+
+            // 对于方法调用，将使用防御性副本，因为编译器无法确定方法中是否会修改对象内部的状态
+            normalPoint.ChangeX(10);
+
+            // 此处 normalPoint 引用的对象时不会改变的
+            // 这样保证了 in 只读的语意
+            Console.WriteLine($"OriginX {normalPoint.X}");
+        }
+
+        public static void Run()
+        {
+            NormalPoint k = new NormalPoint(1, 2);
+            ReadOnlyRef(k);
+            // 不会变
+            Console.WriteLine($"ChangeEnd {k.X}");
+
+            ref readonly NormalPoint zero = ref NormalPoint.NNN;
+            // 由于是 ref readonly，所有不能修改
+            // zero.X = 100;
+
+            // 如果赋值给了一个非 ref readonly 得变量
+            // 值对象将会被赋值，同时新变量也失去了限制
+            NormalPoint copy = zero;
+
+            copy.X = -100;
+            // copy 改变了，原始的 ref NormalPoint 不会变            
+            Debug.Assert(copy.X != zero.X);
+
+            // 没有办法通过引用不同的表达式来有条件地绑定变量，类似于三元运算符(也称为条件运算符)在通过值绑定时所做的:
+
+            int a = 1;
+            int b = 2;
+
+            ref int max = ref b; // requires initialization
+            if (a > b)
+            {
+                max = ref a;       // not allowed in C# 7.2，7.3 支持了
+            }
+
+            // 一种替代的方式
+            ref int max2 = ref BindConditionally(a > b, ref a, ref b);
+
+            int[] emptyArray = { };
+            int[] nonEmptyArray = { 1, 2, 3 };
+
+            // 这个方法有个缺陷
+            // 就算 emptyArray.Length = 0 , emptyArray[0] 访问也会被执行
+            // 所以会导致 IndexOutOfRangeException 
+            // ref int firstItem = ref BindConditionally(emptyArray.Length > 0, ref emptyArray[0], ref nonEmptyArray[0]);
+
+            // 7.2 中新增了 ref conditional expression，解决了这个问题
+            // 7.3 中已经支持了 ref rebind，所以也可以通过上面的方式实现这类三目运算符
+            ref int firstItem = ref (emptyArray.Length > 0 ? ref emptyArray[0] : ref nonEmptyArray[0]);
+
+        }
+
+        private static ref T BindConditionally<T>(bool condition, ref T trueExpression, ref T falseExpression)
+        {
+            if (condition)
+            {
+                return ref trueExpression;
+            }
+            else
+            {
+                return ref falseExpression;
+            }
+        }
+
+
+
+        /// <summary>
+        /// 引用类型也支持
+        /// 不过使用场景作用不是很大
+        /// </summary>
+        /// <param name="abc"></param>
+        private static void ReadOnlyRef(in ABC abc)
+        {
+            // 不能修改引用地址
+            // abc = null;
+        }
+
+        /// <summary>
+        /// 另一个新特效
+        /// readonly struct
+        /// 编译器会检测，没有改变内部数据的方法（属性要为只读版本）
         /// 
-        /// 使用方式
-        ///     1，通过 in 参数进行传递（避免值类型的复制）
+        /// 当把 readonly struct 结构当做 in 方式进行传递时
+        /// 编译器不需要为调用这些结构体的方法而创建防御性副本，因为它知道它们不能修改结构体。
         /// </summary>
         private readonly struct ReadOnlyPoint
         {
@@ -100,11 +207,21 @@ namespace ConsoleAppCore.Demos
             public double Y { get; }
             // 只读结构，不允许有 set
             //public double Y { get; set; }
+
+            /// <summary>
+            /// 使用 in (refernece) 方法传递的对象
+            /// 调用这个方法时
+            /// 不用创建防御性副本，因为它知道它们不能修改结构体
+            /// </summary>
+            public void Say()
+            {
+
+            }
         }
 
         /// <summary>
         /// 声明一个 ref struct
-        /// 
+        /// 必须在堆栈上分配的 struct
         /// 限制：
         ///     1，不能装箱，例如转换为 Object、dynamic 类型
         ///     2，不能将其声明为其他类型或结构的成员字段
@@ -145,6 +262,18 @@ namespace ConsoleAppCore.Demos
             {
                 return X - Y;
             }
+
+            public void ChangeX(int plus)
+            {
+                Console.WriteLine($"ChangeX Begin {X}");
+                X = X + plus;
+                Console.WriteLine($"ChangeX End {X}");
+            }
+
+            // 创建一个 Read-only return values by reference
+            // 类似于一个 in reference
+            private static readonly NormalPoint nnn = new NormalPoint(100, 200);
+            public static ref readonly NormalPoint NNN => ref nnn;
         }
 
         private class ABC
@@ -163,15 +292,15 @@ namespace ConsoleAppCore.Demos
 
             public void MyMethod()
             {
-                RefPoint a = new RefPoint(1, 2);
+                RefPoint refPoint = new RefPoint(1, 2);
                 // 无法装箱成 Object
                 // Object aa = a;
                 // 无法赋值给 dynamic
                 // dynamic aaa = a;
 
-                NormalPoint b = new NormalPoint(1, 2);
-                Object bb = b;
-                dynamic bbb = b;
+                NormalPoint normalPoint = new NormalPoint(1, 2);
+                object bb = normalPoint;
+                dynamic bbb = normalPoint;
 
                 ReadOnlyPoint c = new ReadOnlyPoint(1, 2);
                 // ReadOnlyPoint 不允许修改
@@ -180,16 +309,16 @@ namespace ConsoleAppCore.Demos
 
                 Action action = () =>
                 {
-                    // lambda 无法捕获 a
-                    // Console.WriteLine(a.ToString());
-                    Console.WriteLine(b.ToString());
+                    // lambda 无法捕获 refPoint
+                    // Console.WriteLine(refPoint.ToString());
+                    Console.WriteLine(normalPoint.ToString());
                 };
 
                 void myLocalMethod()
                 {
-                    // 本地函数中 无法捕获 a
-                    // Console.WriteLine(a.ToString());
-                    Console.WriteLine(b.ToString());
+                    // 本地函数中 无法捕获 refPoint
+                    // Console.WriteLine(refPoint.ToString());
+                    Console.WriteLine(normalPoint.ToString());
                 }
             }
 

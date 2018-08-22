@@ -1,13 +1,11 @@
 ﻿using ConsoleAppCore.Demos;
 using System;
-using System.ComponentModel;
 
 namespace ConsoleAppCore
 {
-
-    class Program
+    internal class Program
     {
-        static void Main(String[] args)
+        private static void Main(string[] args)
         {
             Console.WriteLine("----- Start -----");
             Temp();
@@ -16,11 +14,9 @@ namespace ConsoleAppCore
             Console.WriteLine("按任意键退出");
             Console.ReadKey(true);
         }
-
-        static void Temp()
+        private static void Temp()
         {
-            CSharp73Features.Run();
+            CSharp72Features.Run();
         }
     }
-
 }

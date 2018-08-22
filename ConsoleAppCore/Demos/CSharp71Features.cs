@@ -10,12 +10,12 @@ namespace ConsoleAppCore.Demos
         /// 1. 异步的 Main 方法
         /// </summary>
         /// <returns></returns>
-        static async Task<int> Main()
+        private static async Task<int> Main()
         {
             return await DoAsyncWork();
         }
 
-        static async Task<int> DoAsyncWork()
+        private static async Task<int> DoAsyncWork()
         {
             await Task.Delay(1000);
             return 123;
@@ -54,10 +54,32 @@ namespace ConsoleAppCore.Demos
         {
             int count = 5;
             string label = "Color used in the map";
-            var pair = (count, label);
+            (int count, string label) pair = (count, label);
 
             // pair 命名为 (int:count,string label)
             Console.WriteLine($"{pair.count} - {pair.label}");
+        }
+
+        /// <summary>
+        /// 7.0 不支持泛型的 Pattern Matching
+        /// 7.1 支持
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="abc"></param>
+        private static void Attack<T>(T abc) where T : A
+        {
+            switch (abc)
+            {
+                case B b:
+                    Console.WriteLine("b");
+                    break;
+                case C c:
+                    Console.WriteLine("c");
+                    break;
+                default:
+                    Console.WriteLine("a");
+                    break;
+            }
         }
 
         private struct MyStruct
@@ -71,6 +93,10 @@ namespace ConsoleAppCore.Demos
                 B = b;
             }
         }
+
+        private class A { }
+        private class B : A { }
+        private class C : A { }
     }
 
 

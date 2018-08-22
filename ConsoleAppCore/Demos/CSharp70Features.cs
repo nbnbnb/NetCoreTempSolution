@@ -10,8 +10,8 @@ namespace ConsoleAppCore.Demos
         {
             public MyPoint(double x, double y)
             {
-                this.X = x;
-                this.Y = y;
+                X = x;
+                Y = y;
             }
 
             public double X { get; }
@@ -26,8 +26,8 @@ namespace ConsoleAppCore.Demos
             /// <param name="y"></param>
             public void Deconstruct(out double x, out double y)
             {
-                x = this.X;
-                y = this.Y;
+                x = X;
+                y = Y;
             }
         }
 
@@ -36,7 +36,7 @@ namespace ConsoleAppCore.Demos
         /// </summary>
         public static void OutVar()
         {
-            if (Int32.TryParse("111", out Int32 res)) // 还可以使用 out var res
+            if (int.TryParse("111", out int res)) // 还可以使用 out var res
             {
                 Console.WriteLine(res);
             }
@@ -58,25 +58,25 @@ namespace ConsoleAppCore.Demos
         /// is Type value = boolean
         /// switch item case Type value（会将 item 自动转换为匹配类型的 val）
         /// </summary>
-        public static int PatternMatching(IEnumerable<Object> values)
+        public static int PatternMatching(IEnumerable<object> values)
         {
-            var sum = 0;
+            int sum = 0;
 
             // 使用 is Type value = boolean 模式
-            foreach (Object item in values)
+            foreach (object item in values)
             {
                 if (item is int val)
                 {
                     sum += val;
                 }
-                else if (item is IEnumerable<Object> subList)
+                else if (item is IEnumerable<object> subList)
                 {
                     sum += PatternMatching(subList);
                 }
             }
 
             // 使用 switch item case Type value 模式
-            foreach (Object item in values)
+            foreach (object item in values)
             {
                 // 会将 item 自动转换为匹配类型的 val
                 switch (item)
@@ -84,7 +84,7 @@ namespace ConsoleAppCore.Demos
                     case int val:
                         sum += val;
                         break;
-                    case IEnumerable<Object> subList:
+                    case IEnumerable<object> subList:
                         sum += PatternMatching(subList);
                         break;
                 }
@@ -100,15 +100,15 @@ namespace ConsoleAppCore.Demos
         /// 自动解包
         /// 返回命名的元组
         /// </summary>
-        public static (int Max, int Min) TupleEnhance(IEnumerable<Int32> numbers)
+        public static (int Max, int Min) TupleEnhance(IEnumerable<int> numbers)
         {
             // 简单的创建方式
             // 使用 Item1,Item2 命名方式
-            var letters = ("a", "b");
+            (string, string) letters = ("a", "b");
             Console.WriteLine($"{letters.Item1} - {letters.Item2}");
 
             // 使用自命名方式（右边）
-            var rightAlphabate = (alpha: "a", beta: "b");
+            (string alpha, string beta) rightAlphabate = (alpha: "a", beta: "b");
             Console.WriteLine($"{rightAlphabate.alpha} - {rightAlphabate.beta}");
 
             // 使用自命名方式（左边）
@@ -117,10 +117,10 @@ namespace ConsoleAppCore.Demos
             Console.WriteLine($"{leftAlphabate.alpha} - {leftAlphabate.beta}");
 
             // 解包，并创建“本地”变量
-            (String alpha, String beta) = letters;
+            (string alpha, string beta) = letters;
             Console.WriteLine($"{alpha} - {beta}");  // 变量直接在本地
 
-            var point = new MyPoint(1.2, 3.4);
+            MyPoint point = new MyPoint(1.2, 3.4);
 
             // 自动解包功能
             // 由于 Point 类定义了相应的 Deconstruct 函数
@@ -187,7 +187,7 @@ namespace ConsoleAppCore.Demos
         /// lambda 表达式是委托的一个实例，创建委托和 Invoke 执行都会有开销
         /// 本地函数可以在函数内的任意位置声明，而 lambda 只能在调用之前声明
         /// </summary>
-        public static Task<String> LocalFunc(string address, int index, string name)
+        public static Task<string> LocalFunc(string address, int index, string name)
         {
             if (string.IsNullOrWhiteSpace(address))
                 throw new ArgumentException(message: "An address is required", paramName: nameof(address));
@@ -248,7 +248,10 @@ namespace ConsoleAppCore.Demos
         /// </summary>
         /// <param name="label"></param>
         // Expression-bodied constructor
-        public CSharp70Features(string label) => Label = label;
+        public CSharp70Features(string label)
+        {
+            Label = label;
+        }
 
         /// <summary>
         /// 7. 增强的表达式体成员（C# 6.0 只支持成员函数和只读属性）
@@ -267,7 +270,7 @@ namespace ConsoleAppCore.Demos
         public string Label
         {
             get => label;
-            set => this.label = value ?? "Default label";
+            set => label = value ?? "Default label";
         }
 
         /// <summary>
@@ -298,9 +301,9 @@ namespace ConsoleAppCore.Demos
             if (DateTime.TryParse(dateString, out _))
                 Console.WriteLine($"'{dateString}': valid");
 
-            var abc = (a: 1, b: "2", c: 3);
+            (int a, string b, int c) abc = (a: 1, b: "2", c: 3);
             // 元组丢弃
-            var (_, y, _) = abc;
+            (int _, string y, int _) = abc;
             Console.WriteLine(y);
 
             // 独立丢弃
