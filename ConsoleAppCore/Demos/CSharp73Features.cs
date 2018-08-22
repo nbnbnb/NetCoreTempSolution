@@ -14,7 +14,7 @@
         unsafe static public void M()
         {
             int p = s.myFixedField[5];
-            System.Console.WriteLine(p);
+            Console.WriteLine(p);
         }
 
         /// <summary>
@@ -84,10 +84,69 @@
                 Console.WriteLine(*(ptr + 1));
             }
         }
+
+        /// <summary>
+        /// 元组支持 == 和 !=
+        /// </summary>
+        internal static void TubleEquals()
+        {
+            var a = (a: 1, b: 2);
+            var b = (b: 2, a: 1);
+            var c = (a: 1, b: 2);
+            Console.WriteLine(a == b); // false，顺序要一致
+            Console.WriteLine(a != b); // true
+            Console.WriteLine(a == c); // true
+        }
+
+        /// <summary>
+        /// 将 Attribute 添加到自动属性的后台字段上
+        /// </summary>
+        [field: SomeThingAboutField]
+        public int SomeProperty { get; set; }
+
+        // 支持 in 的方法重载
+        // in 代表的是引用的自读版本，与之对应的是 ref 和 out 的引用的可写版本
+        // 定义了 in 之后，就不能定义 ref 或 out 的重载
+
+        static void SampleMethod(int i)
+        {
+            Console.WriteLine($"Without In {i}");
+        }
+        static void SampleMethod(in int i)
+        {
+            Console.WriteLine($"With In {i}");
+        }
+
+        public static void InMethodOverload()
+        {
+            // 不带 in 的版本
+            SampleMethod(5);
+            //SampleMethod(5L); // CS1503: no implicit conversion from long to int
+
+            short s = 0;
+            // 不带 in 的版本
+            // 隐式类型转换
+            SampleMethod(s); // OK, temporary int created with the value 0
+            //SampleMethod(in s); // CS1503: cannot convert from in short to in int
+
+            int i = 42;
+            // 不带 in 的版本
+            SampleMethod(i); // passed by readonly reference
+            // 带 in 的版本
+            // 显式指定 in
+            SampleMethod(in i); // passed by readonly reference, explicitly using `in`
+        }
     }
 
     namespace Misc
     {
+        class MyClass { }
+
+        class SomeThingAboutFieldAttribute : Attribute
+        {
+
+        }
+
         unsafe struct MyStruct
         {
             public fixed int myFixedField[10];
@@ -109,6 +168,31 @@
             {
                 int[] items = { 1, 2, 3, 4, 5 };
                 return ref items[3];
+            }
+        }
+
+        class B
+        {
+            public B(int i, out int j)
+            {
+                // j 在此处进行赋值
+                j = i + 1;
+            }
+        }
+
+        class D : B
+        {
+            /// <summary>
+            /// 扩展初始值设定项中的表达式变量
+            /// out 变量声明
+            /// 支持 字段初始化，属性初始化，构造函数初始化，查询子句
+            /// 
+            /// 此处示例为构造函数初始化
+            /// </summary>
+            /// <param name="i"></param>
+            public D(int i) : base(i, out var j)
+            {
+                Console.WriteLine($"The value of 'j' is {j}");
             }
         }
     }

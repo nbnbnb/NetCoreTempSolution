@@ -238,7 +238,7 @@ namespace ConsoleAppCore.Demos
         /// </summary>
         public static void ThrowExpress()
         {
-            String abc = "";
+            string abc = "";
             Console.WriteLine(abc ?? throw new ArgumentException("Not allow null"));
         }
 
@@ -283,6 +283,31 @@ namespace ConsoleAppCore.Demos
             Console.WriteLine(0b11_11_11);  // 等价于 0b111111
             Console.WriteLine(12_34.1234_56_78); // 等价于 1234.12345678
             Console.WriteLine(100_000_000); // 等价于 100000000      
+
+        }
+
+        /// <summary>
+        /// 9. 丢弃值
+        /// _
+        /// </summary>
+        public static void Discard()
+        {
+            string dateString = "1991-01-01";
+
+            // out 丢弃
+            if (DateTime.TryParse(dateString, out _))
+                Console.WriteLine($"'{dateString}': valid");
+
+            var abc = (a: 1, b: "2", c: 3);
+            // 元组丢弃
+            var (_, y, _) = abc;
+            Console.WriteLine(y);
+
+            // 独立丢弃
+            _ = Task.Run(() =>
+            {
+                Console.WriteLine("---");
+            });
 
         }
     }

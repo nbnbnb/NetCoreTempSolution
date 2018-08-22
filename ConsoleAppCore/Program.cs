@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConsoleAppCore.Demos;
+using System;
 
 namespace ConsoleAppCore
 {
@@ -17,7 +18,7 @@ namespace ConsoleAppCore
 
         static void Temp()
         {
-
+            CSharp73Features.GGG();
         }
     }
 }
