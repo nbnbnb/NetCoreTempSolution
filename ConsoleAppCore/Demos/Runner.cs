@@ -18,7 +18,6 @@ using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Ninject;
 using Ninject.Extensions.Conventions;
 using Ninject.Planning.Bindings.Resolvers;
 using MediatR.Pipeline;

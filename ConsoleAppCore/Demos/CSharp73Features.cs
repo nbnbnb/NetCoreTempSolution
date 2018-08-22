@@ -2,6 +2,7 @@
 {
     using ConsoleAppCore.Demos.Misc;
     using System;
+    using System.ComponentModel;
 
     internal sealed class CSharp73Features
     {
@@ -55,24 +56,6 @@
         }
 
         /// <summary>
-        /// 增强的泛型约束
-        /// 支持 System.Enum 和 System.Delegate
-        /// </summary>
-        static void EnhanceConstraintEnum<T>() where T : Enum
-        {
-
-        }
-
-        /// <summary>
-        /// 增强的泛型约束
-        /// 支持 System.Enum 和 System.Delegate
-        /// </summary>
-        static void EnhanceConstraintDelegate<T>() where T : Delegate
-        {
-
-        }
-
-        /// <summary>
         /// fixed 语法支持 GetPinnableReference 方法的协议
         /// </summary>
         internal static unsafe void FixedWithGetPinnableReference()
@@ -103,6 +86,12 @@
         /// </summary>
         [field: SomeThingAboutField]
         public int SomeProperty { get; set; }
+
+        /// <summary>
+        /// 事件 Attribute 早期版本就支持
+        /// </summary>
+        [field: NonSerialized]
+        public event PropertyChangedEventHandler PropertyChanged;
 
         // 支持 in 的方法重载
         // in 代表的是引用的自读版本，与之对应的是 ref 和 out 的引用的可写版本
@@ -136,11 +125,43 @@
             // 显式指定 in
             SampleMethod(in i); // passed by readonly reference, explicitly using `in`
         }
+
+        string input = "1234";
+
+        object weapon = new MyClass();
+
+        /// <summary>
+        /// 表达式变量
+        /// 属性初始化中使用
+        /// </summary>
+        public int Arrows => weapon is MyClass myClass ? myClass.X : 0;
+
+        /// <summary>
+        /// 表达式变量
+        /// Out 中使用
+        /// </summary>
+        private int Number => Int32.TryParse(input, out int value) ? value : 0;
+
+        public static void Run()
+        {
+            // 使用扩展方法
+            Console.WriteLine(ABC.A.GetDescription());
+
+            MyHelperClass.MustValueType(123);
+            MyHelperClass.MustValueType(new MyStruct());
+            // 类不行
+            //MyHelperClass.MustValueType(new MyClass());
+            // 字符串不行
+            //MyHelperClass.MustValueType("123");
+        }
     }
 
     namespace Misc
     {
-        class MyClass { }
+        class MyClass
+        {
+            public int X { get; }
+        }
 
         class SomeThingAboutFieldAttribute : Attribute
         {
@@ -159,7 +180,6 @@
 
         class MyPinnable
         {
-
             /// <summary>
             /// 符合 ref T 的签名
             /// </summary>
@@ -169,6 +189,17 @@
                 int[] items = { 1, 2, 3, 4, 5 };
                 return ref items[3];
             }
+        }
+
+
+        enum ABC
+        {
+            [Description("AAA")]
+            A,
+            [Description("BBB")]
+            B,
+            [Description("CCC")]
+            C
         }
 
         class B
@@ -183,16 +214,61 @@
         class D : B
         {
             /// <summary>
-            /// 扩展初始值设定项中的表达式变量
-            /// out 变量声明
-            /// 支持 字段初始化，属性初始化，构造函数初始化，查询子句
-            /// 
-            /// 此处示例为构造函数初始化
+            /// 表达式变量
+            /// 构造函数中使用
             /// </summary>
             /// <param name="i"></param>
             public D(int i) : base(i, out var j)
             {
+                // 此处可以引用父类中的 out j
                 Console.WriteLine($"The value of 'j' is {j}");
+            }
+        }
+
+        static class MyHelperClass
+        {
+            /// <summary>
+            /// 委托约束
+            /// </summary>
+            /// <typeparam name="TDelegate"></typeparam>
+            /// <param name="source"></param>
+            /// <param name="target"></param>
+            /// <returns></returns>
+            public static TDelegate Combine<TDelegate>(this TDelegate source, TDelegate target)
+               where TDelegate : Delegate
+            {
+                return (TDelegate)Delegate.Combine(source, target);
+            }
+
+            /// <summary>
+            /// 枚举约束
+            /// </summary>
+            /// <typeparam name="TEnum"></typeparam>
+            /// <param name="value"></param>
+            /// <returns></returns>
+            public static string GetDescription<TEnum>(this TEnum value) where TEnum : Enum
+            {
+                var type = typeof(TEnum);
+                var member = type.GetMember(value.ToString());
+                var attributes = member[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
+                return ((DescriptionAttribute)attributes[0]).Description;
+            }
+
+            /// <summary>
+            /// 值类型约束
+            /// T 只能为值类型
+            /// 并且 T 中不能有为 null 在字段
+            /// </summary>
+            /// <typeparam name="T"></typeparam>
+            /// <param name="value"></param>
+            /// <returns></returns>
+            public unsafe static void MustValueType<T>(in T value) where T : unmanaged
+            {
+                // 限制了值类型，可以使用 fixed 获取固定地址
+                fixed (void* pp = &value)
+                {
+
+                }
             }
         }
     }
