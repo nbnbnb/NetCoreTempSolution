@@ -1,5 +1,5 @@
-﻿using ConsoleAppCore.Demos;
-using System;
+﻿using System;
+using ConsoleAppCore.Demos;
 
 namespace ConsoleAppCore
 {
@@ -16,7 +16,12 @@ namespace ConsoleAppCore
         }
         private static void Temp()
         {
-            CSharp72Features.Run();
+
+        }
+
+        private static void  Change(Tuple<int,int> abc)
+        {
+           
         }
     }
 }

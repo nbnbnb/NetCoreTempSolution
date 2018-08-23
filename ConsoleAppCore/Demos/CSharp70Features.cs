@@ -21,6 +21,8 @@ namespace ConsoleAppCore.Demos
             /// 元组自动解包使用（还可以使用扩展方法）
             /// 名称为 Deconstruct，无返回值
             /// 并且参数都用 out 进行标记
+            /// 
+            /// 扩展方法也可以
             /// </summary>
             /// <param name="x"></param>
             /// <param name="y"></param>
@@ -133,8 +135,11 @@ namespace ConsoleAppCore.Demos
             //(double pointX, double pointY) kkking = point
             Console.WriteLine($"{pointX} - {pointY}");
 
-            // 返回命名的元组
+            // 返回“命名的元组” (int Max, int Min)
             // 元组通过 (int Max, int Min) 方式定义
+            // 这个与 Tuple 类型有两个重要的不同点
+            // 1，可以用命名方式访问，而不是 Item1，Item2 方式访问
+            // 2，返回的是一个值类型，而不是引用类型
             return (100, 0);
         }
 
@@ -213,6 +218,8 @@ namespace ConsoleAppCore.Demos
         /// 
         /// ValueTask 可以对现有的 Task 进行包装，实现一些优化处理
         /// 
+        /// ValueTask 是一个值类型（减少在堆上分配对象）
+        /// 
         /// ValueTask 符合 Awaiter 模式，可以直接在上面执行 await 操作
         /// </summary>
         /// <returns></returns>
@@ -252,6 +259,15 @@ namespace ConsoleAppCore.Demos
         {
             Label = label;
         }
+
+        private int _health;
+
+        /// <summary>
+        /// expression bodied
+        /// 类型构造器
+        /// </summary>
+        /// <param name="health"></param>
+        public CSharp70Features(int health) => _health = health >= 0 ? throw new ArgumentOutOfRangeException();
 
         /// <summary>
         /// 7. 增强的表达式体成员（C# 6.0 只支持成员函数和只读属性）
