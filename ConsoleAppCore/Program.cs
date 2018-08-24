@@ -18,10 +18,5 @@ namespace ConsoleAppCore
         {
 
         }
-
-        private static void  Change(Tuple<int,int> abc)
-        {
-           
-        }
     }
 }
