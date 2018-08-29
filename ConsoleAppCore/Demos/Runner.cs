@@ -369,13 +369,16 @@ namespace ConsoleAppCore
 
             // 启用 RequestPreProcessorBehavior
             kernel.Bind(typeof(IPipelineBehavior<,>)).To(typeof(RequestPreProcessorBehavior<,>));
-            // 配置 RequestPreProcessor 
-            kernel.Bind(typeof(IRequestPreProcessor<>)).To(typeof(GenericRequestPreProcessor<>));
+            // 配置 PreProcessor AOP 
+            kernel.Bind(typeof(IRequestPreProcessor<>)).To(typeof(RequestPreProcessorAOP<>));
 
             // 启用 RequestPostProcessorBehavior
             kernel.Bind(typeof(IPipelineBehavior<,>)).To(typeof(RequestPostProcessorBehavior<,>));
-            // 配置 RequestPostProcessor 
-            kernel.Bind(typeof(IRequestPostProcessor<,>)).To(typeof(GenericRequestPostProcessor<,>));
+            // 配置 PostProcessor AOP 
+            kernel.Bind(typeof(IRequestPostProcessor<,>)).To(typeof(RequestPostProcessorAOP<,>));
+
+            // 启用 Around 形式的 AOP
+            kernel.Bind(typeof(IPipelineBehavior<,>)).To(typeof(PipelineAOP<,>));
 
             // 配置 MediatR 的动态 Factory
             kernel.Bind<ServiceFactory>().ToMethod(ctx => t => ctx.Kernel.TryGet(t));

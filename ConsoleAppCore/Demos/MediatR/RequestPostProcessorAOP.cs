@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace ConsoleAppCore.Demos.MediatR
 {
-    public class GenericRequestPostProcessor<TRequest, TResponse> : IRequestPostProcessor<TRequest, TResponse>
+    public class RequestPostProcessorAOP<TRequest, TResponse> : IRequestPostProcessor<TRequest, TResponse>
     {
         public Task Process(TRequest request, TResponse response)
         {
-            Console.WriteLine("- All Done");
+            Console.WriteLine("- PostProcessor AOP");
             return Task.CompletedTask;
         }
     }

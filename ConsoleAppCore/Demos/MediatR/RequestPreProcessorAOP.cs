@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace ConsoleAppCore.Demos.MediatR
 {
-    public class GenericRequestPreProcessor<TRequest> : IRequestPreProcessor<TRequest>
+    public class RequestPreProcessorAOP<TRequest> : IRequestPreProcessor<TRequest>
     {
         public Task Process(TRequest request, CancellationToken cancellationToken)
         {
-            Console.WriteLine("- Starting Up");
+            Console.WriteLine("- PreProcessorAOP");
             return Task.CompletedTask;
         }
     }

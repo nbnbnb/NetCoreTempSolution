@@ -267,7 +267,7 @@ namespace ConsoleAppCore.Demos
         /// 类型构造器
         /// </summary>
         /// <param name="health"></param>
-        public CSharp70Features(int health) => _health = health >= 0 ? throw new ArgumentOutOfRangeException();
+        public CSharp70Features(int health) => _health = health >= 0 ? throw new ArgumentOutOfRangeException() : health;
 
         /// <summary>
         /// 7. 增强的表达式体成员（C# 6.0 只支持成员函数和只读属性）
