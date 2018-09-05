@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 using ConsoleAppCore.Demos;
+using ConsoleAppCore.Demos.SimpleAOP;
 
 namespace ConsoleAppCore
 {
@@ -16,7 +19,7 @@ namespace ConsoleAppCore
         }
         private static void Temp()
         {
-            Runner.MediatR();
+            Runner.DispatchProxyDemo();
         }
     }
 }

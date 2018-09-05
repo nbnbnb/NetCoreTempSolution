@@ -23,6 +23,7 @@ using Ninject.Planning.Bindings.Resolvers;
 using MediatR.Pipeline;
 using Ninject.Syntax;
 using MediatR;
+using ConsoleAppCore.Demos.SimpleAOP;
 
 namespace ConsoleAppCore
 {
@@ -402,6 +403,15 @@ namespace ConsoleAppCore
 
             // Publish
             await mediator.Publish(new PingNotification());
+        }
+
+        public static void DispatchProxyDemo()
+        {
+            // 创建代理类，并把 SamepleProxy 作为拦截器注入
+            var samepleProxy = DispatchProxy.Create<ITargetInterface, SamepleProxy>();
+            // 执行接口方法
+            samepleProxy.WriteMessage("here is invoke by proxy");
+            Console.WriteLine(samepleProxy.GetAddress(123));
         }
     }
 }
