@@ -9,9 +9,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAppCore", "WebAppCore\We
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleAppCoreTest", "ConsoleAppCoreTest\ConsoleAppCoreTest.csproj", "{07FA491B-3D40-4C78-900C-E60FD92B3AF1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAppCore.IntegrationTests", "WebAppCore.IntegrationTests\WebAppCore.IntegrationTests.csproj", "{2BACF707-3889-40FF-AB72-9C7B23ADC2A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAppCore.IntegrationTests", "WebAppCore.IntegrationTests\WebAppCore.IntegrationTests.csproj", "{2BACF707-3889-40FF-AB72-9C7B23ADC2A3}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{67585328-1844-444B-BF5C-E86A4643B878}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E25EE853-42F1-4A9C-90E2-D6B8E5BF7F88}"
+	ProjectSection(SolutionItems) = preProject
+		.travis.yml = .travis.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
