@@ -3,4 +3,4 @@ mono: none
 solution: NetCoreTempSolution.sln
 dotnet: 2.1
 script: 
- - dotnet restore
+ - dotnet restore NetCoreTempSolution.sln
