@@ -3,7 +3,7 @@ mono: none
 solution: NetCoreTempSolution.sln
 dotnet: 2.1
 install:
- - dotnet restore
+ - dotnet restore NetCoreTempSolution.sln
 script: 
  - dotnet build
  - dotnet test WebAppCore.IntegrationTests/WebAppCore.IntegrationTests.csproj
