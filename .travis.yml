@@ -6,3 +6,4 @@ install:
 script: 
  - dotnet build NetCoreTempSolution.sln
  - dotnet test WebAppCore.IntegrationTests/WebAppCore.IntegrationTests.csproj
+ - dotnet test ConsoleAppCoreTest/ConsoleAppCoreTest.csproj
