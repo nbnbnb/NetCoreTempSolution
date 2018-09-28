@@ -1,9 +1,8 @@
 language: csharp
 mono: none
-solution: NetCoreTempSolution.sln
 dotnet: 2.1
 install:
  - dotnet restore NetCoreTempSolution.sln
 script: 
- - dotnet build
+ - dotnet build NetCoreTempSolution.sln
  - dotnet test WebAppCore.IntegrationTests/WebAppCore.IntegrationTests.csproj
