@@ -17,7 +17,7 @@ namespace ConsoleAppCoreTest
         {
             var client = HttpApiClient.Create<IMyWebApi>();
             var content = await client.GetContentAsync();
-            Assert.IsTrue(content.Contains("<!DOCTYPE html>", StringComparison.OrdinalIgnoreCase));
+            Assert.IsTrue(content.Contains("<html>", StringComparison.OrdinalIgnoreCase));
 
         }
 
