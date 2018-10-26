@@ -13,7 +13,7 @@ namespace ConsoleAppCore.Demos.AspectCore
     /// AspectCore 基本使用
     /// https://www.cnblogs.com/liuhaoyang/p/aspectcore-getting-started.html
     /// </summary>
-    class Runner
+    public class AspectCoreRunner
     {
         public static void Run()
         {
@@ -48,9 +48,9 @@ namespace ConsoleAppCore.Demos.AspectCore
             IServiceCollection services = new ServiceCollection();
             services.AddTransient<ISampleInterface, SampleClass>();
 
-            services.AddDynamicProxy();
-            IServiceProvider serviceProvider = services.BuildAspectCoreServiceProvider();
+            services.ConfigureDynamicProxy();
 
+            IServiceProvider serviceProvider = services.BuildAspectInjectorProvider();
             ISampleInterface sampleInterface = serviceProvider.GetService<ISampleInterface>();
             Console.WriteLine(sampleInterface);
             sampleInterface.Foo();

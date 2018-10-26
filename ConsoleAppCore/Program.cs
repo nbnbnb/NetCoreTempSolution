@@ -19,7 +19,7 @@ namespace ConsoleAppCore
         }
         private static void Temp()
         {
-            Runner.DispatchProxyDemo();
+            Demos.AspectCore.AspectCoreRunner.Run();
         }
     }
 }
