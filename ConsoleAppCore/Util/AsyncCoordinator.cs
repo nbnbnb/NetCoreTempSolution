@@ -24,7 +24,7 @@ namespace ConsoleAppCore.Util
         /// <summary>
         /// 该方法必须在处理好一个操作的结果之后调用
         /// </summary>
-        public void JustEnded()
+        public void IsEnded()
         {
             if (Interlocked.Decrement(ref m_opCount) == 0)
             {
@@ -45,23 +45,38 @@ namespace ConsoleAppCore.Util
             {
                 m_timer = new Timer(TimeExpired, null, timeout, Timeout.Infinite);
             }
-            JustEnded();
+
+            // 判断当前是否已经全部执行完成
+            IsEnded();
         }
 
+        /// <summary>
+        /// 超时回调
+        /// </summary>
+        /// <param name="o"></param>
         private void TimeExpired(Object o)
         {
             ReportStatus(CoordinationStatus.Timeout);
         }
 
+        /// <summary>
+        /// 告诉协调器取消
+        /// </summary>
         public void Cancel()
         {
             ReportStatus(CoordinationStatus.Cancel);
         }
 
+        /// <summary>
+        /// 根据记录的回调函数
+        /// 发送当前状态
+        /// </summary>
+        /// <param name="status"></param>
         private void ReportStatus(CoordinationStatus status)
         {
             // 如果状态从未报告过，就报告它
             // 否则忽略它
+            // 例如，如果已经调用过取消，则忽略后续的回调
             if (Interlocked.Exchange(ref m_statusReported, 1) == 0)
             {
                 m_callback(status);

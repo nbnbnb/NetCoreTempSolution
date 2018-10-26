@@ -7,11 +7,12 @@ namespace ConsoleAppCore.Util
 {
     /// <summary>
     /// 001，002，003 是初始化步骤
+    /// 
+    /// 需要继承 INotifyCompletion 接口
     /// </summary>
     /// <typeparam name="TEventArgs"></typeparam>
     public sealed class EventAwaiter<TEventArgs> : INotifyCompletion
     {
-
         private ConcurrentQueue<TEventArgs> m_events = new ConcurrentQueue<TEventArgs>();
         private Action m_continuation;
 
@@ -23,7 +24,7 @@ namespace ConsoleAppCore.Util
         /// 
         /// await 语法将会识别这个方法
         /// 
-        /// 状态机先调用这个来获得 awaiter：我们自己返回自己
+        /// 状态机先调用这个来获得 awaiter（返回自己）
         /// </summary>
         /// <returns></returns>
         public EventAwaiter<TEventArgs> GetAwaiter()
@@ -69,14 +70,16 @@ namespace ConsoleAppCore.Util
         /// 
         /// await 基础设施
         /// 
-        /// 状态机查询结果：这是 await 操作符的结果
+        /// m_continuation.Invoke() 方法将会触发 GetResult() 的执行
+        /// 
+        /// 状态机查询结果：这是 await 操作符等待的结果
         /// 
         /// 返回结果之后，继续执行 001，002，003 步骤
         /// </summary>
         /// <returns></returns>
         public TEventArgs GetResult()
         {
-            // 获取结果
+            // 弹出队列
             m_events.TryDequeue(out TEventArgs e);
             return e;
         }
@@ -97,9 +100,8 @@ namespace ConsoleAppCore.Util
 
             // 简写
             // 如果有一个等待进行的延续任务，该线程会运行它
-            // 将 m_continuation 设置为 null
-            // 并返回原始的 m_continuation 值
-            // 当原始 m_continuation 值不为 null 时，执行它
+            // 将 m_continuation 设置为 null，并返回原始的 m_continuation 值
+            // 此时 m_continuation 为 null，
             Interlocked.Exchange(ref m_continuation, null)?.Invoke();  // 恢复状态机
         }
     }

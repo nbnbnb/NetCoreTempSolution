@@ -45,6 +45,8 @@ namespace ConsoleAppCore
             while (true)
             {
                 // 每个异常都是通过 ContinueWith 进行处理的
+                // 调用 await eventAwaiter 时将会触发 Awaiter 模式
+                // 如果发生了 EventRaised，则会触发 Awaiter 中的 m_continuation 执行
                 Console.WriteLine("AppDomain exception: {0}", (await eventAwaiter).Exception.GetType());
             }
         }

@@ -12,9 +12,11 @@ namespace ConsoleAppCore.Demos
         /// </summary>
         public static void LiteralPrefix()
         {
+            // 7.0+
             Console.WriteLine(0b11_11_11);  // 二进制
             Console.WriteLine(0x12_dd); // 十六进制
 
+            // 7.2+
             Console.WriteLine(0b_11_11_11);  // 二进制
             Console.WriteLine(0x_12_dd); // 十六进制
         }
@@ -23,7 +25,10 @@ namespace ConsoleAppCore.Demos
         /// <summary>
         /// 新增的 private protected 访问级别
         /// 
-        /// 系统原先有 internal protected 访问级别，但是除了继承类可以访问外，程序集中的其他成员也可以访问
+        /// 系统原先有 internal protected 访问级别
+        /// 但是除了继承类可以访问外，当前程序集中的其他成员也可以访问
+        /// 程序集外不能访问（不能继承）
+        /// 
         /// private protected 则限制了只有继承的成员才可以访问
         /// 
         /// 嵌套类是可以访问宿主类 private 成员的
@@ -96,7 +101,7 @@ namespace ConsoleAppCore.Demos
         /// <summary>
         /// 只读引用传递
         /// 在方法调用时
-        /// 尤其都值类型有效，避免值类型的赋值
+        /// 尤其对值类型有效，避免值类型的赋值
         /// 同时也避免了修改值类型不起效的场景（默认是按值传递的）
         /// </summary>
         private static void ReadOnlyRef(in NormalPoint normalPoint)
@@ -108,7 +113,7 @@ namespace ConsoleAppCore.Demos
             // 对于方法调用，将使用防御性副本，因为编译器无法确定方法中是否会修改对象内部的状态
             normalPoint.ChangeX(10);
 
-            // 此处 normalPoint 引用的对象时不会改变的
+            // 此处 normalPoint 引用的对象是不会改变的
             // 这样保证了 in 只读的语意
             Console.WriteLine($"OriginX {normalPoint.X}");
         }

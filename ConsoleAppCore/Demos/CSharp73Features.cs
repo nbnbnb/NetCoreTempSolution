@@ -14,7 +14,7 @@
         /// </summary>
         unsafe static public void M()
         {
-            int p = s.myFixedField[5];
+            int p = s.MyFixedField[5];
             Console.WriteLine(p);
         }
 
@@ -24,7 +24,7 @@
         /// </summary>
         unsafe static public void M2()
         {
-            fixed (int* ptr = s.myFixedField)
+            fixed (int* ptr = s.MyFixedField)
             {
                 int p = ptr[5];
             }
@@ -42,14 +42,12 @@
         }
 
         /// <summary>
-        /// 数组元素初始化值
-        /// stackalloc 方式也支持
+        /// stackalloc 方式的数组元素初始化
+        /// 
+        /// 注意 Span<int> 形式
         /// </summary>
         unsafe static void InitArray()
         {
-            var arr = new int[3] { 1, 2, 3 };
-            var arr2 = new int[] { 1, 2, 3 };
-
             int* pArr = stackalloc int[3] { 1, 2, 3 };
             int* pArr2 = stackalloc int[] { 1, 2, 3 };
             Span<int> arr3 = stackalloc[] { 1, 2, 3 };
@@ -57,13 +55,14 @@
 
         /// <summary>
         /// fixed 语法支持 GetPinnableReference 方法的协议
+        /// public ref int GetPinnableReference(){ }
         /// </summary>
         internal static unsafe void FixedWithGetPinnableReference()
         {
+            // fixed 语句块
+            // 然后的 ref int 转换为 int*
             fixed (int* ptr = new MyPinnable())
             {
-                // 传递的是第3个索引
-                // 此处输出第4个索引
                 Console.WriteLine(*(ptr + 1));
             }
         }
@@ -93,16 +92,20 @@
         [field: NonSerialized]
         public event PropertyChangedEventHandler PropertyChanged;
 
-        // 支持 in 的方法重载
-        // in 代表的是引用的自读版本，与之对应的是 ref 和 out 的引用的可写版本
-        // 定义了 in 之后，就不能定义 ref 或 out 的重载
-
+        /// <summary>
+        /// 支持 in 的方法重载
+        /// in 代表的是引用的只读版本，与之对应的是 ref 和 out 的引用&可写版本
+        /// 定义了 in 之后，就不能定义 ref 或 out 的重载
+        /// </summary>
+        /// <param name="i"></param>
         static void SampleMethod(int i)
         {
+            i = 123;  // 可以重新赋值
             Console.WriteLine($"Without In {i}");
         }
         static void SampleMethod(in int i)
         {
+            // i = 123; 不允许赋值
             Console.WriteLine($"With In {i}");
         }
 
@@ -114,14 +117,17 @@
 
             short s = 0;
             // 不带 in 的版本
-            // 隐式类型转换
+            // 隐式类型转换为 int
             SampleMethod(s); // OK, temporary int created with the value 0
-            //SampleMethod(in s); // CS1503: cannot convert from in short to in int
+            // 由于 in 的本质是传递的引用
+            // 所以此处是不支持转型的
+            // SampleMethod(in s); // CS1503: cannot convert from in short to in int
 
             int i = 42;
             // 不带 in 的版本
             SampleMethod(i); // passed by readonly reference
             // 带 in 的版本
+            // 此处需要显式指定 in
             // 显式指定 in
             SampleMethod(in i); // passed by readonly reference, explicitly using `in`
         }
@@ -136,11 +142,45 @@
         /// </summary>
         public int Arrows => weapon is MyClass myClass ? myClass.X : 0;
 
+        public int ArrowsMethod()
+        {
+            // 原始方式
+            if (weapon is MyClass)
+            {
+                MyClass myClass = (MyClass)weapon;
+                return myClass.X;
+            }
+
+            // 表达式变量
+            if (weapon is MyClass myClass2)
+            {
+                return myClass2.X;
+            }
+
+
+            return 0;
+        }
+
         /// <summary>
         /// 表达式变量
+        /// out int value
         /// Out 中使用
         /// </summary>
         private int Number => Int32.TryParse(input, out int value) ? value : 0;
+
+        /// <summary>
+        /// 原始方式 TryParse 模式
+        /// </summary>
+        /// <returns></returns>
+        private int NumberWithMethod()
+        {
+            int value = 0;
+            if (Int32.TryParse(input, out value))
+            {
+                return value;
+            }
+            return -1;
+        }
 
         public static void Run()
         {
@@ -149,10 +189,13 @@
 
             MyHelperClass.MustValueType(123);
             MyHelperClass.MustValueType(new MyStruct());
+            // 包含 String 类型字段，不行
+            // MyHelperClass.MustValueType(new MyStructWithStringField());
             // 类不行
             //MyHelperClass.MustValueType(new MyClass());
             // 字符串不行
             //MyHelperClass.MustValueType("123");
+
         }
     }
 
@@ -168,9 +211,19 @@
 
         }
 
+        /// <summary>
+        /// unsafe
+        /// fixed
+        /// </summary>
         unsafe struct MyStruct
         {
-            public fixed int myFixedField[10];
+            public fixed int MyFixedField[10];
+        }
+
+        struct MyStructWithStringField
+        {
+            public int MyIntField;
+            public string MyStringField;
         }
 
         struct VeryLargeStruct
@@ -214,14 +267,27 @@
         class D : B
         {
             /// <summary>
+            /// 成员初始值设定项和查询中的表达式变量声明
             /// 表达式变量
             /// 构造函数中使用
             /// </summary>
-            /// <param name="i"></param>
-            public D(int i) : base(i, out var j)
+            /// <param name="m"></param>
+            public D(int i) : base(i, out int m)
             {
-                // 此处可以引用父类中的 out j
-                Console.WriteLine($"The value of 'j' is {j}");
+                // 此处可以引用父类中的 out m
+                // 而不用声明两个变量
+                Console.WriteLine($"The value of 'm' is {m}");
+            }
+
+            /// <summary>
+            /// 原始方式
+            /// 声明两个变量
+            /// </summary>
+            /// <param name="i"></param>
+            /// <param name="m"></param>
+            public D(int i, int mm) : base(i, out mm)
+            {
+                Console.WriteLine($"The value of 'mm' is {mm}");
             }
         }
 
@@ -237,6 +303,7 @@
             public static TDelegate Combine<TDelegate>(this TDelegate source, TDelegate target)
                where TDelegate : Delegate
             {
+                // 可以安全的调用 Combine 方法了
                 return (TDelegate)Delegate.Combine(source, target);
             }
 
@@ -248,16 +315,18 @@
             /// <returns></returns>
             public static string GetDescription<TEnum>(this TEnum value) where TEnum : Enum
             {
-                var type = typeof(TEnum);
-                var member = type.GetMember(value.ToString());
-                var attributes = member[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
+                var members = typeof(TEnum).GetMember(value.ToString());
+                var attributes = members[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
                 return ((DescriptionAttribute)attributes[0]).Description;
             }
 
             /// <summary>
+            /// 非托管的约束类型检查
+            /// 
             /// 值类型约束
             /// T 只能为值类型
-            /// 并且 T 中不能有为 null 在字段
+            /// 
+            /// 并且 T 中不能有为 null 字段
             /// </summary>
             /// <typeparam name="T"></typeparam>
             /// <param name="value"></param>
@@ -265,6 +334,7 @@
             public unsafe static void MustValueType<T>(in T value) where T : unmanaged
             {
                 // 限制了值类型，可以使用 fixed 获取固定地址
+                // 此处由于没有确切类型，使用了 void* 
                 fixed (void* pp = &value)
                 {
 
