@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using ConsoleAppCore.Demos;
 using ConsoleAppCore.Demos.SimpleAOP;
 
@@ -19,7 +22,8 @@ namespace ConsoleAppCore
         }
         private static void Temp()
         {
-            Demos.AspectCore.AspectCoreRunner.Run();
+
+
         }
     }
 }

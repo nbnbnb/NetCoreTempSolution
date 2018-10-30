@@ -111,6 +111,8 @@ namespace ConsoleAppCore.Demos
             // normalPoint.X = 12;
 
             // 对于方法调用，将使用防御性副本，因为编译器无法确定方法中是否会修改对象内部的状态
+            // 防御性副本是对当前值对象的复制
+            // 实际上 normalPoint 没有任何更改
             normalPoint.ChangeX(10);
 
             // 此处 normalPoint 引用的对象是不会改变的
@@ -137,15 +139,14 @@ namespace ConsoleAppCore.Demos
             // copy 改变了，原始的 ref NormalPoint 不会变            
             Debug.Assert(copy.X != zero.X);
 
-            // 没有办法通过引用不同的表达式来有条件地绑定变量，类似于三元运算符(也称为条件运算符)在通过值绑定时所做的:
-
+            // 没有办法通过引用不同的表达式来有条件地绑定变量
+            // 类似于三元运算符(也称为条件运算符)在通过值绑定时所做的
             int a = 1;
             int b = 2;
-
-            ref int max = ref b; // requires initialization
+            ref int max = ref b; // a,b 变量需要先初始化s
             if (a > b)
             {
-                max = ref a;       // not allowed in C# 7.2，7.3 支持了
+                max = ref a; // C# 7.2 不支持，7.3 支持了
             }
 
             // 一种替代的方式
@@ -273,12 +274,19 @@ namespace ConsoleAppCore.Demos
                 Console.WriteLine($"ChangeX Begin {X}");
                 X = X + plus;
                 Console.WriteLine($"ChangeX End {X}");
+
+                Console.WriteLine(this);
             }
 
             // 创建一个 Read-only return values by reference
             // 类似于一个 in reference
             private static readonly NormalPoint nnn = new NormalPoint(100, 200);
             public static ref readonly NormalPoint NNN => ref nnn;
+
+            public override string ToString()
+            {
+                return $"X:{X} Y:{Y}";
+            }
         }
 
         private class ABC

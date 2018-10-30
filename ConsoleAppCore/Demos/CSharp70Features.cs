@@ -109,18 +109,16 @@ namespace ConsoleAppCore.Demos
             (string, string) letters = ("a", "b");
             Console.WriteLine($"{letters.Item1} - {letters.Item2}");
 
-            // 使用自命名方式（右边）
-            (string alpha, string beta) rightAlphabate = (alpha: "a", beta: "b");
-            Console.WriteLine($"{rightAlphabate.alpha} - {rightAlphabate.beta}");
-
-            // 使用自命名方式（左边）
+            // 使用自命名方式
             // 如果左右边都指定了，将会保留左边（编译器会提示）
-            (string alpha, string beta) leftAlphabate = letters;
-            Console.WriteLine($"{leftAlphabate.alpha} - {leftAlphabate.beta}");
+            (string alphaLeft, string betaLeft) rightAlphabate = (alphaRight: "a", betaRight: "b");
+            Console.WriteLine($"{rightAlphabate.alphaLeft} - {rightAlphabate.betaLeft}");
 
             // 解包，并创建“本地”变量
+            // 没有声明额外变量
+            // 直接释放到本地作用域
             (string alpha, string beta) = letters;
-            Console.WriteLine($"{alpha} - {beta}");  // 变量直接在本地
+            Console.WriteLine($"{alpha} - {beta}");
 
             MyPoint point = new MyPoint(1.2, 3.4);
 
@@ -128,18 +126,18 @@ namespace ConsoleAppCore.Demos
             // 由于 Point 类定义了相应的 Deconstruct 函数
             // 此处编译器将会自动调用相应的方法
 
-            // 此处只能使用创建“本地”变量的方式  (double pointX, double pointY)          
+            // 此处只能使用直接创建“本地”变量的方式  (double pointX, double pointY)          
             (double pointX, double pointY) = point;
 
             // 不能使用命名元组方式  (double pointX, double pointY) kkking
-            //(double pointX, double pointY) kkking = point
+            // (double pointX, double pointY) kkking = point
             Console.WriteLine($"{pointX} - {pointY}");
 
             // 返回“命名的元组” (int Max, int Min)
             // 元组通过 (int Max, int Min) 方式定义
             // 这个与 Tuple 类型有两个重要的不同点
             // 1，可以用命名方式访问，而不是 Item1，Item2 方式访问
-            // 2，返回的是一个值类型，而不是引用类型
+            // 2，返回的是一个“值类型”，而不是引用类型
             return (100, 0);
         }
 
@@ -196,8 +194,10 @@ namespace ConsoleAppCore.Demos
         {
             if (string.IsNullOrWhiteSpace(address))
                 throw new ArgumentException(message: "An address is required", paramName: nameof(address));
+
             if (index < 0)
                 throw new ArgumentOutOfRangeException(paramName: nameof(index), message: "The index must be non-negative");
+
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException(message: "You must supply a name", paramName: nameof(name));
 
@@ -330,7 +330,5 @@ namespace ConsoleAppCore.Demos
 
         }
     }
-
-
 
 }
