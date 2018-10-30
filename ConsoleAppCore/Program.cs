@@ -5,6 +5,7 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using ConsoleAppCore.Demos;
+using ConsoleAppCore.Demos.Misc;
 using ConsoleAppCore.Demos.SimpleAOP;
 
 namespace ConsoleAppCore
@@ -22,7 +23,7 @@ namespace ConsoleAppCore
         }
         private static void Temp()
         {
-            Runner.MediatR();
+            TaskExceptions.Run();
         }
     }
 }
