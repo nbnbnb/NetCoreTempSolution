@@ -110,10 +110,16 @@ namespace ConsoleAppCore.Demos
             Console.WriteLine($"{letters.Item1} - {letters.Item2}");
 
             // 使用自命名方式
-            // 如果左右边都指定了，将会保留左边（编译器会提示）
-            (string alphaLeft, string betaLeft) rightAlphabate = (alphaRight: "a", betaRight: "b");
-            Console.WriteLine($"{rightAlphabate.alphaLeft} - {rightAlphabate.betaLeft}");
+            // 左边为目标类型，以左边为准
+            (string alphaLeft, string betaLeft) leftAlphabate = (alphaRight: "a", betaRight: "b");
+            Console.WriteLine($"{leftAlphabate.alphaLeft} - {leftAlphabate.betaLeft}");
 
+            // 使用自命名方式
+            // 已右边为准
+            var rigthAlphabate = (alphaRight: "a", betaRight: "b");
+            Console.WriteLine($"{rigthAlphabate.alphaRight} - {rigthAlphabate.betaRight}");
+
+            // 不指定变量名称
             // 解包，并创建“本地”变量
             // 没有声明额外变量
             // 直接释放到本地作用域
@@ -128,16 +134,16 @@ namespace ConsoleAppCore.Demos
 
             // 此处只能使用直接创建“本地”变量的方式  (double pointX, double pointY)          
             (double pointX, double pointY) = point;
+            Console.WriteLine($"{pointX} - {pointY}");
 
             // 不能使用命名元组方式  (double pointX, double pointY) kkking
             // (double pointX, double pointY) kkking = point
-            Console.WriteLine($"{pointX} - {pointY}");
 
             // 返回“命名的元组” (int Max, int Min)
             // 元组通过 (int Max, int Min) 方式定义
             // 这个与 Tuple 类型有两个重要的不同点
             // 1，可以用命名方式访问，而不是 Item1，Item2 方式访问
-            // 2，返回的是一个“值类型”，而不是引用类型
+            // 2，返回的是一个“值类型”，而不是引用类型，这个差别非常重要
             return (100, 0);
         }
 
@@ -249,22 +255,12 @@ namespace ConsoleAppCore.Demos
             Console.WriteLine(abc ?? throw new ArgumentException("Not allow null"));
         }
 
-        /// <summary>
-        /// 7. 增强的表达式体成员（C# 6.0 只支持成员函数和只读属性）
-        /// 现在支持 类型构造器
-        /// </summary>
-        /// <param name="label"></param>
-        // Expression-bodied constructor
-        public CSharp70Features(string label)
-        {
-            Label = label;
-        }
-
         private int _health;
 
         /// <summary>
-        /// expression bodied
-        /// 类型构造器
+        /// => 增强的表达式体
+        /// 7. 增强的表达式体成员（C# 6.0 只支持成员函数和只读属性）
+        /// 现在支持 类型构造器
         /// </summary>
         /// <param name="health"></param>
         public CSharp70Features(int health) => _health = health >= 0 ? throw new ArgumentOutOfRangeException() : health;

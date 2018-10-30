@@ -152,6 +152,7 @@ namespace ConsoleAppCore.Demos
 
             // ?. 操作符可以保证左边的表达式只被计算一次
             // 并且将结果缓存，这样可以避免委托为空的场景
+            // Delegate 是值类型，复制下来就可以保证不能空的场景了
             cSharp60.SometingHappened?.Invoke(null, null);
         }
 
