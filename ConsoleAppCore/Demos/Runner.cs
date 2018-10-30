@@ -24,6 +24,7 @@ using MediatR.Pipeline;
 using Ninject.Syntax;
 using MediatR;
 using ConsoleAppCore.Demos.SimpleAOP;
+using Castle.DynamicProxy;
 
 namespace ConsoleAppCore
 {
@@ -380,25 +381,25 @@ namespace ConsoleAppCore
             // 配置 PostProcessor AOP 
             kernel.Bind(typeof(IRequestPostProcessor<,>)).To(typeof(RequestPostProcessorAOP<,>));
 
-            // 启用 Around 形式的 AOP
+            // 启用并配置 Around 形式的 AOP
             kernel.Bind(typeof(IPipelineBehavior<,>)).To(typeof(PipelineAOP<,>));
 
             // 配置 MediatR 的动态 Factory
-            kernel.Bind<ServiceFactory>().ToMethod(ctx => t => ctx.Kernel.TryGet(t));
+            kernel.Bind<ServiceFactory>().ToMethod(ctx => serviceType => ctx.Kernel.TryGet(serviceType));
 
             var mediator = kernel.Get<IMediator>();
 
-            // 有返回值 Async Handler
-            Console.WriteLine(await mediator.Send(new Ping() { MsgId = 100 }));
+            // 有返回值 异步 
+            _ = await mediator.Send(new Ping() { MsgId = 100 });
 
             Console.WriteLine();
 
-            // 有返回值 Sync Handler
-            Console.WriteLine(await mediator.Send(new Pong() { MsgId = 100 }));
+            // 有返回值 同步 
+            _ = await mediator.Send(new Pong() { MsgId = 200 });
 
             Console.WriteLine();
 
-            // 无返回值 Async Handler
+            // 无返回值 异步 
             await mediator.Send(new OneWay());
 
             Console.WriteLine();
@@ -415,5 +416,6 @@ namespace ConsoleAppCore
             samepleProxy.WriteMessage("here is invoke by proxy");
             Console.WriteLine(samepleProxy.GetAddress(123));
         }
+
     }
 }

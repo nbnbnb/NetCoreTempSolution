@@ -12,7 +12,11 @@ namespace ConsoleAppCore.Demos.MediatR
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
             Console.WriteLine("-- PipelineAOP Begin");
-            var response = await next();
+
+            TResponse response = await next();
+
+            Console.WriteLine($"Response: {response}");
+
             Console.WriteLine("-- PipelineAOP  End ");
             return response;
         }

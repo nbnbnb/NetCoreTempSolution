@@ -22,8 +22,7 @@ namespace ConsoleAppCore
         }
         private static void Temp()
         {
-
-
+            Runner.MediatR();
         }
     }
 }

@@ -6,13 +6,16 @@ using System.Text;
 namespace ConsoleAppCore.Demos.MediatR
 {
     /// <summary>
-    /// 同步，有返回值的 Handler
+    /// 同步
+    /// 有返回值
     /// </summary>
     public class SyncPongHandler : RequestHandler<Pong, string>
     {
         protected override string Handle(Pong request)
         {
-            return "Pong Sync Pong";
+            Console.WriteLine("Pong Sync Pong");
+
+            return "Result for -> Pong Sync Pong";
         }
     }
 }
