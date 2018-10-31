@@ -112,32 +112,15 @@ namespace ConsoleAppCore.Demos.Misc
             {
                 // 返回根源异常
                 // 返回最内层异常的顺序和异常抛出的时间无关，TaskAll 会等待所有的异常
-                // 现在的实现是，将“第一个任务的异常当作最内层异常返回”，此处就是 task1
-                // 使用 AggregateException 重写的 GetBaseException 方法返回作为问题根源的最内层的异常
-                // 第一个任务的 AggregateException 异常作为最内层异常抛出
+                // 现在的实现是，将“第一个任务的异常当作 InnerException 属性返回”
+                // 此处就是 task1 抛出的 AggregateException
 
-                // 为什么没有像上面 MLink() 示例一样进行解包呢？
-                // 因为 Task.WaitAll 会对异常有一个封装
-                // 获得引发异常的根本原因
+                // ex.GetBaseException() == ex
+                Console.WriteLine($"ex.GetBaseException() == ex => {ex.GetBaseException() == ex}");
 
-                // ex 是对整个 WaitAll() 方法中抛出的异常的一个封装
-                Exception ex_01 = ex.GetBaseException();
-
-                Console.WriteLine(ex_01 == ex);  // True ????
-
-                // 其 InnerException 是 M1 抛出的 AggregateException
-                Exception ex_02 = ex_01.InnerException;
-
-                // 最后获取 M1 的 AggregateException 的内部异常
-                Exception ex_03 = ex_02.InnerException;
-
-                Console.WriteLine(ex_03.Message + "---" + ex_03.GetType());
-
-                Console.WriteLine("\n---- Demo6 ----");
-                Console.WriteLine("直接通过 InnerException.InnerException 获取层级异常（结果与上面一样）");
-                // 将“第一个任务的异常当作 InnerException 返回”，此处就是 task1 的异常
-                // M1 抛出的 AggregateException
-                // 然后再次通过 InnerException 获取其内部异常，最后就是 throw new NotSupportedException("M1")
+                // 将“第一个任务的异常当作 InnerException 返回”，此处就是 task1 的异常，被封装成 AggregateException
+                // 然后再次通过 InnerException 获取其内部异常
+                // 最后就是 throw new NotSupportedException("M1")
                 Exception innerEx = ex.InnerException.InnerException;
                 Console.WriteLine(innerEx.Message + "---" + innerEx.GetType());
             }
