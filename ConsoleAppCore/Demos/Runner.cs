@@ -422,6 +422,8 @@ namespace ConsoleAppCore
         {
             int cnt = 10000000;
             int target = 0;
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
             // List 列表非线程安全，Add 时会有丢失
             // List<int> results = new List<int>();
             ConcurrentQueue<int> results = new ConcurrentQueue<int>();
@@ -441,8 +443,8 @@ namespace ConsoleAppCore
                 // 所以不能在此处添加
                 // results.Enqueue(target);
             });
-
-            Console.WriteLine($"总计数（包含冲突）:{results.Count()}，去重后是否相等：{cnt== results.Distinct().Count()}");
+            stopwatch.Stop();
+            Console.WriteLine($"总计数（包含冲突）:{results.Count()}，循环计数：{cnt}，去重后是否相等：{cnt== results.Distinct().Count()}，计时：{stopwatch.Elapsed}");
 
         }
     }
