@@ -25,6 +25,7 @@ using Ninject.Syntax;
 using MediatR;
 using ConsoleAppCore.Demos.SimpleAOP;
 using Castle.DynamicProxy;
+using System.Collections.Concurrent;
 
 namespace ConsoleAppCore
 {
@@ -417,5 +418,32 @@ namespace ConsoleAppCore
             Console.WriteLine(samepleProxy.GetAddress(123));
         }
 
+        public static void MorpherDemo()
+        {
+            int cnt = 10000000;
+            int target = 0;
+            // List 列表非线程安全，Add 时会有丢失
+            // List<int> results = new List<int>();
+            ConcurrentQueue<int> results = new ConcurrentQueue<int>();
+            var tp = Parallel.For(0, cnt, i =>
+            {
+                Morpher.Run(ref target, results, (int startValue, ConcurrentQueue<int> argument, out string morphResult) =>
+                {
+                    morphResult = "";
+                    var res = startValue + 1;
+                    // 在 morpher 方法中添加
+                    // 这个方法冲突时会重试，所以计数会大于循环次数
+                    argument.Enqueue(res);
+                    return res;
+                });
+
+                // 这个时候的 target 可能已经被其他线程修改
+                // 所以不能在此处添加
+                // results.Enqueue(target);
+            });
+
+            Console.WriteLine($"总计数（包含冲突）:{results.Count()}，去重后是否相等：{cnt== results.Distinct().Count()}");
+
+        }
     }
 }

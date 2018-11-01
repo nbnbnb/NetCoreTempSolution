@@ -7,6 +7,7 @@ namespace ConsoleAppCore.Util
 {    
     public static class Morpher
     {
+        // 由于 Func<T> 不支持 Out 参数        
         public delegate Int32 MorpherAction<TResult, in TArgument>(Int32 startValue, TArgument argument, out TResult morphResult);
 
         public static TResult Run<TResult, TArgument>(ref Int32 target, TArgument argument, MorpherAction<TResult, TArgument> morpher)

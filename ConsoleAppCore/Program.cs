@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 using ConsoleAppCore.Demos;
 using ConsoleAppCore.Demos.Misc;
 using ConsoleAppCore.Demos.SimpleAOP;
+using ConsoleAppCore.Util;
+using System.Linq;
+using System.Threading;
+using System.Collections.Concurrent;
 
 namespace ConsoleAppCore
 {
@@ -23,7 +27,8 @@ namespace ConsoleAppCore
         }
         private static void Temp()
         {
-            TaskExceptions.Run();
+            Runner.MorpherDemo();
         }
     }
+
 }
