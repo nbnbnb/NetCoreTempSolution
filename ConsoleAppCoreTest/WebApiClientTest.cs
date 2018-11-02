@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using WebApiClient;
 using WebApiClient.Attributes;
 
-namespace ConsoleAppCoreTest
+namespace ConsoleAppCore.UnitTests
 {
     [TestClass]
     public class WebApiClientTest
@@ -18,8 +18,6 @@ namespace ConsoleAppCoreTest
             var client = HttpApiClient.Create<IMyWebApi>();
             var content = await client.GetContentAsync();
             Assert.IsTrue(content.Contains("<html>", StringComparison.OrdinalIgnoreCase));
-
         }
-
     }
 }

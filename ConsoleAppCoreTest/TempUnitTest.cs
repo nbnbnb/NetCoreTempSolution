@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ConsoleAppCoreTest
+namespace ConsoleAppCore.UnitTests
 {
     [TestClass]
     public class TempUnitTest
