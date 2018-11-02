@@ -27,7 +27,7 @@ namespace ConsoleAppCore.UnitTests
         public static void Assembly_Initialize(TestContext testContext)
         {
             GlobalTestContext = testContext;
-            StaticData.IsInit = true;
+            StaticData.IsAssemblyInit = true;
             testContext.Properties["AssemblyInitialize"] = true;
         }
 

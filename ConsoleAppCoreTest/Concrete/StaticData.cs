@@ -6,8 +6,8 @@ namespace ConsoleAppCore.UnitTests.Concrete
 {
     class StaticData
     {
-        public static bool IsInit { get; set; }
+        public static bool IsAssemblyInit { get; set; }
 
-
+        public static bool IsClassInit { get; set; }
     }
 }

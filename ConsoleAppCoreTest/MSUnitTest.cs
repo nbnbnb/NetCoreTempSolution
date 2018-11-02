@@ -6,14 +6,35 @@ using System;
 namespace ConsoleAppCore.UnitTests
 {
     [TestClass]
+    [Ignore]
     public class MSUnitTest : TestBase
     {
+        [ClassInitialize]
+        public static void ClassInitialize_Test(TestContext testContext)
+        {
+            // 这个 TestContext 与 GlobalTestContext 是同一个
+            Assert.IsTrue(testContext == GlobalTestContext);
+            StaticData.IsClassInit = true;
+        }
+
+        [TestInitialize]
+        public void TestInitialize_Test()
+        {
+
+        }
+
+        [TestCleanup]
+        public void TestCleanup_Test()
+        {
+
+        }
 
         [TestMethod]
-        public void AddIntegers_FromDataSourceTest()
+        public void TestBase_Init_Test()
         {
             Assert.IsNotNull(TestContext);
-            Assert.IsTrue(StaticData.IsInit);
+            Assert.IsTrue(StaticData.IsAssemblyInit);
+            Assert.IsTrue(StaticData.IsClassInit);
             Assert.IsTrue((bool)GlobalTestContext.Properties["AssemblyInitialize"]);
         }
 
@@ -28,9 +49,23 @@ namespace ConsoleAppCore.UnitTests
         [DataRow(1, 2, 3)]
         [DataRow(2, 3, 5)]
         [DataRow(3, 5, 8)]
-        public void AdditionTest(int a, int b, int result)
+        public void DataTestMethod_Test(int a, int b, int result)
         {
             Assert.AreEqual(result, a + b);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void ExpectedException_Test()
+        {
+            throw new ArgumentNullException();
+        }
+
+        [TestMethod]
+        [Ignore]
+        public void Ignore_Test()
+        {
+            Assert.IsTrue(false);
         }
 
     }
