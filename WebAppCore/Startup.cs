@@ -47,9 +47,9 @@ namespace WebAppCore
             var healthMetrics = AppMetricsHealth.CreateDefaultBuilder()
                     .HealthChecks.RegisterFromAssembly(services)
                     .BuildAndAddTo(services);
-            
+
             services.AddMetrics(basicMetrics);
-            
+
             // 定期推送监控信息
             services.AddMetricsReportScheduler();
 
@@ -62,7 +62,12 @@ namespace WebAppCore
             // 启用 App.Metrics.AspNetCore.Health 包中的中间件
             services.AddHealth(healthMetrics);
 
-            services.AddMvc();
+            services
+                    .AddMvc(options =>
+                        {
+
+                        })
+                    .AddXmlSerializerFormatters();  // 添加 ModelBind XML 格式支持
 
             services.AddSwaggerGen(c =>
             {
