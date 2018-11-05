@@ -1,4 +1,6 @@
-﻿@{
+﻿@using WebAppCore.Ext;
+
+@{
     ViewData["Title"] = "Contact";
 }
 <h2>@ViewData["Title"]</h2>
@@ -15,3 +17,12 @@
     <strong>Support:</strong> <a href="mailto:Support@example.com">Support@example.com</a><br />
     <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
 </address>
+
+<h2>Product list using htmlHelper</h2>
+<div class="row">
+    <div class="col-md-6">@Html.ListGroup().Info(new List<String> { "A", "B", "C" }, it => it + it)</div>
+    <div class="col-md-6">@Html.ListGroup().Warning(new List<String> { "A", "B", "C" }, it => it + it)</div>
+</div>
+<div class="row">
+    <div class="col-md-6">@Html.ListGroup().Danger(new List<String> { "A", "B", "C" }, it => it + it)</div>
+</div>

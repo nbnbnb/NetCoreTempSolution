@@ -11,6 +11,8 @@ using ConsoleAppCore.Util;
 using System.Linq;
 using System.Threading;
 using System.Collections.Concurrent;
+using System.Xml.Serialization;
+using System.Text;
 
 namespace ConsoleAppCore
 {
@@ -27,8 +29,6 @@ namespace ConsoleAppCore
         }
         private static void Temp()
         {
-            Runner.MorpherDemo();
         }
     }
-
 }

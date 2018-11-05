@@ -4,10 +4,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using WebAppCore.Ext;
 using WebAppCore.Models;
 
 namespace WebAppCore.Controllers
 {
+    [Stopwatch]
     public class HomeController : Controller
     {
         public IActionResult Index()
@@ -32,6 +34,17 @@ namespace WebAppCore.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public IActionResult GetUser()
+        {
+            var user = new UserViewModel()
+            {
+                Name = "JJJ",
+                Age = 30
+            };
+
+            return new XmlResult(user);
         }
     }
 }
