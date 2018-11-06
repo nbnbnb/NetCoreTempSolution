@@ -8,8 +8,10 @@ using App.Metrics.Formatters.InfluxDB;
 using App.Metrics.Health;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using WebAppCore.TagHelpers;
 
 namespace WebAppCore
 {
@@ -47,9 +49,9 @@ namespace WebAppCore
             var healthMetrics = AppMetricsHealth.CreateDefaultBuilder()
                     .HealthChecks.RegisterFromAssembly(services)
                     .BuildAndAddTo(services);
-            
+
             services.AddMetrics(basicMetrics);
-            
+
             // 定期推送监控信息
             services.AddMetricsReportScheduler();
 
@@ -68,6 +70,9 @@ namespace WebAppCore
             {
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "My API", Version = "v1" });
             });
+
+            // 注册自定义的 TagHelperComponent
+            services.AddTransient<ITagHelperComponent, AddressTagHelperComponent>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
