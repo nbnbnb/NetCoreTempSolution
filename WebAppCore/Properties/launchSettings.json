@@ -5,6 +5,10 @@
     "iisExpress": {
       "applicationUrl": "http://localhost:27909/",
       "sslPort": 0
+    },
+    "iis": {
+      "applicationUrl": "http://localhost/8999",
+      "sslPort": 0
     }
   },
   "profiles": {
@@ -15,13 +19,21 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "WebAppCore": {
-      "commandName": "Project",
+    "IIS": {
+      "commandName": "IIS",
       "launchBrowser": true,
+      "launchUrl": "http://localhost/8999",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:27910/"
+      "WebAppCore": {
+        "commandName": "Project",
+        "launchBrowser": true,
+        "environmentVariables": {
+          "ASPNETCORE_ENVIRONMENT": "Development"
+        },
+        "applicationUrl": "http://localhost:27910/"
+      }
     }
   }
 }
