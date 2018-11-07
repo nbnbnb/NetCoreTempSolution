@@ -20,8 +20,9 @@ namespace WebAppCore.TagHelpers
 
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            var childContent = output.Content.IsModified ? output.Content.GetContent() :
-                (await output.GetChildContentAsync()).GetContent();
+            var childContent = output.Content.IsModified
+                ? output.Content.GetContent()
+                : (await output.GetChildContentAsync()).GetContent();
 
             // Find Urls in the content and replace them with their anchor tag equivalent.
             output.Content.SetHtmlContent(Regex.Replace(
