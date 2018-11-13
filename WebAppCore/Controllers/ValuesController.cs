@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebAppCore.Entities;
 
 namespace WebAppCore.Controllers
 {
@@ -39,6 +40,26 @@ namespace WebAppCore.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+        }
+
+        [HttpGet("authorWithAuthorId/{authorId}")]
+        public IActionResult Get(Author author)
+        {
+            return Ok(author);
+        }
+
+        [HttpGet("authorWithId/{id}")]
+        public IActionResult GetById([ModelBinder(Name = "id")]Author author)
+        {
+            if (author == null)
+            {
+                return NotFound();
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            return Ok(author);
         }
     }
 }

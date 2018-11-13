@@ -68,7 +68,8 @@ namespace WebAppCore
             services
                     .AddMvc(options =>
                     {
-
+                        // 添加自定义 BinderProvider
+                        options.ModelBinderProviders.Insert(0, new AuthorEntityBinderProvider());
                     })
                     .ConfigureApplicationPartManager(apm =>
                     {
