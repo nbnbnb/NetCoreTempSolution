@@ -66,9 +66,10 @@ namespace WebAppCore
 
             services
                     .AddMvc(options =>
-                        {
+                    {
 
-                        })
+                    })
+                    .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Latest)  // 使用最新版本 MVC
                     .AddXmlSerializerFormatters();  // 添加 ModelBind XML 格式支持
 
             services.AddSwaggerGen(c =>
