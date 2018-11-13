@@ -45,3 +45,8 @@
 <div class="row">
     <div class="col-md-6">@Html.ListGroup().Danger(new List<String> { "A", "B", "C" }, it => it + it)</div>
 </div>
+<div>
+    @await Component.InvokeAsync("PriorityList", new { maxPriority = 2, isDone = true })
+
+    @await Component.InvokeAsync("PriorityList", new { maxPriority = 4, isDone = true })
+</div>

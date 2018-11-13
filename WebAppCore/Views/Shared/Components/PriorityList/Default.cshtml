@@ -1,0 +1,10 @@
+﻿@model IEnumerable<WebAppCore.Entities.TodoItem>
+
+<h2> ToDo List</h2>
+<h4>@ViewBag.PriorityMessage</h4>
+<ul>
+    @foreach (var todo in Model)
+    {
+        <li>@todo.Name</li>
+    }
+</ul>
