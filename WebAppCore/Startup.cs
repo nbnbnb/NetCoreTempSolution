@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using WebAppCore.Ext;
 using WebAppCore.TagHelpers;
 
 namespace WebAppCore
@@ -68,6 +69,10 @@ namespace WebAppCore
                     .AddMvc(options =>
                     {
 
+                    })
+                    .ConfigureApplicationPartManager(apm =>
+                    {
+                        apm.FeatureProviders.Add(new GenericControllerFeatureProvider());
                     })
                     .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Latest)  // 使用最新版本 MVC
                     .AddXmlSerializerFormatters();  // 添加 ModelBind XML 格式支持

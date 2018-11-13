@@ -17,7 +17,8 @@ namespace WebAppCore.IntegrationTests
         {
             var builder = WebHost.CreateDefaultBuilder()
                   .UseEnvironment(EnvironmentName.Development)
-                  .UseStartup<StartupIntegrationTest>();
+                  //.UseStartup<StartupIntegrationTest>();  // 使用自定义的 Startup
+                  .UseStartup<Startup>();  
 
             testServer = new TestServer(builder);
             httpClient = testServer.CreateClient();
