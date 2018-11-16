@@ -340,6 +340,23 @@
 
                 }
             }
+
+            /// <summary>
+            /// .NET Core 2.1 中新增的类型
+            /// .NET Framework 还不支持，可以使用 System.Memory 进行代替
+            /// </summary>
+            public static void SpanType()
+            {
+                var arr = new byte[10];
+                // Span<T> 是一个新的值类型，表示任意内存的“相邻区域”
+                // 无论相应内存是与托管对象相关联，还是通过互操作由本机代码提供，亦或是位于“堆栈”上
+                // 能确保安全访问和高性能特性，就像数组一样
+                Span<byte> bytes = arr; // Implicit cast from T[] to Span<T>
+
+                // 随后，可以轻松高效地创建 Span，以利用 Span 的 Slice 方法重载仅表示、指向此数组的子集
+                // 随后，可以为生成的 Span 编制索引，以编写和读取原始数组中相关部分的数据
+                Span<byte> slicedBytes = bytes.Slice(start: 5, length: 2);
+            }
         }
     }
 

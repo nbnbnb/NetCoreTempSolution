@@ -7,7 +7,7 @@ namespace ConsoleAppCore.UnitTests
     public class TempUnitTest : TestBase
     {
         [TestMethod]
-        public void TempTest()
+        public void Temp_Test()
         {
 
         }

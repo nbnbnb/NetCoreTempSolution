@@ -6,14 +6,12 @@ using System;
 namespace ConsoleAppCore.UnitTests
 {
     [TestClass]
-    [Ignore]
+    //[Ignore]
     public class MSUnitTest : TestBase
     {
         [ClassInitialize]
         public static void ClassInitialize_Test(TestContext testContext)
         {
-            // 这个 TestContext 与 GlobalTestContext 是同一个
-            Assert.IsTrue(testContext == GlobalTestContext);
             StaticData.IsClassInit = true;
         }
 
@@ -35,7 +33,6 @@ namespace ConsoleAppCore.UnitTests
             Assert.IsNotNull(TestContext);
             Assert.IsTrue(StaticData.IsAssemblyInit);
             Assert.IsTrue(StaticData.IsClassInit);
-            Assert.IsTrue((bool)GlobalTestContext.Properties["AssemblyInitialize"]);
         }
 
         /// <summary>
@@ -60,13 +57,5 @@ namespace ConsoleAppCore.UnitTests
         {
             throw new ArgumentNullException();
         }
-
-        [TestMethod]
-        [Ignore]
-        public void Ignore_Test()
-        {
-            Assert.IsTrue(false);
-        }
-
     }
 }

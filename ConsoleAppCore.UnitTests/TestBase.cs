@@ -11,12 +11,6 @@ namespace ConsoleAppCore.UnitTests
     public class TestBase
     {
         /// <summary>
-        /// 全局的 TestContext
-        /// 可以在里面存储共享的数据
-        /// </summary>
-        public static TestContext GlobalTestContext { get; set; }
-
-        /// <summary>
         /// 程序集初始化时执行
         /// 所有的资源初始化最前面
         /// 
@@ -26,7 +20,6 @@ namespace ConsoleAppCore.UnitTests
         [AssemblyInitialize]
         public static void Assembly_Initialize(TestContext testContext)
         {
-            GlobalTestContext = testContext;
             StaticData.IsAssemblyInit = true;
             testContext.Properties["AssemblyInitialize"] = true;
         }
