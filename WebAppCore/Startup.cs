@@ -2,10 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using App.Metrics;
-using App.Metrics.Filtering;
-using App.Metrics.Formatters.InfluxDB;
-using App.Metrics.Health;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -29,43 +25,6 @@ namespace WebAppCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // 基础 Web Metrics  配置
-            var basicMetrics = AppMetrics.CreateDefaultBuilder()
-                .Report.ToInfluxDb(
-                    options =>
-                    {
-                        options.InfluxDb.BaseUri = new Uri("http://tcloud.zhangjin.tk:8086");
-                        options.InfluxDb.Database = "AppMetricsDB";
-                        options.InfluxDb.UserName = "appmetrics";
-                        options.InfluxDb.Password = "appmetrics";
-                        options.InfluxDb.CreateDataBaseIfNotExists = true;
-                        options.HttpPolicy.BackoffPeriod = TimeSpan.FromSeconds(30);
-                        options.HttpPolicy.FailuresBeforeBackoff = 5;
-                        options.HttpPolicy.Timeout = TimeSpan.FromSeconds(10);
-                        options.MetricsOutputFormatter = new MetricsInfluxDbLineProtocolOutputFormatter();
-                        options.FlushInterval = TimeSpan.FromSeconds(20);
-                    })
-                .Build();
-
-            // Health Metrics 配置
-            var healthMetrics = AppMetricsHealth.CreateDefaultBuilder()
-                    .HealthChecks.RegisterFromAssembly(services)
-                    .BuildAndAddTo(services);
-
-            services.AddMetrics(basicMetrics);
-
-            // 定期推送监控信息
-            services.AddMetricsReportScheduler();
-
-            // 启用 App.Metrics.AspNetCore.Tracking 包中的中间件
-            services.AddMetricsTrackingMiddleware();
-
-            // 启用 App.Metrics.AspNetCore.Endpoints 包中的中间件
-            services.AddMetricsEndpoints();
-
-            // 启用 App.Metrics.AspNetCore.Health 包中的中间件
-            services.AddHealth(healthMetrics);
-
             services
                     .AddMvc(options =>
                     {
@@ -113,27 +72,6 @@ namespace WebAppCore
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
-            // 打开所有的 Web Tracking 中间件功能
-            // app.UseMetricsActiveRequestMiddleware();
-            // app.UseMetricsErrorTrackingMiddleware();
-            // app.UseMetricsPostAndPutSizeTrackingMiddleware();
-            // app.UseMetricsRequestTrackingMiddleware();
-            // app.UseMetricsOAuth2TrackingMiddleware();
-            // app.UseMetricsApdexTrackingMiddleware();
-            app.UseMetricsAllMiddleware();
-
-            // 暴露所有的 HTTP 节点
-            // 这样可以被其他应用集成
-            // app.UseMetricsEndpoint();
-            // app.UseMetricsTextEndpoint();
-            // app.UseEnvInfoEndpoint();
-            app.UseMetricsAllEndpoints();
-
-            // 暴露 Health HTTP 节点
-            // app.UseHealthEndpoint();
-            // app.UsePingEndpoint();
-            app.UseHealthAllEndpoints();
 
             app.UseStaticFiles();
             app.UseSwagger();
