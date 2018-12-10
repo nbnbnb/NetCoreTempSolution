@@ -1,6 +1,7 @@
+sudo: required
 language: csharp
 mono: none
-dotnet: 2.2
+dotnet: 2.2.100
 script: 
  - dotnet build NetCoreTempSolution.sln
  - dotnet test WebAppCore.IntegrationTests/WebAppCore.IntegrationTests.csproj
