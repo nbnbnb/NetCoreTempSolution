@@ -1,8 +1,7 @@
+dist: trusty
 language: csharp
 mono: none
 dotnet: 2.2.100
-install: 
- - sudo apt-get install -y dpkg
 script: 
  - dotnet build NetCoreTempSolution.sln
  - dotnet test WebAppCore.IntegrationTests/WebAppCore.IntegrationTests.csproj
