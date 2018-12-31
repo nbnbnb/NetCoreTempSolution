@@ -26,6 +26,7 @@ using MediatR;
 using ConsoleAppCore.Demos.SimpleAOP;
 using Castle.DynamicProxy;
 using System.Collections.Concurrent;
+using ConsoleAppCore.Demos.Coroutine;
 
 namespace ConsoleAppCore
 {
@@ -444,8 +445,25 @@ namespace ConsoleAppCore
                 // results.Enqueue(target);
             });
             stopwatch.Stop();
-            Console.WriteLine($"总计数（包含冲突）:{results.Count()}，循环计数：{cnt}，去重后是否相等：{cnt== results.Distinct().Count()}，计时：{stopwatch.Elapsed}");
+            Console.WriteLine($"总计数（包含冲突）:{results.Count()}，循环计数：{cnt}，去重后是否相等：{cnt == results.Distinct().Count()}，计时：{stopwatch.Elapsed}");
 
+        }
+
+        public static void Coroutiner()
+        {
+            //错误处理仅仅是将错误显示在控制台里
+            Action<ICoroutineUnit, Exception> errorHandle = (unit, ex) =>
+            {
+                Console.WriteLine(ex.ToString());
+            };
+            //初始化协程容器
+            ICoroutineContainer coroutineContainerBase = new CoroutineContainerBase(errorHandle);
+            //注册Action1
+            coroutineContainerBase.Register(new Action01());
+            //注册Action2
+            coroutineContainerBase.Register(new Action02());
+            //运行容器
+            coroutineContainerBase.Run();
         }
     }
 }

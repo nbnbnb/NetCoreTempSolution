@@ -13,6 +13,7 @@ using System.Threading;
 using System.Collections.Concurrent;
 using System.Xml.Serialization;
 using System.Text;
+using System.Net.Http;
 
 namespace ConsoleAppCore
 {
@@ -29,6 +30,8 @@ namespace ConsoleAppCore
         }
         private static void Temp()
         {
+
         }
     }
+
 }
