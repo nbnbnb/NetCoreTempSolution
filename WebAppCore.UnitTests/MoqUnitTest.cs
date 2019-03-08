@@ -3,6 +3,9 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using Moq.Protected;
+using System.Reflection;
+using Match = Moq.Match;
 
 namespace WebAppCore.UnitTests
 {
@@ -198,8 +201,164 @@ namespace WebAppCore.UnitTests
             });
             b.Object.SayName();
 
+            // 默认情况下，属性返回的是默认值
+            mock = new Mock<IFoo> { DefaultValue = DefaultValue.Empty };
+            Assert.AreEqual(mock.Object.Bar, null);
+            // 可以设置为返回一个 Mock 对象
+            mock = new Mock<IFoo> { DefaultValue = DefaultValue.Mock };
+            Assert.IsNotNull(mock.Object.Bar);
+            // 并且从这个对象中，还可以获得 Mock 对象
+            // 然后对这个对象进行相应的设置
+            Mock<Bar> mockBar = Mock.Get(mock.Object.Bar);
+            mockBar.Setup(m => m.Submit()).Returns(true);
+
+            // 使用 MockRepository 将所有的 Behavior 同时设置
+            var repository = new MockRepository(MockBehavior.Strict) { DefaultValue = DefaultValue.Mock };
+
+            // 使用 MockRepository 的设置
+            var fooMock = repository.Create<IFoo>();
+
+            // 可以覆盖设置
+            var barMock = repository.Create<Bar>(MockBehavior.Loose);
+
+            // 执行 MockRepository 上面的验证
+            repository.Verify();
+
         }
-        #region Test Classes
+
+        [TestMethod]
+        public void Miscellaneous_Test()
+        {
+            var mock = new Mock<IFoo>();
+            // 使用 SetupSequence 设置每次调用返回不同的值
+            mock.SetupSequence(f => f.GetCount())
+                .Returns(3)  // will be returned on 1st invocation
+                .Returns(2)  // will be returned on 2nd invocation
+                .Returns(1)  // will be returned on 3rd invocation
+                .Returns(0)  // will be returned on 4th invocation
+                .Throws(new InvalidOperationException());  // will be thrown on 5th invocation
+
+            // in the test
+            // using Moq.Protected;
+            // 对于受保护的成员，无法通过智能提示访问其程序信息
+            // 此处可以使用 Protected() 扩展方法，然后通过字符串的信息进行 Setup
+            var mockBase = new Mock<CommandBase>();
+            mockBase.Protected()
+                 .Setup<int>("Execute")
+                 .Returns(5);
+            // 如果是传递参数的场景，需要使用 ItExpr，而不能使用 It
+            mockBase.Protected()
+                .Setup<bool>("Execute", ItExpr.IsAny<String>())
+                .Returns(true);
+
+            // Moq 4.8+ 支持使用一个兼容受保护成员的接口，来提供强类型支持
+            mockBase.Protected().As<CommandBaseProtectedMembers>()
+                .Setup(m => m.Show(It.IsAny<string>()))
+                .Returns<String>(m => m);
+
+            // 传递的 Mock 对象，覆盖了原始的实现
+            CommandBase.ABC abc = new CommandBase.ABC(mockBase.Object);
+            Assert.AreEqual(abc.ExecuteId, 5);
+            Assert.IsTrue(abc.ExecuteBool);
+            Assert.AreEqual(abc.ShowStr, "abc");
+        }
+
+        [TestMethod]
+        public void Advanced_Features_Test()
+        {
+            Mock<IFoo> mock = new Mock<IFoo>();
+            // 这个对象其实包含 Mock 信息
+            IFoo foo = mock.Object;
+            // 通过 Mock.Get 可以获得原始的 Mock 数据
+            Mock<IFoo> fooMock = Mock.Get(foo);
+            fooMock.Setup(f => f.GetCount()).Returns(42);
+            Assert.AreEqual(foo.GetCount(), 42);
+
+
+            Mock<IFoo> mock2 = new Mock<IFoo>();
+            // 可以转型到接口进行 Mock
+            Mock<IDisposable> disposableFoo = mock2.As<IDisposable>();
+            // 然后可以设置接口的方法（不转型不能设置）
+            disposableFoo.Setup(disposable => disposable.Dispose());
+            // 在单个 mock 中设置
+            mock2.As<IDisposable>().Setup(disposable => disposable.Dispose());
+
+            // 自定义 Matcher
+            mock2.Setup(m => m.DoSomething(IsLarge())).Throws<ArgumentException>();
+
+            var mock3 = new Mock<IFoo>
+            {
+                DefaultValueProvider = new MyEmptyDefaultValueProvider()
+            };
+
+            Assert.AreEqual("?", mock3.Object.Name);
+            // 此时为 DefaultValue.Custom
+            Assert.AreEqual(mock3.DefaultValue, DefaultValue.Custom);
+
+        }
+
+        #region Test Items
+
+        /// <summary>
+        /// 创建自定义的默认值提供程序
+        /// </summary>
+        class MyEmptyDefaultValueProvider : LookupOrFallbackDefaultValueProvider
+        {
+            public MyEmptyDefaultValueProvider()
+            {
+                // 如果是字符串类型，则返回 ?
+                base.Register(typeof(string), (type, mock) => "?");
+                base.Register(typeof(List<>), (type, mock) => Activator.CreateInstance(type));
+            }
+        }
+
+        public string IsLarge()
+        {
+            return Match.Create<string>(s => !String.IsNullOrEmpty(s) && s.Length > 100);
+        }
+
+        interface CommandBaseProtectedMembers
+        {
+            string Show(string arg);
+        }
+
+        public class CommandBase
+        {
+            // 访问级别不是 public
+            // 此处 Moq 无法读取到 Execute 方法信息
+            protected virtual int Execute()
+            {
+                return 0;
+            }
+
+            protected virtual bool Execute(string arg)
+            {
+                return false;
+            }
+
+            protected virtual string Show(string arg)
+            {
+                return arg;
+            }
+
+            // 由于 Execute 是 protected 级别
+            // 此处放在嵌套类中可以访问
+            public class ABC
+            {
+                public int ExecuteId { get; private set; }
+
+                public bool ExecuteBool { get; private set; }
+
+                public string ShowStr { get; private set; }
+
+                public ABC(CommandBase command)
+                {
+                    ExecuteId = command.Execute();
+                    ExecuteBool = command.Execute("xyz");
+                    ShowStr = command.Show("abc");
+                }
+            }
+        }
 
         public abstract class A
         {
