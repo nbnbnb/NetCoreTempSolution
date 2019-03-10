@@ -284,8 +284,12 @@ namespace WebAppCore.UnitTests
             mock2.As<IDisposable>().Setup(disposable => disposable.Dispose());
 
             // 自定义 Matcher
-            mock2.Setup(m => m.DoSomething(IsLarge())).Throws<ArgumentException>();
+            mock2.Setup(m => m.DoSomething(IsSmall())).Throws<ArgumentException>();
 
+            // 参数小于 5 个字符
+            Assert.ThrowsException<ArgumentException>(() => mock2.Object.DoSomething("abc"));
+
+            // 使用自定义的默认值提供程序
             var mock3 = new Mock<IFoo>
             {
                 DefaultValueProvider = new MyEmptyDefaultValueProvider()
@@ -312,9 +316,9 @@ namespace WebAppCore.UnitTests
             }
         }
 
-        public string IsLarge()
+        public string IsSmall()
         {
-            return Match.Create<string>(s => !String.IsNullOrEmpty(s) && s.Length > 100);
+            return Match.Create<string>(s => !String.IsNullOrEmpty(s) && s.Length < 5);
         }
 
         interface CommandBaseProtectedMembers
