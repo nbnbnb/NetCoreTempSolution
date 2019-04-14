@@ -15,7 +15,7 @@ namespace ConsoleAppCore.UnitTests
         [TestMethod]
         public async Task BasicGetTest()
         {
-            var client = HttpApiClient.Create<IMyWebApi>();
+            var client = HttpApi.Create<IMyWebApi>();
             var content = await client.GetContentAsync();
             Assert.IsTrue(content.Contains("<html>", StringComparison.OrdinalIgnoreCase));
         }

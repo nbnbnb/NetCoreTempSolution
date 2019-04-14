@@ -26,14 +26,15 @@
 		<PackageReference Include="AspectCore.Extensions.Autofac" Version="1.2.0" />
 		<PackageReference Include="AspectCore.Extensions.DependencyInjection" Version="1.2.0" />
 		<PackageReference Include="MediatR" Version="6.0.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.2" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.4" />
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.2.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
 		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.2.0" />
 		<PackageReference Include="Ninject" Version="3.3.4" />
 		<PackageReference Include="ninject.extensions.conventions" Version="3.3.0" />
-		<PackageReference Include="WebApiClient.JIT" Version="0.3.3" />
+		<PackageReference Include="System.Reactive" Version="4.1.5" />
+		<PackageReference Include="WebApiClient.JIT" Version="1.0.3" />
 	</ItemGroup>
 
 
