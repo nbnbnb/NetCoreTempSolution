@@ -28,7 +28,7 @@ namespace ConsoleAppCore.MyLinq.LinqToTerra
         protected override Expression VisitConstant(ConstantExpression c)
         {
             // Replace the constant QueryableTerraServerData arg with the queryable Place collection. 
-            if (c.Type == typeof(QueryableTerraServerData<Place>))
+            if (c.Type == typeof(TerraServerDataQueryable<Place>))
                 return Expression.Constant(this.queryablePlaces);
             else
                 return c;
