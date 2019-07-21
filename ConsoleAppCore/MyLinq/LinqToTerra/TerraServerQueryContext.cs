@@ -28,8 +28,11 @@ namespace ConsoleAppCore.MyLinq.LinqToTerra
             // 获取最内层的 Where 表达式
             MethodCallExpression whereExpression = whereFinder.GetInnermostWhere(expression);
 
+            // Where 方法有两个参数，第一个是数据源，第二个是表达式
+            // 此处获取第二个参数，表达式
             // 获取 Where 表达式里面的 LambdaExpression
             LambdaExpression lambdaExpression = (LambdaExpression)((UnaryExpression)(whereExpression.Arguments[1])).Operand;
+
 
             // Send the lambda expression through the partial evaluator.
             // 将变量表达式执行求值操作
@@ -63,6 +66,7 @@ namespace ConsoleAppCore.MyLinq.LinqToTerra
             // This step creates an IQueryable that executes by replacing Queryable methods with Enumerable methods.     
             // 将自定义的 Query 和 Provider 替换为 Linq to Object 的 Provider 和 IQueryable
             if (isEnumerable)
+                // 切换到原生的 Linq to Object IQueryable
                 return queryablePlaces.Provider.CreateQuery(newExpressionTree);
             else
                 return queryablePlaces.Provider.Execute(newExpressionTree);

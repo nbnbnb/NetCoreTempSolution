@@ -14,6 +14,7 @@ using System.Collections.Concurrent;
 using System.Xml.Serialization;
 using System.Text;
 using System.Net.Http;
+using ConsoleAppCore.MyLinq.LinqToTerra;
 
 namespace ConsoleAppCore
 {
@@ -30,7 +31,7 @@ namespace ConsoleAppCore
         }
         private static void Temp()
         {
-            ConsoleAppCore.Demos.ReLinq.Run.ReLinq();
+            LinqToTerraTest.Run();
         }
     }
 
