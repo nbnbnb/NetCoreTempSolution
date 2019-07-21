@@ -30,7 +30,7 @@ namespace ConsoleAppCore
         }
         private static void Temp()
         {
-
+            ConsoleAppCore.Demos.ReLinq.Run.ReLinq();
         }
     }
 
