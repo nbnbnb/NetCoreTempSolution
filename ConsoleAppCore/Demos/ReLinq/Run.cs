@@ -15,10 +15,16 @@ namespace ConsoleAppCore.Demos.ReLinq
             // Create our IQueryable instance
             SampleQueryable<SampleDataSourceItem> items = new SampleQueryable<SampleDataSourceItem>(queryParser, new SampleQueryExecutor());
 
-            var results = from i in items select i;
+            var results = from i in items
+                          where i.Description == "KKKing" && i.Name == "JJZhang"
+                          select i;
+
 
             // force evalution of the statement to prevent assertion from re-evaluating the query.
-            var list = results.ToList();
+            results.ToList().ForEach(it =>
+            {
+                Console.WriteLine(it);
+            });
         }
     }
 }

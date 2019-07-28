@@ -16,6 +16,9 @@ namespace ConsoleAppCore.Demos.ReLinq
 
         public IEnumerable<T> ExecuteCollection<T>(QueryModel queryModel)
         {
+            CustomVisitor customVisitor = new CustomVisitor();
+            customVisitor.VisitQueryModel(queryModel);
+
             // Create an expression that returns the current item when invoked.
             Expression currentItemExpression = Expression.Property(Expression.Constant(this), "Current");
 

@@ -31,7 +31,7 @@ namespace ConsoleAppCore
         }
         private static void Temp()
         {
-            LinqToTerraTest.Run();
+            Demos.ReLinq.Run.ReLinq();
         }
     }
 
