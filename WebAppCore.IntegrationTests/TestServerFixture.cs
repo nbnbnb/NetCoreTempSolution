@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -15,13 +16,15 @@ namespace WebAppCore.IntegrationTests
 
         public TestServerFixture()
         {
+
             var builder = WebHost.CreateDefaultBuilder()
-                  .UseEnvironment(EnvironmentName.Development)
+                  .UseEnvironment(Environments.Development)
                   //.UseStartup<StartupIntegrationTest>();  // 使用自定义的 Startup
                   .UseStartup<Startup>();  
 
             testServer = new TestServer(builder);
             httpClient = testServer.CreateClient();
+
         }
 
         public void Dispose()

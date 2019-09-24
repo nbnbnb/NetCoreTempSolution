@@ -69,7 +69,7 @@ namespace WebAppCore.UnitTests
             Assert.IsFalse(fakeFoo.Add(1));
             Assert.IsTrue(fakeFoo.Add(2));
             // Range Æ¥Åä
-            mock.Setup(m => m.Add(It.IsInRange<int>(0, 10, Range.Inclusive))).Returns(true);
+            mock.Setup(m => m.Add(It.IsInRange<int>(0, 10, Moq.Range.Inclusive))).Returns(true);
             Assert.IsTrue(fakeFoo.Add(9));
             // Regex Æ¥Åä
             mock.Setup(m => m.DoSomethingStringy(It.IsRegex("[a-d]+", RegexOptions.IgnoreCase))).Returns("abcd");

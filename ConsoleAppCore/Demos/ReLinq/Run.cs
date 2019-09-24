@@ -16,15 +16,25 @@ namespace ConsoleAppCore.Demos.ReLinq
             SampleQueryable<SampleDataSourceItem> items = new SampleQueryable<SampleDataSourceItem>(queryParser, new SampleQueryExecutor());
 
             var results = from i in items
-                          where i.Description == "KKKing" && i.Name == "JJZhang"
-                          select i;
+                              // where i.Description == "KKKing" && i.Name == "JJZhang"
+                          select new { KKKing = i.Name, JJJ = i.Description };
 
 
             // force evalution of the statement to prevent assertion from re-evaluating the query.
+            Console.WriteLine(" 一次性 yield");
             results.ToList().ForEach(it =>
             {
                 Console.WriteLine(it);
             });
+
+
+            Console.WriteLine("每次 yield");
+            foreach (var it in results)
+            {
+                Console.WriteLine(it);
+            }
+
+
         }
     }
 }

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using WebAppCore.Ext;
 using WebAppCore.TagHelpers;
 
@@ -28,6 +29,7 @@ namespace WebAppCore
             services
                     .AddMvc(options =>
                     {
+                        options.EnableEndpointRouting = false;
                         // 添加自定义 BinderProvider
                         options.ModelBinderProviders.Insert(0, new AuthorEntityBinderProvider());
                     })
@@ -61,11 +63,10 @@ namespace WebAppCore
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.EnvironmentName.Equals(Environments.Development))
             {
-                app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
             }
             else
@@ -74,11 +75,14 @@ namespace WebAppCore
             }
 
             app.UseStaticFiles();
+
+            /*
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
+            */
 
             app.UseCookiePolicy();
             app.UseSession();
