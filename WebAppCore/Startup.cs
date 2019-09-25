@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using WebAppCore.Ext;
 using WebAppCore.TagHelpers;
 
@@ -43,7 +44,7 @@ namespace WebAppCore
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "My API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
             });
 
             // 注册自定义的 TagHelperComponent
@@ -76,13 +77,17 @@ namespace WebAppCore
 
             app.UseStaticFiles();
 
-            /*
+            // In the Configure method, insert middleware to expose the generated Swagger as JSON endpoint(s)
+            // At this point, you can spin up your application and view the generated Swagger JSON at "/swagger/v1/swagger.json."
             app.UseSwagger();
+
+            // Optionally, insert the swagger - ui middleware if you want to expose interactive documentation
+            // specifying the Swagger JSON endpoint(s) to power it from.
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
-            */
+            
 
             app.UseCookiePolicy();
             app.UseSession();
