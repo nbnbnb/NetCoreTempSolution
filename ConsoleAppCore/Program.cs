@@ -15,6 +15,7 @@ using System.Xml.Serialization;
 using System.Text;
 using System.Net.Http;
 using ConsoleAppCore.MyLinq.LinqToTerra;
+using ConsoleAppCore.Demos.CSharp80;
 
 namespace ConsoleAppCore
 {
@@ -31,6 +32,8 @@ namespace ConsoleAppCore
         }
         private static void Temp()
         {
+            CSharp80Features features = new CSharp80Features();
+            features.Temp();
 
         }
     }
