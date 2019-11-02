@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ConsoleAppCore.Demos.CSharp80
 {
@@ -355,14 +356,226 @@ namespace ConsoleAppCore.Demos.CSharp80
         }
     }
     #endregion
-    internal sealed class CSharp80Features
+
+    #region 异步流
+
+    public class ERUEOIUR
     {
+        /// <summary>
+        /// 这个方法返回了一个异步流
+        /// 
+        /// 有三个属性
+        /// 1，用 async 修饰
+        /// 2，返回 IAsyncEnumerable<T>
+        /// 3，方法体中连续返回的 yield return 语句
+        /// </summary>
+        public static async IAsyncEnumerable<int> GenerateSequence()
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                await Task.Delay(100);
+                yield return i;
+            }
+        }
+
+        public static async void KKKing()
+        {
+            // 可以使用 await foreach 语句来枚举序列
+            await foreach (var number in GenerateSequence())
+            {
+                Console.WriteLine(number);
+            }
+        }
+    }
+
+    #endregion
+
+    #region 索引和范围
+
+    public class ERYEURY
+    {
+        /*
+         * 新增的两个类型 
+         * 
+         * System.Index 表示一个序列索引
+         * System.Range 表示序列的子范围
+         * 
+         * ^ 表示末尾运算符
+         * ^n == sequence.Length - n
+         * 所以
+         * sequence[^0] == sequence[sequence.Length]
+         * 
+         * .. 表示范围运算符（包含开始，不包含介绍）
+         * [0..^0] == [0..sequence.Length]，表示整个范围
+         */
+
 
         public void Temp()
         {
+            var words = new string[]
+                {
+                                // index from start    index from end
+                    "The",      // 0                   ^9
+                    "quick",    // 1                   ^8
+                    "brown",    // 2                   ^7
+                    "fox",      // 3                   ^6
+                    "jumped",   // 4                   ^5
+                    "over",     // 5                   ^4
+                    "the",      // 6                   ^3
+                    "lazy",     // 7                   ^2
+                    "dog"       // 8                   ^1
 
+                };              // 9 (or words.Length) ^0
 
+            // ^1 表示最后一个词 dog（sequence.Length - 1 = 8，表示第 8 个索引）
+            Console.WriteLine($"The last word is {words[^1]}");
+
+            // 包含的是索引 1,2,3
+            // 不包括结尾的 4
+            string[] quickBrownFox = words[1..4];
+
+            // 解析出来是 [7..9]
+            // 索引，包含的索引是 7,8
+            // 不包含 9
+            string[] lazyDog = words[^2..^0];
+
+            // 这个可以表示整个数组
+            // 可以用这个方式进行数组元素的复制
+            string[] allWords = words[..];
+
+            // 表示 [0..4]
+            // 0,1,2,3 索引内容
+            string[] firstPhrase = words[..4];
+
+            // 表示 [6..9]
+            // 6,7,8 索引内容
+            string[] lastPhrase = words[6..];
+
+            // 声明 System.Range 类型
+            System.Range phrase = 1..4;
+            // 然后再 [ 和 ] 中使用它
+            string[] text = words[phrase];
+
+            // 不仅数组支持索引和范围
+            // String，Span<T> 或 ReadOnlySpan<T> 也支持这种方式
+            // https://docs.microsoft.com/zh-cn/dotnet/csharp/tutorials/ranges-indexes
         }
     }
+
+    #endregion
+
+    #region Null 合并赋值
+
+    public class EOFEIF
+    {
+        public void KKKing()
+        {
+            List<int> numbers = null;
+            int? i = null;
+
+            // 仅当左侧 numbers 为 null 时
+            // 才将右侧的值分配给左侧
+            numbers ??= new List<int>();  // 右侧赋值初始化
+            numbers.Add(i ??= 17);  // i 变成 17 了
+            numbers.Add(i ??= 20);  // 由于 i 已经有值了，此处不会赋值为 20
+
+            // 注意，与 i ?? 17 的区别，这个时不会赋值的，i 总是为 null
+
+            Console.WriteLine(string.Join(" ", numbers));  // output: 17 17
+            Console.WriteLine(i);  // output: 17
+        }
+    }
+
+    #endregion
+
+    #region 非托管构造类型
+
+    /*
+     * 在 C# 7.3 及更低版本中，构造类型（包含至少一个类型参数的类型）不能为非托管类型
+     * 例如下面的 Coords<T> 就是一个构造类型，包含一个类型参数 T
+     * 
+     * 从 C# 8.0 开始，如果构造的值类型仅包含非托管类型的字段，则该类型不受管理。
+     * 
+     * 从 C# 7.3 开始，可使用 unmanaged 约束指定：类型参数为“非指针非托管类型”
+     * 例如  public struct Coords<T> where T : unmanaged
+     */
+
+    public struct Coords<T>
+    {
+        public T X;
+        public T Y;
+    }
+
+    public class FKEFJKJG
+    {
+        public void KKKing()
+        {
+            // Coords<int> 是一个构造类型
+            // 但是 int 是一个值类型的非托管类型字段
+            // 所以，此处不受约束
+            // 与任何非托管类型一样，可以创建指向此类型的变量的指针，或针对此类型的实例在堆栈上分配内存块
+            Span<Coords<int>> coordinates = stackalloc[]
+            {
+                new Coords<int> { X = 0, Y = 0 },
+                new Coords<int> { X = 0, Y = 3 },
+                new Coords<int> { X = 4, Y = 0 }
+            };
+
+            DisplaySize<Coords<int>>();
+            // String 不满足 T : unmanaged 约束条件
+            // DisplaySize<Coords<String>>();
+        }
+
+        /// <summary>
+        /// 使用 unmanaged 进行约束
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        private unsafe static void DisplaySize<T>() where T : unmanaged
+        {
+            Console.WriteLine($"{typeof(T)} is unmanaged and its size is {sizeof(T)} bytes");
+        }
+    }
+
+    #endregion
+
+    #region 嵌套表达式中的 stackalloc
+    public class BNKDKJ
+    {
+        public void KKKing()
+        {
+            // 从 C# 8.0 开始，如果 stackalloc 表达式的结果为 System.Span<T> 或 System.ReadOnlySpan<T> 类型
+            // 则可以在其他表达式中使用 stackalloc 表达式
+
+            Span<int> numbers = stackalloc[] { 1, 2, 3, 4, 5, 6 };
+
+            // 在 IndexOfAny 参数表达式中使用 stackalloc 表达式
+            var ind = numbers.IndexOfAny(stackalloc[] { 2, 4, 6, 8 });
+            Console.WriteLine(ind);  // output: 1
+        }
+    }
+    #endregion
+
+    #region 内插逐字字符串的增强功能
+
+    public class BNKJGKEG
+    {
+        public void KKKing()
+        {
+            // 内插逐字字符串中 $ 和 @ 标记的顺序可以任意安排：$@"..." 和 @$"..." 均为有效的内插逐字字符串
+            // 在早期 C# 版本中，$ 标记必须出现在 @ 标记之前
+
+            int a = 124;
+            double b = 556.34;
+
+            Console.WriteLine(@$"a={a} \t b={b}");
+            Console.WriteLine($@"a={a} \t b={b}");
+
+            // 这个没有用 @ 修饰
+            // 将会输出一个 Tab
+            Console.WriteLine($"a={a} \t b={b}");
+        }
+    }
+
+    #endregion
 
 }

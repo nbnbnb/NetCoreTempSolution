@@ -32,10 +32,15 @@ namespace ConsoleAppCore
         }
         private static void Temp()
         {
-            CSharp80Features features = new CSharp80Features();
-            features.Temp();
+            int a = 124;
+            double b = 556.34;
 
+            Console.WriteLine(@$"a={a} \t b={b}");
+            Console.WriteLine($@"a={a} \t b={b}");
+
+            Console.WriteLine($"a={a} \t b={b}");
         }
+
     }
 
 }
