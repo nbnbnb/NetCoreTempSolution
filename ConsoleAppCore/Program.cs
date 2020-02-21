@@ -16,6 +16,7 @@ using System.Text;
 using System.Net.Http;
 using ConsoleAppCore.MyLinq.LinqToTerra;
 using ConsoleAppCore.Demos.CSharp80;
+using ConsoleAppCore.Demos.AspectCore;
 
 namespace ConsoleAppCore
 {
@@ -32,13 +33,7 @@ namespace ConsoleAppCore
         }
         private static void Temp()
         {
-            int a = 124;
-            double b = 556.34;
 
-            Console.WriteLine(@$"a={a} \t b={b}");
-            Console.WriteLine($@"a={a} \t b={b}");
-
-            Console.WriteLine($"a={a} \t b={b}");
         }
 
     }

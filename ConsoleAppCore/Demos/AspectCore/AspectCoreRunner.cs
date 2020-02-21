@@ -26,7 +26,7 @@ namespace ConsoleAppCore.Demos.AspectCore
         /// 基本使用方式
         /// 非 IoC 场景
         /// </summary>
-        public static void Basic()
+        static void Basic()
         {
             ProxyGeneratorBuilder proxyGeneratorBuilder = new ProxyGeneratorBuilder();
 
@@ -50,7 +50,7 @@ namespace ConsoleAppCore.Demos.AspectCore
 
             services.ConfigureDynamicProxy();
 
-            IServiceProvider serviceProvider = services.BuildAspectInjectorProvider();
+            IServiceProvider serviceProvider = services.BuildDynamicProxyProvider();
             ISampleInterface sampleInterface = serviceProvider.GetService<ISampleInterface>();
             Console.WriteLine(sampleInterface);
             sampleInterface.Foo();
