@@ -1,15 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27004.2010
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleAppCore", "ConsoleAppCore\ConsoleAppCore.csproj", "{42980AA5-AE42-4B0E-B59B-A42B8D2E6E56}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAppCore", "WebAppCore\WebAppCore.csproj", "{69E8B0CC-E234-4870-B409-78B9B4C86CC6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAppCore.IntegrationTests", "WebAppCore.IntegrationTests\WebAppCore.IntegrationTests.csproj", "{2BACF707-3889-40FF-AB72-9C7B23ADC2A3}"
-EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{67585328-1844-444B-BF5C-E86A4643B878}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E25EE853-42F1-4A9C-90E2-D6B8E5BF7F88}"
 	ProjectSection(SolutionItems) = preProject
@@ -66,18 +64,6 @@ Global
 		{2BACF707-3889-40FF-AB72-9C7B23ADC2A3}.Release|x64.Build.0 = Release|Any CPU
 		{2BACF707-3889-40FF-AB72-9C7B23ADC2A3}.Release|x86.ActiveCfg = Release|Any CPU
 		{2BACF707-3889-40FF-AB72-9C7B23ADC2A3}.Release|x86.Build.0 = Release|Any CPU
-		{67585328-1844-444B-BF5C-E86A4643B878}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{67585328-1844-444B-BF5C-E86A4643B878}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{67585328-1844-444B-BF5C-E86A4643B878}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{67585328-1844-444B-BF5C-E86A4643B878}.Debug|x64.Build.0 = Debug|Any CPU
-		{67585328-1844-444B-BF5C-E86A4643B878}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{67585328-1844-444B-BF5C-E86A4643B878}.Debug|x86.Build.0 = Debug|Any CPU
-		{67585328-1844-444B-BF5C-E86A4643B878}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{67585328-1844-444B-BF5C-E86A4643B878}.Release|Any CPU.Build.0 = Release|Any CPU
-		{67585328-1844-444B-BF5C-E86A4643B878}.Release|x64.ActiveCfg = Release|Any CPU
-		{67585328-1844-444B-BF5C-E86A4643B878}.Release|x64.Build.0 = Release|Any CPU
-		{67585328-1844-444B-BF5C-E86A4643B878}.Release|x86.ActiveCfg = Release|Any CPU
-		{67585328-1844-444B-BF5C-E86A4643B878}.Release|x86.Build.0 = Release|Any CPU
 		{45377F6B-0308-4349-A109-52F1DA9ABBB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{45377F6B-0308-4349-A109-52F1DA9ABBB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45377F6B-0308-4349-A109-52F1DA9ABBB3}.Debug|x64.ActiveCfg = Debug|Any CPU

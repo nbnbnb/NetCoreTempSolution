@@ -1,8 +1,0 @@
-version: '3.4'
-services:
-  ci-build:
-    image: microsoft/dotnet
-    volumes:
-      - .:/src
-    working_dir: /src
-    command: /bin/bash -c "dotnet restore ./NetCoreTempSolution.sln && dotnet publish ./NetCoreTempSolution.sln -c Release -o ./obj/Docker/publish"
