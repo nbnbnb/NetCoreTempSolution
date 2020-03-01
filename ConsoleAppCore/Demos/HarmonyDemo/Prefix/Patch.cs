@@ -10,18 +10,25 @@ namespace ConsoleAppCore.Demos.HarmonyDemo.Prefix
     [HarmonyPatch(typeof(OriginalCode), "GetName")]
     class Patch
     {
+        // 签名是 static bool
+        // 默认方法名 Prefix
         static bool Prefix(ref string __result)
         {
+            Console.WriteLine("MoceName Prefix");
+
             // __result 这种带两个下划线的变量，是特殊的格式
             // 表示原来方法的返回值
             // 此处，还用 ref 进行了修饰
 
             // 设置 GetName 方法的返回值
-            __result = "test";
+            __result = "Mock Name";
 
-            // true：跳过原始的 GetName 方法逻辑
-            // false：继续执行原来的方法
-            return true;
+            // true：继续执行原始方法
+            // 如果继续执行了原始方法，那么这里设置的 __result 是没有效果的
+            // 因为原始方法会返回一个新值
+
+            // false：不再执行原始方法
+            return false;
         }
     }
 }

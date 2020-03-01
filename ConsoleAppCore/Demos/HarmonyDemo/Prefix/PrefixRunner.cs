@@ -9,7 +9,13 @@ namespace ConsoleAppCore.Demos.HarmonyDemo.Prefix
     {
         public static void Run()
         {
+            var harmony = new Harmony("ml.zhangjin");
+            harmony.PatchAll();
 
+            var originalCode = new OriginalCode();
+            var name = originalCode.GetName();
+
+            Console.WriteLine(name);
 
         }
     }

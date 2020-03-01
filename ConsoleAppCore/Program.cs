@@ -17,6 +17,7 @@ using System.Net.Http;
 using ConsoleAppCore.MyLinq.LinqToTerra;
 using ConsoleAppCore.Demos.CSharp80;
 using ConsoleAppCore.Demos.AspectCore;
+using ConsoleAppCore.Demos.HarmonyDemo.Prefix;
 
 namespace ConsoleAppCore
 {
@@ -33,9 +34,7 @@ namespace ConsoleAppCore
         }
         private static void Temp()
         {
-            //PrefixRunner.Run();
-
-            Demos.HarmonyDemo.Basic.CheckPatch();
+            PrefixRunner.Run();
         }
     }
 

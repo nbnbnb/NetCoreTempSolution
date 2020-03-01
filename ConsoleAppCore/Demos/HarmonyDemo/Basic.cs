@@ -12,7 +12,7 @@ namespace ConsoleAppCore.Demos.HarmonyDemo
         {
             // 创建的时候，只当一个 id
             // 用于区分不同的 Patch
-            var harmony = new HarmonyLib.Harmony("ml.zhangjin");
+            var harmony = new Harmony("ml.zhangjin");
 
             // 获得一个程序集
             var assembly = Assembly.GetExecutingAssembly();
@@ -188,7 +188,7 @@ namespace ConsoleAppCore.Demos.HarmonyDemo
                 // false 不执行原始方法
                 // return false;
 
-                // true 执行原始方法
+                // true 继续执行原始方法
                 return true;
             }
         }

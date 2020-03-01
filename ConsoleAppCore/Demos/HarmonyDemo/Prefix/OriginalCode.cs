@@ -12,5 +12,6 @@ namespace ConsoleAppCore.Demos.HarmonyDemo.Prefix
         {
             return name;
         }
+
     }
 }
