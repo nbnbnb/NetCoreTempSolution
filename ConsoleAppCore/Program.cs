@@ -33,9 +33,11 @@ namespace ConsoleAppCore
         }
         private static void Temp()
         {
+            //PrefixRunner.Run();
 
+            Demos.HarmonyDemo.Basic.CheckPatch();
         }
-
     }
+
 
 }
