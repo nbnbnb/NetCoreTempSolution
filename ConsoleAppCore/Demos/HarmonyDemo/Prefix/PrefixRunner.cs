@@ -12,6 +12,8 @@ namespace ConsoleAppCore.Demos.HarmonyDemo.Prefix
             var harmony = new Harmony("ml.zhangjin");
             harmony.PatchAll();
 
+            // TODO
+            // 如果一个方法上有多个 Patch，如果控制顺序？？？
             var originalCode = new OriginalCode();
             var name = originalCode.GetName();
 

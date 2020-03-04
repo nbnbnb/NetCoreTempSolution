@@ -18,6 +18,7 @@ using ConsoleAppCore.MyLinq.LinqToTerra;
 using ConsoleAppCore.Demos.CSharp80;
 using ConsoleAppCore.Demos.AspectCore;
 using ConsoleAppCore.Demos.HarmonyDemo.Prefix;
+using ConsoleAppCore.Demos.HarmonyDemo.Reverse;
 
 namespace ConsoleAppCore
 {
@@ -34,7 +35,7 @@ namespace ConsoleAppCore
         }
         private static void Temp()
         {
-            PrefixRunner.Run();
+            ReverseRunner.Run();
         }
     }
 
