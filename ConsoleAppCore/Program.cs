@@ -35,7 +35,7 @@ namespace ConsoleAppCore
         }
         private static void Temp()
         {
-            Demos.Algorithm.InsertSort.Run();
+            Demos.Algorithm.PopSort.Run();
         }
 
     }
