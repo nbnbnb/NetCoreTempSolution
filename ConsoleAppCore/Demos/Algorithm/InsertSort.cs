@@ -14,7 +14,7 @@ namespace ConsoleAppCore.Demos.Algorithm
                 // 被插入的位置（准备和前一个数比较）
                 int beforeIndex = afterIndex - 1;
 
-                // 插入的数（后一个）
+                // 插入，比较的数（原始值）
                 int afterVal = arr[afterIndex];
 
                 // 如果 插入的数（后一个） 比 被插入的数（前一个） 小
@@ -22,14 +22,18 @@ namespace ConsoleAppCore.Demos.Algorithm
                 // 后一个数，继续与前一个进行匹配
                 while (beforeIndex >= 0 && afterVal < arr[beforeIndex])
                 {
-                    // 后一个值被前一个值替换
-                    // 后一个值存储在了 afterVal 中继续使用
+                    // 比 afterVal 小的值
+                    // 都向后移动一个位置
                     arr[beforeIndex + 1] = arr[beforeIndex];
 
                     // 这个位置是关键（已排序的数据中，从后向前扫描）
                     // 让 index 向前移动
                     beforeIndex--;
                 }
+
+                // 如果上面的比较条件不满足
+                // 表示找到了插入的位置
+                // 将 afterVal 放入这个位置即可
 
                 // 如果没有交换发生
                 // 那么 beforeIndex + 1 == afterIndex
