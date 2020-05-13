@@ -413,10 +413,11 @@ namespace ConsoleAppCore
         public static void DispatchProxyDemo()
         {
             // 创建代理类，并把 SamepleProxy 作为拦截器注入
-            var samepleProxy = DispatchProxy.Create<ITargetInterface, SamepleProxy>();
+            // 调用 ITargetInterface 的方法时，将会执行 SamepleProxy.Invoke 方法
+            ITargetInterface targetInterface = DispatchProxy.Create<ITargetInterface, SamepleProxy>();
             // 执行接口方法
-            samepleProxy.WriteMessage("here is invoke by proxy");
-            Console.WriteLine(samepleProxy.GetAddress(123));
+            targetInterface.WriteMessage("here is invoke by proxy");
+            Console.WriteLine(targetInterface.GetAddress(123));
         }
 
         public static void MorpherDemo()
