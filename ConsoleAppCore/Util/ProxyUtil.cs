@@ -12,6 +12,7 @@ namespace ConsoleAppCore.Util
     {
         private const string ProxyAssemblyName = "App.DynamicGenerated";
         private static readonly ModuleBuilder _moduleBuilder;
+        // 缓存类型信息
         private static readonly ConcurrentDictionary<string, Type> _proxyTypes = new ConcurrentDictionary<string, Type>();
 
         static ProxyUtil()
@@ -23,6 +24,7 @@ namespace ConsoleAppCore.Util
 
         public static Type CreateInterfaceProxy(Type interfaceType)
         {
+            // 定义一个唯一的名称
             var proxyTypeName = $"{ProxyAssemblyName}.{interfaceType.FullName}";
             var type = _proxyTypes.GetOrAdd(proxyTypeName, name =>
             {
