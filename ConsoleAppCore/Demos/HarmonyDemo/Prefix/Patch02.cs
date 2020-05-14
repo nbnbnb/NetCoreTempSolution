@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Threading;
 
 namespace ConsoleAppCore.Demos.HarmonyDemo.Prefix
 {
@@ -12,19 +13,20 @@ namespace ConsoleAppCore.Demos.HarmonyDemo.Prefix
     {
         // this example uses a Stopwatch type to measure
         // and share state between prefix and postfix
-
+        // out 引用方式，执行变量传递
         static void Prefix(out Stopwatch __state)
         {
-            Console.WriteLine("Stopwatch Prefix");
+            Console.WriteLine("Patch02 Prefix");
             __state = new Stopwatch(); // assign your own state
             __state.Start();
         }
 
         static void Postfix(Stopwatch __state)
         {
+            Thread.Sleep(123);
             __state.Stop();
             Console.WriteLine($"ElapsedMilliseconds : {__state.ElapsedMilliseconds}");
-            Console.WriteLine("Stopwatch Postfix");
+            Console.WriteLine("Patch02 Postfix");
         }
     }
 }

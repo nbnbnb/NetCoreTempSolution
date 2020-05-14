@@ -5,6 +5,9 @@ using System.Text;
 
 namespace ConsoleAppCore.Demos.HarmonyDemo.Reverse
 {
+    /// <summary>
+    /// 反向代理-方法调用
+    /// </summary>
     class ReverseRunner
     {
         public static void Run()
@@ -27,12 +30,12 @@ namespace ConsoleAppCore.Demos.HarmonyDemo.Reverse
             // 将请求转发到 OriginalCode02.Test() 方法中
             // 这是一个私有方法，也是可以调用的
 
-            // Patch03.MyTest() 的签名要和 OriginalCode02.Test() 保存一直
+            // Patch03.MyTest() 的签名要和 OriginalCode02.Test() 保持一致
             // 如果代理的是实例方法，则需要第一个参数 originalInstance
             // 如果是静态方法，则不需要
             Patch03.MyTest(originalInstance, 100, "hello");
 
-           
+
         }
     }
 }

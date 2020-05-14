@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using HarmonyLib;
 
 namespace ConsoleAppCore.Demos.HarmonyDemo
@@ -10,7 +9,7 @@ namespace ConsoleAppCore.Demos.HarmonyDemo
     {
         public static void BasicUse()
         {
-            // 创建的时候，只当一个 id
+            // 创建的时候，指定一个 id
             // 用于区分不同的 Patch
             var harmony = new Harmony("ml.zhangjin");
 
@@ -20,7 +19,8 @@ namespace ConsoleAppCore.Demos.HarmonyDemo
             // 给指定的程序集打 Patch
             harmony.PatchAll(assembly);
 
-            // 或者，隐式的就是当前程序集
+            // 或者
+            // 隐式指定当前程序集
             harmony.PatchAll();
 
 
@@ -30,8 +30,12 @@ namespace ConsoleAppCore.Demos.HarmonyDemo
         {
             // 还可以进行更多的控制，例如对指定的方法执行 Patch
             // add null checks to the following lines, they are omitted for clarity
+
+            // 原始方法
             var original = typeof(TheClass).GetMethod("TheMethod");
+            // 前缀补丁方法
             var prefix = typeof(MyPatchClass1).GetMethod("SomeMethod");
+            // 后缀补丁方法
             var postfix = typeof(MyPatchClass2).GetMethod("SomeMethod");
 
 

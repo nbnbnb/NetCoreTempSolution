@@ -30,7 +30,7 @@ namespace ConsoleAppCore.Demos.HarmonyDemo.Reverse
             // 这里的代码实际上是不会执行的
             // 在运行时，将直接调用 OriginalCode02.Test() 
 
-            // 如果代码签名里面由返回值，可以返回默认值，保证编译通过即可
+            // 如果代码签名里面有返回值，可以返回默认值，保证编译通过即可
             // 实际返回的还是原始方法的执行结果
 
             // its a stub so it has no initial content
