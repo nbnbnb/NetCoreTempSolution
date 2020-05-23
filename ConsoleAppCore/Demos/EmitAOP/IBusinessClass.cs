@@ -6,9 +6,12 @@ namespace ConsoleAppCore.Demos.EmitAOP
 {
     public interface IBusinessClass
     {
-        void Test();
+        void VoidAndVoid();
 
-        int NoArgument();
+        int IntAndNoArgument();
 
+        String StringAndString(String str);
+
+        void VoidAndDate(DateTime dt);
     }
 }
