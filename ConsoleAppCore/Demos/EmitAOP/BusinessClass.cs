@@ -8,9 +8,9 @@ namespace ConsoleAppCore.Demos.EmitAOP
     public class BusinessClass : IBusinessClass
     {
         [Action]
-        public int IntAndNoArgument()
+        public int IntAndNoArgs()
         {
-            Console.WriteLine("IntAndNoArgument");
+            Console.WriteLine("IntAndNoArgs");
             return 123;
         }
 
@@ -32,6 +32,19 @@ namespace ConsoleAppCore.Demos.EmitAOP
         public void VoidAndVoid()
         {
             Console.WriteLine("VoidAndVoid");
+        }
+
+        [Action]
+        public void VoidAndNoArgs()
+        {
+            Console.WriteLine("VoidAndNoArgs");
+        }
+
+   
+        public string StringAndNoArgs()
+        {
+            Console.WriteLine("StringAndNoArgs");
+            return "Good Day!";
         }
     }
 }

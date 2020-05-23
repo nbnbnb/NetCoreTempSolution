@@ -8,10 +8,14 @@ namespace ConsoleAppCore.Demos.EmitAOP
     {
         void VoidAndVoid();
 
-        int IntAndNoArgument();
+        int IntAndNoArgs();
 
-        String StringAndString(String str);
+        string StringAndString(string str);
 
         void VoidAndDate(DateTime dt);
+
+        void VoidAndNoArgs();
+
+        string StringAndNoArgs();
     }
 }

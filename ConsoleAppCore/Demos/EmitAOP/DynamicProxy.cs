@@ -74,9 +74,7 @@ namespace ConsoleAppCore.Demos.EmitAOP
         private static void InjectInterceptor<TImp>(TypeBuilder typeBuilder, Type interceptorAttributeType, bool inheritMode = false)
         {
             var impType = typeof(TImp);
-
             bool hasInterceptor = false;
-            bool hasAction = false;
 
             // 查看类型上是否有 InterceptorBaseAttribute 标记
             // 如果有，则在动态生成的类型中，添加一个私有字段，表示这个标记对象
@@ -120,6 +118,8 @@ namespace ConsoleAppCore.Demos.EmitAOP
             // 是否需要执行 AOP 逻辑
             foreach (var method in methodsOfType)
             {
+                bool hasAction = false;
+
                 // 获取方法上的参数列表
                 var methodParameterTypes = method.GetParameters().Select(p => p.ParameterType).ToArray();
 
@@ -259,12 +259,6 @@ namespace ConsoleAppCore.Demos.EmitAOP
                 {
                     // 没有 Interceptor 的场景
                     // 直接调用实例类的方法
-                    if (method.ReturnType == typeof(void) && actionAttributeType == null)
-                    {
-                        // 如果返回值是 void
-                        // 则注入一个 null 在 Evaluation Stack 上（result）
-                        ilMethod.Emit(OpCodes.Ldnull);
-                    }
 
                     // 将实例类，加载到 Evaluation Stack 上
                     ilMethod.Emit(OpCodes.Ldloc, impObjLocalBuilder);
@@ -276,44 +270,55 @@ namespace ConsoleAppCore.Demos.EmitAOP
                     // 此处执行原始实例方法的调用
                     ilMethod.Emit(OpCodes.Callvirt, impType.GetMethod(method.Name));
 
-                    // box
-                    if (actionAttributeType != null)
+                    // 如果还有 Action 调用，并且返回值不为 void
+                    // 则将其装箱为 object
+                    // 返回值存储在 Evaluation Stack 上（result）
+                    if (hasAction && method.ReturnType != typeof(void))
                     {
-                        if (method.ReturnType != typeof(void))
-                            ilMethod.Emit(OpCodes.Box, method.ReturnType);
-                        else
-                            ilMethod.Emit(OpCodes.Ldnull);
+                        ilMethod.Emit(OpCodes.Box, method.ReturnType);
+                    }
+                    else
+                    {
+                        ilMethod.Emit(OpCodes.Ldnull);
                     }
                 }
 
-                //dynamic proxy action after
-                if (actionAttributeType != null)
+                // 执行 Action-After 注入
+                if (hasAction)
                 {
+                    // 将 Invoke 方法知道的结果，放入 result 变量中
+                    // 如是 void，则 result == null
                     ilMethod.Emit(OpCodes.Stloc, resultLocalBuilder);
-                    //load arguments
+
+                    // 加载参数
                     ilMethod.Emit(OpCodes.Ldloc, actionLocalBuilder);
                     ilMethod.Emit(OpCodes.Ldloc, methodNameLocalBuilder);
                     ilMethod.Emit(OpCodes.Ldloc, resultLocalBuilder);
                     ilMethod.Emit(OpCodes.Call, actionAttributeType.GetMethod("After"));
                 }
 
-                // pop the stack if return void
+                // 如果返回值为 void
+                // 则将弹入的 null 值弹出
                 if (method.ReturnType == typeof(void))
                 {
                     ilMethod.Emit(OpCodes.Pop);
                 }
-                else
+                else if (hasAction || hasInterceptor)
                 {
-                    //unbox,if direct invoke,no box
-                    if (interceptorFieldBuilder != null || actionLocalBuilder != null)
+                    // 值类型，执行拆箱
+                    if (method.ReturnType.IsValueType)
                     {
-                        if (method.ReturnType.IsValueType)
-                            ilMethod.Emit(OpCodes.Unbox_Any, method.ReturnType);
-                        else
-                            ilMethod.Emit(OpCodes.Castclass, method.ReturnType);
+                        ilMethod.Emit(OpCodes.Unbox_Any, method.ReturnType);
+                    }
+                    // 引用类型，执行类型转换
+                    else
+                    {
+                        ilMethod.Emit(OpCodes.Castclass, method.ReturnType);
                     }
                 }
-                // complete
+
+                // 最后一个指令
+                // Ret
                 ilMethod.Emit(OpCodes.Ret);
             }
         }

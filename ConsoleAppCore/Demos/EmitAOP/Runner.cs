@@ -13,9 +13,13 @@ namespace ConsoleAppCore.Demos.EmitAOP
             Console.WriteLine("---------------------------------------");
             business.VoidAndDate(DateTime.Now);
             Console.WriteLine("---------------------------------------");
-            Console.WriteLine(business.IntAndNoArgument());
+            Console.WriteLine(business.IntAndNoArgs());
             Console.WriteLine("---------------------------------------");
             Console.WriteLine(business.StringAndString("haha"));
+            Console.WriteLine("---------------------------------------");
+            business.VoidAndNoArgs();
+            Console.WriteLine("---------------------------------------");
+            Console.WriteLine(business.StringAndNoArgs());
         }
     }
 }
