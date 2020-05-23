@@ -35,8 +35,7 @@ namespace ConsoleAppCore
         }
         private static void Temp()
         {
-            
-
+            Demos.EmitAOP.Runner.Run();
         }
 
     }
