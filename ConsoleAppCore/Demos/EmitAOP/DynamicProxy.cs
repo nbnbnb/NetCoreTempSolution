@@ -42,13 +42,16 @@ namespace ConsoleAppCore.Demos.EmitAOP
 
             var assemblyName = new AssemblyName(nameOfAssembly);
 
-#if NETCORE
+            // .NET Core
             AssemblyBuilder assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.RunAndCollect);
             ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule(nameOfModule);
-#else
+
+            /*
+             * .NET Framework
             var assembly = AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
             var module = assembly.DefineDynamicModule(nameOfModule);
-#endif
+            */
+
 
             TypeBuilder typeBuilder;
 
