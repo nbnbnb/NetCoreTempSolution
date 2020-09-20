@@ -7,7 +7,7 @@ namespace ConsoleAppCore.Demos
     internal sealed class CSharp72Features
     {
         /// <summary>
-        /// C# 7.0 中实现了对数字分隔符的支持，但这不允许 0b 或 0x 这类进制标识后的第一个字符是 _
+        /// C# 7.0 中实现了对数字分隔符的支持，但这不允许 0b 或 0x 这类进制标识后的 “第一个字符是 _"
         /// C# 7.2 放开了这一限制
         /// </summary>
         public static void LiteralPrefix()
@@ -44,7 +44,8 @@ namespace ConsoleAppCore.Demos
         {
             /// <summary>
             /// 新增的 private protected 
-            /// private || protected
+            /// 只有继承的成员才可以访问
+            /// private && protected
             /// </summary>
             private protected void MethodA()
             {
@@ -52,12 +53,22 @@ namespace ConsoleAppCore.Demos
             }
 
             /// <summary>
-            /// internal || protected
+            /// 程序集 或者 继承的都可以访问
+            /// internal && protected
             /// </summary>
-            protected internal void MethodB()
+            internal protected void MethodB()
             {
 
             }
+
+            /// <summary>
+            /// 只有继承的可以访问
+            /// </summary>
+            protected void MethodC()
+            {
+
+            }
+
         }
 
         private class LMN : XYZ
@@ -99,7 +110,8 @@ namespace ConsoleAppCore.Demos
         }
 
         /// <summary>
-        /// 只读引用传递
+        /// 只读引用传递 in 
+        /// NormalPoint 是值类型
         /// 在方法调用时
         /// 尤其对值类型有效，避免值类型的赋值
         /// 同时也避免了修改值类型不起效的场景（默认是按值传递的）
@@ -108,11 +120,13 @@ namespace ConsoleAppCore.Demos
         {
             // normalPoint.X 是只读的
             // 同时 normalPoint 是按照引用传递的
+            // 赋值语句会报错
             // normalPoint.X = 12;
 
             // 对于方法调用，将使用防御性副本，因为编译器无法确定方法中是否会修改对象内部的状态
             // 防御性副本是对当前值对象的复制
             // 实际上 normalPoint 没有任何更改
+            // 可以认位，调用 ChangeX 的是一个拷贝的对象
             normalPoint.ChangeX(10);
 
             // 此处 normalPoint 引用的对象是不会改变的
@@ -122,13 +136,17 @@ namespace ConsoleAppCore.Demos
 
         public static void Run()
         {
+            // 这是一个值类型
             NormalPoint k = new NormalPoint(1, 2);
+
+            // k 是通过 in 传递的
             ReadOnlyRef(k);
+
             // 不会变
             Console.WriteLine($"ChangeEnd {k.X}");
 
             ref readonly NormalPoint zero = ref NormalPoint.NNN;
-            // 由于是 ref readonly，所有不能修改
+            // 由于是 ref readonly，所以不能修改
             // zero.X = 100;
 
             // 如果赋值给了一个非 ref readonly 得变量
@@ -192,12 +210,12 @@ namespace ConsoleAppCore.Demos
         }
 
         /// <summary>
-        /// 另一个新特效
+        /// 另一个新特性
         /// readonly struct
         /// 编译器会检测，没有改变内部数据的方法（属性要为只读版本）
         /// 
         /// 当把 readonly struct 结构当做 in 方式进行传递时
-        /// 编译器不需要为调用这些结构体的方法而创建防御性副本，因为它知道它们不能修改结构体。
+        /// 编译器不需要为调用这些结构体的方法而创建防御性副本，因为它知道它们不能修改结构体
         /// </summary>
         private readonly struct ReadOnlyPoint
         {
