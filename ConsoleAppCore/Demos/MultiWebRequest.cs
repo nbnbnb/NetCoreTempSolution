@@ -12,11 +12,11 @@ namespace ConsoleAppCore.Demos
     {
         private AsyncCoordinator m_ac = new AsyncCoordinator();
 
-        private Dictionary<String, Object> m_services = new Dictionary<string, object>
+        private Dictionary<string, object> m_services = new Dictionary<string, object>
         {
-            {"http://www.baidu.com/",null },
-            {"http://www.google.com/",null },
-            {"http://www.sohu.com/",null }
+            {"https://www.baidu.com/",null },
+            {"https://www.google.com/",null },
+            {"https://www.sohu.com/",null }
         };
 
         public MultiWebRequest(Int32 timeOut = Timeout.Infinite)
