@@ -8,8 +8,14 @@ using System.Text;
 
 namespace ConsoleAppCore.Demos.EmitAOP
 {
-    public class DynamicProxy
+    /// <summary>
+    /// 自定义一个动态代理类
+    /// </summary>
+    public class CustomDynamicProxy
     {
+        // 忽略从 Object 继承的方法
+        static string[] ignoreMethodName = new[] { "GetType", "ToString", "GetHashCode", "Equals" };
+
         /// <summary>
         /// 根据接口和实现类型，注入 AOP 
         /// </summary>
@@ -53,6 +59,8 @@ namespace ConsoleAppCore.Demos.EmitAOP
             */
 
 
+            // 新的实现类型
+            // 根据原始类型的注解信息，做 AOP 切片
             TypeBuilder typeBuilder;
 
             // 类继承模式
@@ -80,7 +88,8 @@ namespace ConsoleAppCore.Demos.EmitAOP
             bool hasInterceptor = false;
 
             // 查看类型上是否有 InterceptorBaseAttribute 标记
-            // 如果有，则在动态生成的类型中，添加一个私有字段，表示这个标记对象
+            // 如果有，则在动态生成的类型中
+            // 添加一个私有字段，表示这个标记对象
             FieldBuilder interceptorFieldBuilder = null;
             if (interceptorAttributeType != null)
             {
@@ -108,9 +117,6 @@ namespace ConsoleAppCore.Demos.EmitAOP
                 ilOfCtor.Emit(OpCodes.Ret);
                 #endregion
             }
-
-            // 忽略从 Object 继承的方法
-            string[] ignoreMethodName = new[] { "GetType", "ToString", "GetHashCode", "Equals" };
 
             // 获取原始类型上的所有方法（公共、实例）
             var methodsOfType =
@@ -175,8 +181,11 @@ namespace ConsoleAppCore.Demos.EmitAOP
                     ilMethod.Emit(OpCodes.Stloc, actionLocalBuilder);
                 }
 
-
                 // 每个方法中，都会实例化一个原始类
+                // 注意，由于 AOP InterceptorBaseAttribute 中可以读取/修改原始 object 对象 
+                // 所以，此处将其存储在方法本地变量中，这样就可以保证所有的原始对象不会在其他 AOP 中被修改
+                // 如果要支持修改原始对象，将其放在字段变量中，也是可以的
+
                 // 在调用原始类方法前，执行对应的 AOP 操作
                 // 实例化需要代理的类，并存储在 Call Stack 上
                 ilMethod.Emit(OpCodes.Newobj, impType.GetConstructor(new Type[0]));
@@ -282,6 +291,7 @@ namespace ConsoleAppCore.Demos.EmitAOP
                     }
                     else
                     {
+                        // 没有返回值，赋值为 null
                         ilMethod.Emit(OpCodes.Ldnull);
                     }
                 }
@@ -289,7 +299,7 @@ namespace ConsoleAppCore.Demos.EmitAOP
                 // 执行 Action-After 注入
                 if (hasAction)
                 {
-                    // 将 Invoke 方法知道的结果，放入 result 变量中
+                    // 将 Invoke 方法执行返回的结果，放入 result 变量中
                     // 如是 void，则 result == null
                     ilMethod.Emit(OpCodes.Stloc, resultLocalBuilder);
 

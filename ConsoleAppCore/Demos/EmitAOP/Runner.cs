@@ -8,7 +8,7 @@ namespace ConsoleAppCore.Demos.EmitAOP
     {
         public static void Run()
         {
-            IBusinessClass business = DynamicProxy.CreateProxyOfRealize<IBusinessClass, BusinessClass>();
+            IBusinessClass business = CustomDynamicProxy.CreateProxyOfRealize<IBusinessClass, BusinessClass>();
             business.VoidAndVoid();
             Console.WriteLine("---------------------------------------");
             business.VoidAndDate(DateTime.Now);

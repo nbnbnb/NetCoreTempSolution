@@ -12,7 +12,7 @@
         /// 新方式
         /// fixed 字段不需要进行固定
         /// </summary>
-        unsafe static public void M()
+        public unsafe static void M()
         {
             int p = s.MyFixedField[5];
             Console.WriteLine(p);
@@ -22,7 +22,7 @@
         /// 原始方式
         /// 需要声明 int* 变量，并使用 fixed 关键字
         /// </summary>
-        unsafe static public void M2()
+        public unsafe static void M2()
         {
             fixed (int* ptr = s.MyFixedField)
             {
@@ -37,8 +37,10 @@
         /// </summary>
         static void RefAgain(ref VeryLargeStruct veryLargeStruct, ref VeryLargeStruct anotherVeryLargeStruct)
         {
-            ref VeryLargeStruct refLocal = ref veryLargeStruct; // initialization
-            refLocal = ref anotherVeryLargeStruct; // reassigned, refLocal refers to different storage.
+            // 定义一个变量，引用 veryLargeStruct
+            ref VeryLargeStruct refLocal = ref veryLargeStruct;
+            // 重新引用 anotherVeryLargeStruct
+            refLocal = ref anotherVeryLargeStruct;
         }
 
         /// <summary>
@@ -46,7 +48,7 @@
         /// 
         /// 注意 Span<int> 形式
         /// </summary>
-        unsafe static void InitArray()
+        static unsafe void InitArray()
         {
             int* pArr = stackalloc int[3] { 1, 2, 3 };
             int* pArr2 = stackalloc int[] { 1, 2, 3 };
@@ -60,7 +62,7 @@
         internal static unsafe void FixedWithGetPinnableReference()
         {
             // fixed 语句块
-            // 然后的 ref int 转换为 int*
+            // MyPinnable 支持 GetPinnableReference 方法的协议
             fixed (int* ptr = new MyPinnable())
             {
                 Console.WriteLine(*(ptr + 1));
@@ -87,6 +89,7 @@
         public int SomeProperty { get; set; }
 
         /// <summary>
+        /// 将 Attribute 添加到事件的的后台（委托）字段上
         /// 事件 Attribute 早期版本就支持
         /// </summary>
         [field: NonSerialized]
@@ -94,7 +97,7 @@
 
         /// <summary>
         /// 支持 in 的方法重载
-        /// in 代表的是引用的只读版本，与之对应的是 ref 和 out 的引用&可写版本
+        /// in 代表的是引用的只读版本，与之对应的是 ref 和 out 的引用可写版本
         /// 定义了 in 之后，就不能定义 ref 或 out 的重载
         /// </summary>
         /// <param name="i"></param>
