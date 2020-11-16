@@ -81,8 +81,8 @@ namespace ConsoleAppCore.Demos.Misc
                     {
                         // 这个是最新的 Awaiter
                         // 包含最新的状态和代码位置信息
-                        TaskAwaiter<Type1> awaiterType1;
-                        TaskAwaiter<Type2> awaiterType2;
+                        TaskAwaiter<Type1> awaiterType1 = default;
+                        TaskAwaiter<Type2> awaiterType2 = default;
 
                         switch (m_state)
                         {
