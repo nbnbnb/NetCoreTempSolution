@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
-		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<TargetFramework>net5.0</TargetFramework>
 		<!--TargetFramework(s) 可以生成多个框架版本-->
 		<!-- <TargetFrameworks>netcoreapp2.0;net45</TargetFrameworks> -->
 		<!-- <RuntimeIdentifiers>win7-x86;win7-x64;win10-x64;win10-x86;osx-x64;ubuntu.15.10-x64;linuxmint.18-x64;opensuse.13.2-x64</RuntimeIdentifiers> -->
@@ -25,18 +25,18 @@
 		<PackageReference Include="AspectCore.Core" Version="2.1.0" />
 		<PackageReference Include="AspectCore.Extensions.Autofac" Version="2.1.0" />
 		<PackageReference Include="AspectCore.Extensions.DependencyInjection" Version="2.1.0" />
-		<PackageReference Include="Lib.Harmony" Version="2.0.2" />
-		<PackageReference Include="MediatR" Version="8.1.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.8" />
-		<PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.8" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="3.1.8" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.8" />
-		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.8" />
+		<PackageReference Include="Lib.Harmony" Version="2.0.4" />
+		<PackageReference Include="MediatR" Version="9.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0" />
 		<PackageReference Include="Ninject" Version="3.3.4" />
 		<PackageReference Include="ninject.extensions.conventions" Version="3.3.0" />
 		<PackageReference Include="Remotion.Linq" Version="2.2.0" />
-		<PackageReference Include="System.Collections.Immutable" Version="1.7.1" />
-		<PackageReference Include="System.Reactive" Version="4.4.1" />
+		<PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
+		<PackageReference Include="System.Reactive" Version="5.0.0" />
 		<PackageReference Include="WebApiClient.JIT" Version="1.1.4" />
 	</ItemGroup>
 
